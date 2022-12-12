@@ -115,14 +115,14 @@ namespace Ghaleb.API.Controllers
                     Id = h.Id,
                     Title = h.Title,
                     h.Url,
-                    Image = h.Image.Image_thumb,
+                    Image = h.Image.BindImage(),
                     h.Visit,
                     h.Abstract
                 }).ToListAsync();
                 var slideShows = await _context.tbl_SlideShows.Include(x => x.Image).Where(h => h.IsActive && h.IsDelete != true).OrderByDescending(x => x.Id).Take(4).Select(h => new
                 {
                     Id = h.Id,
-                    Image = h.Image.Image_thumb,
+                    Image = h.Image.BindImage(),
                     h.Link,
                 }).ToListAsync();
 
