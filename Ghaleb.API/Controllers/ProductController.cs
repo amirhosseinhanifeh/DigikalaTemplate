@@ -129,6 +129,9 @@ namespace Ghaleb.API.Controllers
                 var blocks = await _context.tbl_Blocks.Where(h => h.IsActive && h.IsDelete != true).OrderByDescending(x => x.Id).Take(4).Select(h => new
                 {
                     Id = h.Id,
+                    h.Title,
+                    h.Name,
+                    h.Description,
                     Image = h.Image.BindImage(),
                     h.RouteName
                 }).ToListAsync();
