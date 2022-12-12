@@ -148,7 +148,7 @@
 
         });
     });
-        $("#SubProductCategoryId").change(function(e) {
+        $("#ProductCategoryId").change(function(e) {
             console.log(e);
             $("#fields").load("/Admin/Product/GetFields?categoryId=" + e.target.value+"&productId="+@Model.Id);
         });
