@@ -1,0 +1,42 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model IEnumerable<ALO.DomainClasses.Entity.Blog.tbl_BlogComments>
+@{
+    ViewData["Title"] = "لیست نظرات";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                    <thead>
+                        <tr>
+                            <th>پست</th>
+                            <th>نام و نام خانوادگی</th>
+                            <th>موبایل</th>
+                            <th>ایمیل</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Blog.Title</td>
+                                <td>@item.FullName</td>
+                                <td>@item.Mobile</td>
+                                <td>@item.Email</td>
+                                <td>
+                                    <a class="btn btn-info" asp-route-id="@item.Id" asp-action="Details">پاسخ</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

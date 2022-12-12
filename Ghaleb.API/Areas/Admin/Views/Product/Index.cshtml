@@ -1,0 +1,59 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model IEnumerable<ALO.ViewModels.Product.Admin.GetProductListForAdminDto>
+@{
+    ViewData["Title"] = "لیست محصولات";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
+<div class="row align-items-center">
+    <div class="col text-right">
+        <a type="button" asp-action="Create" asp-area="Admin" asp-controller="Product"  class="btn btn-primary">افزودن</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="">
+            <div class="card-header border-0">
+
+            </div>
+
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                    <thead>
+                        <tr>
+                            <th>ردیف</th>
+                            <th>عکس محصول</th>
+                            <th>نام محصول</th>
+                            <th>دسته</th>
+                            <th>تعداد سفارش</th>
+                            <th>قیمت</th>
+                            <th>وضعیت</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Row</td>
+                                <td><img style="width:75px;height:75px" class="img-fluid" src="@item.Image" /></td>
+                                <td>@item.Title</td>
+                                <td>@item.SubCategory</td>
+                                <td>@item.OrderCount</td>
+                                <td>@item.Cost</td>
+                                <td>@item.Status</td>
+                                <td>
+                                    <a class="btn btn-dark" asp-route-productId="@item.Id" asp-controller="ProductPriceHistory" asp-action="Index">قیمت گذاری</a>
+                                    <a class="btn btn-dark" asp-route-id="@item.Id" asp-action="Edit">ویرایش</a>
+                                    <a class="btn btn-danger" asp-action="Delete" asp-area="Admin" asp-controller="Product" asp-route-id="@item.Id">حذف</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

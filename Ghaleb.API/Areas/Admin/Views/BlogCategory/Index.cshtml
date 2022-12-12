@@ -1,0 +1,49 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model IEnumerable<ALO.ViewModels.BlogCategory.GetBlogCategoryListForAdminDTO>
+@{
+    ViewData["Title"] = "لیست محصولات";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-header border-0">
+                <div class="row align-items-center">
+                    <div class="col text-right">
+                        <a type="button" class="btn btn-primary" asp-action="Create">افزودن</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                    <thead>
+                        <tr>
+                            <th>ردیف</th>
+                            <th>نام محصول</th>
+                            <th>وضعیت</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Row</td>
+                                <td>@item.Title</td>
+                                <td>@item.Status</td>
+                                <td>
+                                    <button class="btn btn-dark" area="Admin" id="@item.Id" action="Edit" controller="BlogCategory" data-toggle="modal" data-target="#exampleModal" onclick="EditModal(this)">ویرایش</button>
+                                    <a class="btn btn-danger" asp-action="Delete" asp-area="Admin" asp-controller="BlogCategory" asp-route-id="@item.Id">حذف</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

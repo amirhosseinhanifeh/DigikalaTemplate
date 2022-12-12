@@ -1,0 +1,50 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model IEnumerable<ALO.DomainClasses.Entity.Account.tbl_Users>
+@{
+    ViewData["Title"] = "لیست دسته بندی ها";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="">
+            <div class="card-header border-0">
+
+            </div>
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                    <thead>
+                        <tr>
+                            <th>نام </th>
+                            <th>نام خانوادگی </th>
+                            <th>موبایل </th>
+                            <th>رمز عبور </th>
+                            <th>تعداد سفارش </th>
+                            <th> </th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Profile.FirstName</td>
+                                <td>@item.Profile.LastName</td>
+                                <td>@item.Mobile</td>
+                                <td>@item.Password</td>
+                                <td>@item.Orders.Count(h=>h.OrderState==ALO.DomainClasses.Entity.Order.OrderState.PAYED)</td>
+                                <td>
+                                    <a class="btn btn-danger" asp-route-id="@item.Id" asp-action="Addresses">آدرس ها</a>
+                                    <a class="btn btn-success" asp-route-id="@item.Id" asp-action="SendSms">ارسال پیامک</a>
+                                </td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="bin\Debug\netcoreapp2.2\ALO.DataAccessLayer.deps.json" />
+    <Content Include="bin\Release\netcoreapp2.2\ALO.DataAccessLayer.deps.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="bin\Debug\netcoreapp2.2\ALO.Common.dll" />
+    <None Include="bin\Debug\netcoreapp2.2\ALO.Common.pdb" />
+    <None Include="bin\Debug\netcoreapp2.2\ALO.DataAccessLayer.dll" />
+    <None Include="bin\Debug\netcoreapp2.2\ALO.DataAccessLayer.pdb" />
+    <None Include="bin\Debug\netcoreapp2.2\ALO.DomainClasses.dll" />
+    <None Include="bin\Debug\netcoreapp2.2\ALO.DomainClasses.pdb" />
+    <None Include="bin\Release\netcoreapp2.2\ALO.Common.dll" />
+    <None Include="bin\Release\netcoreapp2.2\ALO.Common.pdb" />
+    <None Include="bin\Release\netcoreapp2.2\ALO.DataAccessLayer.dll" />
+    <None Include="bin\Release\netcoreapp2.2\ALO.DataAccessLayer.pdb" />
+    <None Include="bin\Release\netcoreapp2.2\ALO.DomainClasses.dll" />
+    <None Include="bin\Release\netcoreapp2.2\ALO.DomainClasses.pdb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ALO.DomainClasses\ALO.DomainClasses.csproj" />
+  </ItemGroup>
+
+</Project>

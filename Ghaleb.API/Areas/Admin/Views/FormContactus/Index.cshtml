@@ -1,0 +1,41 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model IEnumerable<ALO.DomainClasses.Entity.Forms.tbl_FormContantUs>
+
+    @{
+        ViewData["Title"] = "فرم های تماس با ما";
+        Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    }
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+
+                <div class="table-responsive">
+                    <table class="table align-items-center table-flush">
+                        <thead>
+                            <tr>
+                                <th>نام</th>
+                                <th>ایمیل</th>
+                                <th>موبایل</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.FullName</td>
+                                    <td>@item.Email</td>
+                                    <td>@item.Mobile</td>
+                                    <td>
+                                        <a class="btn btn-dark" asp-route-id="@item.Id" asp-action="Edit">مشاهده</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+

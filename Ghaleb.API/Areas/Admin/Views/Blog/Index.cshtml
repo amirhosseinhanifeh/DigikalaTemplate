@@ -1,0 +1,48 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model IEnumerable<ALO.DomainClasses.Entity.Blog.tbl_Blog>
+@{
+    ViewData["Title"] = "لیست وبلاگ ها";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-header border-0">
+                <div class="row align-items-center">
+                    <div class="col text-right">
+                        <a type="button" class="btn btn-primary" asp-action="Create">افزودن</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                    <thead>
+                        <tr>
+                            <th>عنوان</th>
+                            <th>دسته</th>
+                            <th>وضعیت</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Title</td>
+                                <td>@item.BlogCategory.Title</td>
+                                <td>@(item.IsActive?"فعال":"غیرفعال")</td>
+                                <td>
+                                    <a class="btn btn-dark"  asp-action="Edit" asp-route-Id="@item.Id" >ویرایش</a>
+                                    <a class="btn btn-danger" asp-action="Delete" asp-area="Admin" asp-controller="Blog" asp-route-id="@item.Id">حذف</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

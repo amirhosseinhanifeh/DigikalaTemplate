@@ -1,0 +1,89 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Ghaleb.API
+
+@model ALO.DomainClasses.Entity.Blog.tbl_Blog
+
+
+
+<script src="~/AdminTemplate/assets/js/ui-helpers.js"></script>
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">مشخصات</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#seo" role="tab" aria-controls="contact" aria-selected="false">تنظیمات سئو</a>
+    </li>
+</ul>
+<form id="frmValues">
+    <input asp-for="Id" hidden />
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="row">
+
+                <div class="form-group col-6">
+                    <label asp-for="Title"></label>
+                    <input class="form-control" type="text" asp-for="Title" />
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="seo" role="tabpanel" aria-labelledby="contact-tab">
+            <div class="row">
+                <div class="form-group col-6">
+                    <label asp-for="Url"></label>
+                    <input class="form-control" type="text" asp-for="Url" />
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="PageTitle"></label>
+                    <input class="form-control" type="text" asp-for="PageTitle" />
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="MetaKeyword"></label>
+                    <input class="form-control" type="text" asp-for="MetaKeyword" />
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="MetaDescription"></label>
+                    <textarea class="form-control" rows="8" type="text" asp-for="MetaDescription"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3 form-group">
+            <button class="btn btn-primary" id="btnSave" type="submit">ذخیره</button>
+            <button class="btn btn-danger" type="button" data-dismiss="modal" aria-label="Close">بیخیال</button>
+        </div>
+    </div>
+
+</form>
+<script>
+    CKEDITOR.replace('editor1');
+</script>
+<script>
+
+    $("#btnSave").click(function (e) {
+
+        e.preventDefault();
+        for (instance in CKEDITOR.instances) {
+            CKEDITOR.instances[instance].updateElement();
+        }
+        $.ajax({
+            url: "@Url.Action("Edit")",
+            method: "POST",
+            data: $("#frmValues").serialize(),
+
+        }).done(function (result) {
+            if (result.status == 0) {
+                Swal.fire(
+                    'تبریک !',
+                    result.message,
+                    'success'
+                )
+                $('#exampleModal').modal('hide');
+            }
+
+        }).fail(function () {
+
+
+        });
+    });
+</script>

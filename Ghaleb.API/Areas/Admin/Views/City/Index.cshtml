@@ -1,0 +1,44 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model IEnumerable<ALO.DomainClasses.Entity.City.tbl_City>
+@{
+    ViewData["Title"] = "لیست شهر ها";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-header border-0">
+                <div class="row align-items-center">
+                    <div class="col text-right">
+                        <a type="button" asp-action="Create" class="btn btn-primary">افزودن</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                    <thead>
+                        <tr>
+                            <th>نام شهر</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>
+                                <a class="btn btn-dark" asp-route-id="@item.Id" asp-action="Edit">ویرایش</a>
+                                <a class="btn btn-danger" asp-action="Delete"  asp-area="Admin" asp-controller="Product" asp-route-id="@item.Id">حذف</a>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

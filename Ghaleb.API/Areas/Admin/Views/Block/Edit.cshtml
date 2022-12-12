@@ -1,0 +1,88 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AyandeNama.Web
+
+@model ALO.DomainClasses.Entity.Content.tbl_Blocks
+
+
+
+@{
+    ViewData["Title"] = "ویرایش بلوک";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">مشخصات</a>
+    </li>
+</ul>
+<form id="frmValues">
+    <input hidden asp-for="Id"  />
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="row">
+                <div class="form-group col-6">
+                    <label asp-for="Name"></label>
+                    <input class="form-control" type="text" asp-for="Name" />
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="Title"></label>
+                    <input class="form-control" type="text" asp-for="Title" />
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="RouteName"></label>
+                    <input class="form-control" type="text" asp-for="RouteName" />
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="ImageId"></label>
+                    <image-upload Id="img" For="ImageId"></image-upload>
+                </div>
+                <div class="form-group col-12">
+                    <label asp-for="Description"></label>
+                    <textarea id="editor1" name="Description" asp-for="Description"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3 form-group">
+            <button class="btn btn-primary" id="btnSave" type="submit">ذخیره</button>
+            <button class="btn btn-danger" type="button" data-dismiss="modal" aria-label="Close">بیخیال</button>
+        </div>
+    </div>
+
+</form>
+@section Scripts{
+    <script src="https://cdn.ckeditor.com/4.16.1/full-all/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('editor1');
+    </script>
+    <script>
+
+    $("#btnSave").click(function (e) {
+
+        e.preventDefault();
+        for (instance in CKEDITOR.instances) {
+            CKEDITOR.instances[instance].updateElement();
+        }
+        $.ajax({
+            url: "@Url.Action("Edit")",
+            method: "POST",
+            data: $("#frmValues").serialize(),
+
+        }).done(function (result) {
+            if (result.status == 0) {
+                Swal.fire(
+                    'تبریک !',
+                    result.message,
+                    'success'
+                )
+                $('#exampleModal').modal('hide');
+            }
+
+        }).fail(function () {
+
+
+        });
+    });
+    </script>
+}

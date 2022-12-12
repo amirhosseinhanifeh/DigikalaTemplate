@@ -1,0 +1,42 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model IEnumerable<ALO.DomainClasses.Entity.LinkManagement.tbl_GroupLinkManagement>
+@{
+    ViewData["Title"] = "مدیریت گروه لینک ها";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-header border-0">
+                <div class="row align-items-center">
+                    <div class="col text-right">
+                        <a type="button" class="btn btn-primary" asp-action="Create">افزودن</a>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                    <thead>
+                        <tr>
+                            <th>عنوان</th>
+                            <th>نام مسیر</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                            <td>@item.Title</td>
+                            <td>@item.RouteName</td>
+                            <td><a class="btn btn-danger" asp-route-id="@item.Id" asp-action="Index" asp-controller="LinkManagement">لیست لینک ها</a></td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

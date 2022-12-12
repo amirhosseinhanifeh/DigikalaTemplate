@@ -1,0 +1,68 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Ghaleb.API
+
+@model ALO.DomainClasses.Entity.LinkManagement.tbl_GroupLinkManagement
+
+
+
+@{
+    ViewData["Title"] = "افزودن دسته";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/AdminTemplate/assets/js/ui-helpers.js"></script>
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">مشخصات</a>
+    </li>
+</ul>
+<form id="frmValues">
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="row">
+                <div class="form-group col-6">
+                    <label asp-for="Title"></label>
+                    <input class="form-control" type="text" asp-for="Title" />
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="RouteName"></label>
+                    <input class="form-control" type="text" asp-for="RouteName" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3 form-group">
+            <button class="btn btn-primary" id="btnSave" type="submit">ذخیره</button>
+            <button class="btn btn-danger" type="button" data-dismiss="modal" aria-label="Close">بیخیال</button>
+        </div>
+    </div>
+
+</form>
+@section Scripts{
+    <script>
+
+    $("#btnSave").click(function (e) {
+
+        e.preventDefault();
+        $.ajax({
+            url: "@Url.Action("Create")",
+            method: "POST",
+            data: $("#frmValues").serialize(),
+
+        }).done(function (result) {
+            if (result.status == 0) {
+                Swal.fire(
+                    'تبریک !',
+                    result.message,
+                    'success'
+                )
+            }
+
+        }).fail(function () {
+
+
+        });
+    });
+    </script>
+}

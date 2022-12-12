@@ -1,0 +1,30 @@
+﻿@model IEnumerable<ALO.DomainClasses.Entity.Menu.tbl_Menu>
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<ul class="side-menu">
+    @foreach (var item in Model)
+    {
+        <li class="slide">
+            <a class="side-menu__item" data-toggle="slide" href="@Url.Content(item.Link)">
+                <i class="fe fe-folder text-dark ml-1">
+
+                            </i>
+                <span class="side-menu__label">@item.Name</span>
+                @if (item.ChildMenus.Any(x => x.IsActive && x.IsDelete != true))
+                {
+                    <i class="angle fe fe-chevron-down"></i>
+                }
+            </a>
+            @if (item.ChildMenus.Any(x => x.IsActive && x.IsDelete != true))
+            {
+                <ul class="slide-menu">
+                    @foreach (var item2 in item.ChildMenus.Where(x=>x.IsDelete !=true && x.IsActive).OrderBy(x=>x.Order))
+                    {
+                        <li><a class="slide-item" href="@Url.Content(item2.Link)">@item2.Name</a></li>
+                    }
+                </ul>
+            }
+        </li>
+    }
+</ul>
