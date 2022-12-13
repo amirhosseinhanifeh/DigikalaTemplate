@@ -52,19 +52,20 @@ namespace Ghaleb.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
         }
 
         public IConfiguration Configuration { get; }
-
+        private readonly IWebHostEnvironment _env;
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
 
+               
             services.AddScoped<CookieHelper>();
-
             services.AddScoped<WebsiteBase>();
             services.AddControllersWithViews();
             services.AddMvc();
@@ -149,6 +150,7 @@ namespace Ghaleb.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
 
             app.UseDeveloperExceptionPage();
             app.UseSwagger();

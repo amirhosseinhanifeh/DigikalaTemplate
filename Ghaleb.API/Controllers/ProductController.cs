@@ -135,20 +135,7 @@ namespace Ghaleb.API.Controllers
                     Image = h.Image.BindImage(),
                     h.RouteName
                 }).ToListAsync();
-                var links = await _context.tbl_GroupLinkManagements.Include(x=>x.LinkManagements).Where(x => x.IsActive && x.IsDelete != true).Select(x => new
-                {
-                    x.Id,
-                    x.Title,
-                    x.RouteName,
-                    links =x.LinkManagements.Select(h=>new
-                    {
-                        Image=h.Image.BindImage(),
-                        h.Description,
-                        h.Id,
-                        h.Url,
-                        h.Title,
-                    })
-                }).ToListAsync();
+
                 var contactus = await _context.tbl_ContactUsDetails.Select(h => new
                 {
                     h.Lat,
@@ -169,7 +156,6 @@ namespace Ghaleb.API.Controllers
                     slideShows,
                     blocks,
                     contactus,
-                    links
                 };
                 return Ok(new { Data = data, message = result.Message, Status = result.Status, result.NotificationType });
             }

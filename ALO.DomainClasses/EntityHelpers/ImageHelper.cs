@@ -11,7 +11,6 @@ namespace ALO.DomainClasses.EntityHelpers
     public static class ImageHelper
     {
         private static IHttpContextAccessor _httpContextAccessor;
-
         static ImageHelper()
         {
             _httpContextAccessor = new HttpContextAccessor();
@@ -21,11 +20,12 @@ namespace ALO.DomainClasses.EntityHelpers
         {
             if (model != null)
             {
-                
+
                 return _httpContextAccessor.HttpContext.Request.Scheme + "://" + _httpContextAccessor.HttpContext.Request.Host.Value +"/Uploads/Images/"+ model.Image_thumb;
+                //return "https://api.amirprinter.ir" +"/Uploads/Images/"+ model.Image_thumb;
 
             }
-            return null;
+            return "http://www.mstp.ir/images-files/Daneshbonyan-Img/2018-4-11-10-4-7-75-8857.jpg";
         }
         public static string BindFile(this tbl_File model)
         {

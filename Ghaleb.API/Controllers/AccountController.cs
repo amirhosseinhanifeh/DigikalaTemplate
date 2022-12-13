@@ -69,7 +69,7 @@ namespace Ghaleb.API.Controllers
                     _config["Jwt:Issuer"],
                     claims,
                     notBefore: DateTime.Now,
-                    expires: DateTime.Now.AddDays(1),
+                    expires: DateTime.Now.AddYears(1),
                     signingCredentials: credentials);
                 return new TokenViewModel {  Token = new JwtSecurityTokenHandler().WriteToken(token), IsLogin = true };
             }

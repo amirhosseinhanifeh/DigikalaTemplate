@@ -65,7 +65,10 @@ namespace Ghaleb.API.Controllers
                 .ThenInclude(h => h.ProductCustomFieldsOptionValues)
                 .Include(x => x.SubProductCategories)
                 .FirstOrDefaultAsync(h => h.Id == id);
-
+            if(data ==null)
+            {
+                return Ok(null);
+            }
             return Ok(new
             {
                 Id = data.Id,
