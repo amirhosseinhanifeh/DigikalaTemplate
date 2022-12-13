@@ -16,5 +16,6 @@ namespace ALO.DomainClasses.Entity.LinkManagement
         public string RouteName { get; set; }
         public long? LanguageId { get; set; }
         public tbl_Language Language{ get; set; }
+        public ICollection<tbl_LinkManagement> LinkManagements { get; set; }
     }
 }
