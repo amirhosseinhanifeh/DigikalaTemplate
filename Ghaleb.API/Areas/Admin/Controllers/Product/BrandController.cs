@@ -26,6 +26,8 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
             ViewBag.Categories = new SelectList((await _context.GetAllAsync<tbl_MainProductCategory>(x => x.IsDelete == false).ToListAsync()), "Id", "Name");
             return View();
         }
+
+
         [HttpPost]
         public async Task<IActionResult> Create(tbl_Brands model)
         {
@@ -34,6 +36,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
                 await _context.tbl_Brands.AddAsync(model);
                 await _context.SaveChangesAsync();
             }
+
             return Json(new { message = "با موفقیت ثبت شد", Status = Status.Success, NotificationType = NotificationType.success });
         }
     }
