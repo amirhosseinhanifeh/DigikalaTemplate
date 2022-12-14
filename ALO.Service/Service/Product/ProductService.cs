@@ -651,6 +651,10 @@ namespace ALO.Service.Service.Product
 
                         });
                     }
+                    else
+                    {
+                        pr.ProductCustomFieldValues.Clear();
+                    }
                     _db.UpdateBaseEntity<tbl_Product>(pr);
                     await _db.SaveChangesAsync();
                     return new ListResultViewModel<bool>

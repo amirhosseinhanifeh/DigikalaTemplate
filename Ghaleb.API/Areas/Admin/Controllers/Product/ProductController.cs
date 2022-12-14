@@ -69,10 +69,10 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
         public async Task<IActionResult> Edit(long Id)
         {
             var result = await _productService.GetProductForAdmin(Id);
-            ViewBag.MainCategories = new SelectList(await _context.tbl_MainProductCategory.ToListAsync(), "Id", "Name",result.model.MainProuctCategoryId);
+            ViewBag.MainCategories = new SelectList(await _context.tbl_MainProductCategory.ToListAsync(), "Id", "Name", result.model.MainProuctCategoryId);
             ViewBag.Categories = new SelectList((await _productCategoryService.GetProductCategoriesSelect(result.model.MainProuctCategoryId)).model, "Id", "Value", result.model.ProductCategoryId);
             ViewBag.SubCategories = new SelectList((await _productSubCategoryService.GetSubCategorySelect(result.model.ProductCategoryId)).model, "Id", "Value", result.model.SubProductCategoryId);
-            ViewBag.Brands = new SelectList((await _context.tbl_Brands.Where(h=>result.model.MainProuctCategoryId != null ? h.MainProductCategoryId == result.model.MainProuctCategoryId : true).Select(h => new { Id=h.Id,Value=h.Name}).ToListAsync()), "Id", "Value", result.model.BrandId);
+            ViewBag.Brands = new SelectList((await _context.tbl_Brands.Where(h => result.model.MainProuctCategoryId != null ? h.MainProductCategoryId == result.model.MainProuctCategoryId : true).Select(h => new { Id = h.Id, Value = h.Name }).ToListAsync()), "Id", "Value", result.model.BrandId);
             return View(result.model);
         }
         [HttpPost]
@@ -89,11 +89,22 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
                 return Json(new { message = FailMessage, Status = Status.Failed, NotificationType.error });
             }
         }
-        public async Task<IActionResult> GetFields(long? categoryId,long? productId=null)
+        public async Task<IActionResult> GetFields(long? categoryId, long? subcategoryId, long? productId = null)
         {
+            IEnumerable<tbl_ProductCustomFields> list = new List<tbl_ProductCustomFields>();
             ViewBag.ProductID = productId;
-            var data = await _context.tbl_ProductCustomFields.Include(x=>x.ProductCustomFieldValues).Include(x => x.ProductCustomFieldsOptionValues).Where(x => x.ProductCategoryId == categoryId).ToListAsync();
-            return PartialView(data);
+            if (categoryId != null)
+            {
+                list = await _context.tbl_ProductCustomFields.Include(x => x.ProductCustomFieldValues).Include(x => x.ProductCustomFieldsOptionValues).Where(x => categoryId != null ? x.ProductCategoryId == categoryId : true).ToListAsync();
+            }
+            if(subcategoryId !=null)
+            {
+                List<tbl_ProductCustomFields> list2 = new List<tbl_ProductCustomFields>();
+
+                list2 = await _context.tbl_ProductCustomFields.Include(x => x.ProductCustomFieldValues).Include(x => x.ProductCustomFieldsOptionValues).Where(x =>  subcategoryId != null ? x.SubProductCategoryId == subcategoryId : true).ToListAsync();
+                list = list.Union(list2);
+            }
+            return PartialView(list.ToList());
         }
         public IActionResult Delete(long Id)
         {
@@ -103,7 +114,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
         [HttpGet]
         public async Task<IActionResult> GetBrands(long? mainProductCategoryId)
         {
-            var data =await _context.tbl_Brands.Where(x => x.MainProductCategoryId == mainProductCategoryId).Select(x => new
+            var data = await _context.tbl_Brands.Where(x => x.MainProductCategoryId == mainProductCategoryId).Select(x => new
             {
                 Id = x.Id,
                 Value = x.Name
@@ -145,9 +156,9 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
                                     var Description = worksheet.Cells[row, 4].Value?.ToString();
                                     var Color = worksheet.Cells[row, 5].Value?.ToString();
                                     var Inventory = worksheet.Cells[row, 6].Value?.ToString();
-                                    var Cost = worksheet.Cells[row, 7].Value != null?decimal.Parse(worksheet.Cells[row, 7].Value?.ToString()):0;
+                                    var Cost = worksheet.Cells[row, 7].Value != null ? decimal.Parse(worksheet.Cells[row, 7].Value?.ToString()) : 0;
                                     var PageTitle = worksheet.Cells[row, 8].Value?.ToString();
-                                    var Url = worksheet.Cells[row, 9].Value?.ToString().Replace(' ','-');
+                                    var Url = worksheet.Cells[row, 9].Value?.ToString().Replace(' ', '-');
                                     var MetaKeywords = worksheet.Cells[row, 10].Value?.ToString();
                                     var MetaDescription = worksheet.Cells[row, 11].Value?.ToString();
                                     if (!_context.tbl_Products.Any(x => x.Url == Url))

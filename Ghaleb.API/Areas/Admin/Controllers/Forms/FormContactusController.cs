@@ -27,7 +27,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Forms
         {
             var lan = _websitebase.GetCurrectLanguageIdAsync;
 
-            return View(await _context.GetAllAsync<tbl_FormContantUs>(x=>x.LanguageId==lan).ToListAsync());
+            return View(await _context.GetAllAsync<tbl_FormContantUs>().ToListAsync());
         }
     }
 }

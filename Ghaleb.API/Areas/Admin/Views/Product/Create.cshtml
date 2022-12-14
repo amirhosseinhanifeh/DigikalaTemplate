@@ -187,10 +187,15 @@
         });
         $("#ProductCategoryId").change(function(e) {
             console.log(e);
-            loadFields(e.target.value)
+            loadFields()
         });
-        function loadFields(subId){
-            $("#fields").load("/Admin/Product/GetFields?categoryId=" + subId);
+        $("#SubProductCategoryId").change(function(e) {
+            loadFields()
+        });
+        function loadFields(){
+            var subProductCategoryId = $("#SubProductCategoryId").val();
+            var ProductCategoryId = $("#ProductCategoryId").val();
+            $("#fields").load("/Admin/Product/GetFields?categoryId=" +ProductCategoryId+'&subCategoryId='+subProductCategoryId );
         }
     </script>
 }

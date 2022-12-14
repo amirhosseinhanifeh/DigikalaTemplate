@@ -8,8 +8,10 @@ namespace ALO.DomainClasses.Entity.Product
         public string Key { get; set; }
         public bool ShowInList { get; set; }
         public FieldType FieldType { get; set; }
-        public long ProductCategoryId { get; set; }
+        public long? ProductCategoryId { get; set; }
         public tbl_ProductCategory ProductCategory { get; set; }
+        public long? SubProductCategoryId { get; set; }
+        public tbl_SubProductCategory SubProductCategory { get; set; }
         public ICollection<tbl_ProductCustomFieldValues> ProductCustomFieldValues { get; set; }
         public ICollection<tbl_ProductCustomFieldsOptionValues> ProductCustomFieldsOptionValues { get; set; }
     }

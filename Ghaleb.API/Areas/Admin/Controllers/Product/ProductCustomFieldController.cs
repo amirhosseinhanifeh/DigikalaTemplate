@@ -15,22 +15,26 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
         {
             _context = context;
         }
-        public async Task<IActionResult> Index(long subCategoryId)
+        public async Task<IActionResult> Index(long? categoryId, long? subCategoryId)
         {
             ViewBag.SubCategoryId = subCategoryId;
-            return View(await _context.GetAllAsync<tbl_ProductCustomFields>().ToListAsync());
+            ViewBag.CategoryId = categoryId;
+
+            return View(await _context.GetAllAsync<tbl_ProductCustomFields>(x => categoryId != null ? x.ProductCategoryId == categoryId : true && subCategoryId != null ? x.SubProductCategoryId == subCategoryId : true).ToListAsync());
         }
-        public async Task<IActionResult> Create(long subCategoryId)
+        public IActionResult Create(long? categoryId, long? subCategoryId)
         {
             ViewBag.SubCategoryId = subCategoryId;
+            ViewBag.CategoryId = categoryId;
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Create(long subCategoryId ,tbl_ProductCustomFields model)
+        public async Task<IActionResult> Create(long? categoryId,long? subCategoryId, tbl_ProductCustomFields model)
         {
             if (ModelState.IsValid)
             {
-                model.ProductCategoryId = subCategoryId;
+                model.ProductCategoryId = categoryId;
+                model.SubProductCategoryId = subCategoryId;
                 await _context.tbl_ProductCustomFields.AddAsync(model);
                 await _context.SaveChangesAsync();
             }

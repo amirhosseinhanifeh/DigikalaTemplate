@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
     $("#ProductCategoryId").change(function () {
         $("#SubProductCategoryId").find("option").remove();
-        $("#SubProductCategoryId").append("<option>انتخاب نمایید</option>");
+        $("#SubProductCategoryId").append("<option value=''>انتخاب نمایید</option>");
         $.get("/Admin/ProductSubCategory/GetByAjax?productCategoryId=" + $(this).val(), function (res) {
             for (var i = 0; i < res.length; i++) {
 
@@ -13,7 +13,7 @@
     });
     $("#MainProuctCategoryId").change(function () {
         $("#BrandId").find("option").remove();
-        $("#BrandId").append("<option>انتخاب نمایید</option>");
+        $("#BrandId").append("<option value=''>انتخاب نمایید</option>");
         $.get("/Admin/Product/GetBrands?mainProductCategoryId=" + $(this).val(), function (res) {
             for (var i = 0; i < res.length; i++) {
 

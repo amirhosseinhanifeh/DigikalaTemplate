@@ -29,7 +29,7 @@
                             <tr>
                                 <td>@item.Title</td>
                                 <td>
-                                    <a class="btn btn-danger" asp-route-subcategoryid="@item.Id" asp-action="Index" asp-controller="ProductCustomField"> فیلدهای اختصاصی</a>|
+                                    <a class="btn btn-danger" asp-route-categoryid="@item.Id" asp-action="Index" asp-controller="ProductCustomField"> فیلدهای اختصاصی</a>|
                                     @if (item.SubProductCategories.Any(x => x.IsActive && !x.IsDelete))
                                     {
                                         <a class="btn btn-primary" asp-route-productcategoryId="@item.Id" asp-action="Index" asp-controller="ProductSubCategory">زیر دسته (@item.SubProductCategories.Count(x => !x.IsDelete && x.IsActive))</a>

@@ -25,22 +25,5 @@ namespace Ghaleb.API
                     webBuilder.UseStartup<Startup>();
                 });
 
-        static void ConfigConfiguration(WebHostBuilderContext ctx, IConfigurationBuilder config)
-        {
-            config.SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appset.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"config.{ctx.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true);
-
-            if (ctx.HostingEnvironment.EnvironmentName == "amirprinter")
-            {
-                config.AddJsonFile("appsettings.amirprinter.json");
-            }
-            if (ctx.HostingEnvironment.EnvironmentName == "qirat")
-            {
-                config.AddJsonFile("appsettings.qirat.json");
-
-            }
-
-        }
     }
 }
