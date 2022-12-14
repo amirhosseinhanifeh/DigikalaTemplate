@@ -19,7 +19,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
         }
         public async Task<IActionResult> Index()
         {
-            return View(await _context.GetAllAsync<tbl_Brands>().ToListAsync());
+            return View(await _context.GetAllAsync<tbl_Brands>(x=>x.IsDelete == false).ToListAsync());
         }
         public async Task<IActionResult> Create()
         {
