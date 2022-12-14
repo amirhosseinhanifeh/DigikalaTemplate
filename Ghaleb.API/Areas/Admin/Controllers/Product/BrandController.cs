@@ -36,8 +36,26 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
                 await _context.tbl_Brands.AddAsync(model);
                 await _context.SaveChangesAsync();
             }
-            //تست
             return Json(new { message = "با موفقیت ثبت شد", Status = Status.Success, NotificationType = NotificationType.success });
+        }
+
+        
+        public async Task<IActionResult> Delete(int Id)
+        {
+            try
+            {
+                var brand = await _context.tbl_Brands.FirstOrDefaultAsync(b => b.Id.Equals(Id));
+                if (brand == null)
+                    return RedirectToAction(nameof(Index));
+
+                _context.SoftDeletedBaseEntity<tbl_Brands>(brand);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return RedirectToAction(nameof(Index));
+            }
         }
     }
 }
