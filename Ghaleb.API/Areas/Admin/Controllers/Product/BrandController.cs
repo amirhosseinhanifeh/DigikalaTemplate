@@ -36,7 +36,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
                 await _context.tbl_Brands.AddAsync(model);
                 await _context.SaveChangesAsync();
             }
-
+            //تست
             return Json(new { message = "با موفقیت ثبت شد", Status = Status.Success, NotificationType = NotificationType.success });
         }
     }
