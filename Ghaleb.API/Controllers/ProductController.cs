@@ -84,7 +84,7 @@ namespace Ghaleb.API.Controllers
                 var result = await _product.GetHomeProductsByCategoryList();
 
 
-                var hasDiscounts = await _context.tbl_Products.Where(h => h.ProductPriceHistories.Any(g => g.DiscountPrice != null)).Select(h => new
+                var hasDiscounts = await _context.tbl_Products.Where(h =>h.IsDelete==false && h.IsActive==true && h.ProductPriceHistories.Any(g => g.DiscountPrice != null)).Select(h => new
                 {
                     Id = h.Id,
                     Cost = h.GetLastPrice().ToString("n0").toPersianNumber(),
@@ -99,7 +99,7 @@ namespace Ghaleb.API.Controllers
 
                 if (User.Identity.IsAuthenticated)
                 {
-                    YourVisits = await _context.tbl_Products.Where(h => h.ProductVisits.Any(g => g.UserId == User.UserId())).Select(h => new
+                    YourVisits = await _context.tbl_Products.Where(h => h.IsDelete == false && h.IsActive == true && h.ProductVisits.Any(g => g.UserId == User.UserId())).Select(h => new
                     {
                         Id = h.Id,
                         Cost = h.GetLastPrice().ToString("n0").toPersianNumber(),
@@ -119,14 +119,14 @@ namespace Ghaleb.API.Controllers
                     h.Visit,
                     h.Abstract
                 }).ToListAsync();
-                var slideShows = await _context.tbl_SlideShows.Include(x => x.Image).Where(h => h.IsActive && h.IsDelete != true).OrderByDescending(x => x.Id).Take(4).Select(h => new
+                var slideShows = await _context.tbl_SlideShows.Where(x=>x.IsDelete!=false).Include(x => x.Image).Where(h => h.IsActive && h.IsDelete != true).OrderByDescending(x => x.Id).Take(4).Select(h => new
                 {
                     Id = h.Id,
                     Image = h.Image.BindImage(),
                     h.Link,
                 }).ToListAsync();
 
-                var blocks = await _context.tbl_Blocks.Where(h => h.IsActive && h.IsDelete != true).OrderByDescending(x => x.Id).Take(4).Select(h => new
+                var blocks = await _context.tbl_Blocks.Where(x => x.IsDelete != false).Where(h => h.IsActive && h.IsDelete != true).OrderByDescending(x => x.Id).Take(4).Select(h => new
                 {
                     Id = h.Id,
                     h.Title,
