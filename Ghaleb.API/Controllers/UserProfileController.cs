@@ -34,8 +34,12 @@ namespace Ghaleb.API.Controllers
         {
             try
             {
-                var result = await _profile.GetAsync(User.UserId());
-                return Ok(new { Data = result.model, message = result.Message, Status = result.Status, result.NotificationType });
+                if(User.Identity.IsAuthenticated)
+                {
+                    var result = await _profile.GetAsync(User.UserId());
+                    return Ok(new { Data = result.model, message = result.Message, Status = result.Status, result.NotificationType });
+                }
+                return Ok(null);
             }
             catch (Exception e)
             {

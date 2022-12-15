@@ -319,7 +319,7 @@ namespace Ghaleb.API.Controllers
         public async Task<IActionResult> ExportToExcel()
         {
             // Get the user list 
-            var cats = await _context.tbl_ProductCategories.Select(h => h.Title).ToListAsync();
+            var products = await _context.tbl_Products.Select(h =>new { h.Id, h.Title,h.ImageId }).ToListAsync();
 
             var stream = new MemoryStream();
             ExcelPackage.LicenseContext = LicenseContext.Commercial;
@@ -332,14 +332,14 @@ namespace Ghaleb.API.Controllers
 
                 namedStyle.Style.Font.Color.SetColor(Color.Blue);
 
-                worksheet.Cells["A1"].Value = "نام پرینتر";
-                worksheet.Cells["B1"].Value = "خلاصه";
-                worksheet.Cells["C1"].Value = "متن";
-                worksheet.Cells["D1"].Value = "قیمت";
-                worksheet.Cells["E1"].Value = "عنوان بالای صفحه";
-                worksheet.Cells["F1"].Value = "آدرس صفحه";
-                worksheet.Cells["G1"].Value = "کلمات کلیدی";
-                worksheet.Cells["H1"].Value = "توضیحات کلیدی";
+                worksheet.Cells["A1"].Value = "شناسه";
+                worksheet.Cells["B1"].Value = "نام پرینتر";
+                worksheet.Cells["C1"].Value = "خلاصه";
+                worksheet.Cells["D1"].Value = "متن";
+                worksheet.Cells["E1"].Value = "قیمت";
+                worksheet.Cells["F1"].Value = "عنوان بالای صفحه";
+                worksheet.Cells["G1"].Value = "آدرس صفحه";
+                worksheet.Cells["H1"].Value = "کلمات کلیدی";
                 worksheet.View.RightToLeft = true;
 
 
@@ -347,7 +347,15 @@ namespace Ghaleb.API.Controllers
                 xlPackage.Workbook.Properties.Title = "لیست محصولات";
                 xlPackage.Workbook.Properties.Author = "امیرحسین حنیفه";
                 xlPackage.Workbook.Properties.Subject = "لیست محصولات";
+                int row = 2;
+                foreach (var user in products)
+                {
+                    worksheet.Cells[row, 1].Value = user.Id;
+                    worksheet.Cells[row, 2].Value = user.Title;
+                    worksheet.Cells[row, 3].Value = user.ImageId;
 
+                    row++;
+                }
                 // save the new spreadsheet
                 xlPackage.Save();
                 // Response.Clear();
@@ -355,6 +363,20 @@ namespace Ghaleb.API.Controllers
             stream.Position = 0;
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "users.xlsx");
         }
+        [HttpPost]
+        public async Task<IActionResult> AddImageForProducts()
+        {
+            var products = await _context.tbl_Products.Where(x => x.ImageId == null).ToListAsync();
+            foreach (var item in products)
+            {
+                item.Image = new ALO.DomainClasses.Entity.IMG.tbl_Image
+                {
+                    Image_thumb=item.Id+".png",
 
+                };
+            }
+            await _context.SaveChangesAsync();
+            return Ok(true);
+        }
     }
 }
