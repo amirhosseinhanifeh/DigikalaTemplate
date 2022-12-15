@@ -59,5 +59,23 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
             }
 
         }
+
+        public async Task<IActionResult> Delete(int Id)
+        {
+            try
+            {
+                var subCat = await _context.tbl_SubProductCategories.FirstOrDefaultAsync(b => b.Id.Equals(Id));
+                if (subCat == null)
+                    return RedirectToAction(nameof(Index));
+
+                _context.SoftDeletedBaseEntity<tbl_SubProductCategory>(subCat);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return RedirectToAction(nameof(Index));
+            }
+        }
     }
 }
