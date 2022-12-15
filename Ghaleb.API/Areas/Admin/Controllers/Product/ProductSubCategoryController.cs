@@ -29,7 +29,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
 
         public async Task<IActionResult> Index(long? productcategoryId=null)
         {
-            return View(await _context.GetAllAsync<tbl_SubProductCategory>(x=>productcategoryId!=null? x.ProductCategoryId==productcategoryId:true,includes:new string[] { "ProductCategory" }).ToListAsync());
+            return View(await _context.GetAllAsync<tbl_SubProductCategory>(x=>(productcategoryId!=null? x.ProductCategoryId==productcategoryId:true)&& x.IsDelete == false, includes:new string[] { "ProductCategory" }).ToListAsync());
         }
         public async Task<IActionResult> Create()
         {
@@ -58,6 +58,28 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
                 return Json(null);
             }
 
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var subCat = await _context.tbl_SubProductCategories.FirstOrDefaultAsync(b => b.Id.Equals(id));
+            if (subCat == null)
+            {
+                return NotFound();
+            }
+            ViewBag.Categories = new SelectList((await _context.GetAllAsync<tbl_ProductCategory>(x => x.IsDelete == false).ToListAsync()), "Id", "Title");
+            return View(subCat);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(tbl_SubProductCategory model)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.UpdateBaseEntity<tbl_SubProductCategory>(model);
+                await _context.SaveChangesAsync();
+            }
+            return Json(new { message = "با موفقیت ثبت شد", Status = Status.Success, NotificationType = NotificationType.success });
         }
 
         public async Task<IActionResult> Delete(int Id)

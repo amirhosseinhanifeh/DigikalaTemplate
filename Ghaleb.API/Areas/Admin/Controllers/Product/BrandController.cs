@@ -55,7 +55,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
         {
             if (ModelState.IsValid)
             {
-                _context.tbl_Brands.Update(model);
+                _context.UpdateBaseEntity<tbl_Brands>(model);
                 await _context.SaveChangesAsync();
             }
             return Json(new { message = "با موفقیت ثبت شد", Status = Status.Success, NotificationType = NotificationType.success });
