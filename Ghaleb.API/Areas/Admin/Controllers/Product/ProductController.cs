@@ -183,6 +183,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
 
 
                                         };
+;
                                         data.ProductPriceHistories = new List<tbl_ProductPriceHistory>();
                                         var color = await _context.tbl_Colors.FirstOrDefaultAsync(h => h.Name == Color);
                                         if (color != null)
@@ -197,6 +198,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
                                         }
                                         await _context.tbl_Products.AddAsync(data);
                                         await _context.SaveChangesAsync();
+                                       
                                     }
 
 

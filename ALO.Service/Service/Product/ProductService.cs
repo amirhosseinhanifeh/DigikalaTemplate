@@ -213,7 +213,7 @@ namespace ALO.Service.Service.Product
         {
             try
             {
-                var result = (await _db.GetAllAsync<tbl_SubProductCategory>(x => x.ShowInHome == true, new string[] { "ProductCategory", "Products", "Products.Image", "Products.ProductPriceHistories" }).ToListAsync())
+                var result = (await _db.GetAllAsync<tbl_SubProductCategory>(x => x.ShowInHome == true, new string[] { "ProductCategory", "Products", "Products.Image", "Products.ProductPriceHistories" }).OrderByDescending(x => x.Id).ToListAsync())
                     .Select(x => new CategoryListForHomeDTO
                     {
                         Title = x.Title,
