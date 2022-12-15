@@ -39,7 +39,27 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
             return Json(new { message = "با موفقیت ثبت شد", Status = Status.Success, NotificationType = NotificationType.success });
         }
 
-        
+        public async Task<IActionResult> Edit(int id)
+        {
+            var brand = await _context.tbl_Brands.Include(b=> b.Logo).FirstOrDefaultAsync(b =>b.Id.Equals(id));
+            if (brand == null)
+            {
+                return NotFound();
+            }
+            ViewBag.Categories = new SelectList((await _context.GetAllAsync<tbl_MainProductCategory>(x => x.IsDelete == false).ToListAsync()), "Id", "Name");
+            return View(brand);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(tbl_Brands model)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.tbl_Brands.Update(model);
+                await _context.SaveChangesAsync();
+            }
+            return Json(new { message = "با موفقیت ثبت شد", Status = Status.Success, NotificationType = NotificationType.success });
+        }
         public async Task<IActionResult> Delete(int Id)
         {
             try
