@@ -1,0 +1,44 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Ghaleb.API
+@model ALO.DomainClasses.Entity.Forms.tbl_FormContantUs
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<form id="frmValues">
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="row">
+                <input hidden asp-for="Id" />
+                <div class="form-group col-6">
+                    <label asp-for="FullName"></label> : 
+                    <span>@Model.FullName</span>
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="Email"></label> : 
+                    <span>@Model.Email</span>
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="Mobile"></label> : 
+                    <span>@Model.Mobile</span>
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="Body"></label> :
+                    <p>@Model.Body</p>
+                </div>
+                <div class="form-group col-12">
+                    <label>پاسخ</label>
+                    <input class="form-control" type="text" name="Answer" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3 form-group">
+            <button class="btn btn-primary" id="btnSave" type="submit">ذخیره</button>
+        </div>
+    </div>
+
+</form>
+

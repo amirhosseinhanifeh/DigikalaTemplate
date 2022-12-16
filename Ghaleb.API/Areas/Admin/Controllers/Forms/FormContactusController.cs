@@ -29,5 +29,10 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Forms
 
             return View(await _context.GetAllAsync<tbl_FormContantUs>().ToListAsync());
         }
+        [HttpGet]
+        public async Task<IActionResult> Details(long id)
+        {
+            return View(await _context.tbl_FormContantUs.Where(x=>x.Id==id).FirstOrDefaultAsync());
+        }
     }
 }

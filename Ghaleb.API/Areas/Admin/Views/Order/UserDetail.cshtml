@@ -1,9 +1,9 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, AuthoringTagHelpers
-@model IEnumerable<ALO.DomainClasses.Entity.Forms.tbl_FormContantUs>
+@model ALO.DomainClasses.Entity.Account.tbl_UserAddresses
 
     @{
-        ViewData["Title"] = "فرم های تماس با ما";
+        ViewData["Title"] = "جزییات خریدار";
         Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     }
 
@@ -15,27 +15,22 @@
                     <table class="table align-items-center table-flush">
                         <thead>
                             <tr>
-                                <th>نام</th>
-                                <th>ایمیل</th>
+                                <th>نام گیرنده</th>
+                                <th>آدرس</th>
+                                <th>تلفن</th>
                                 <th>موبایل</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model)
-                            {
                                 <tr>
-                                    <td>@item.FullName</td>
-                                    <td>@item.Email</td>
-                                    <td>@item.Mobile</td>
-                                    <td>
-                                        <a class="btn btn-dark" asp-route-id="@item.Id" asp-action="Details">مشاهده</a>
-                                    </td>
+                                    <td>@Model.User.Profile.FirstName @Model.User.Profile.LastName</td>
+                                    <td>@Model.Address پلاک @Model.Pelak واحد @Model.Vahed</td>
+                                    <td>@Model.Phone</td>
+                                    <td>@Model.Mobile</td>
                                 </tr>
-                            }
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
-
