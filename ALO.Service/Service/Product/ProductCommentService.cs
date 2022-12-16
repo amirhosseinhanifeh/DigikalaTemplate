@@ -23,16 +23,14 @@ namespace ALO.Service.Service.Product
             _db = db;
         }
 
-        public async Task<ListResultViewModel<bool>> CreateProductComment(RequestProductCommentDto request)
+        public async Task<ListResultViewModel<bool>> CreateProductComment(long userId, RequestProductCommentDto request)
         {
             try
             {
                 tbl_ProductComment model = new tbl_ProductComment()
                 {
+                    UserId= userId,
                     Body = request.Body,
-                    Email = request.Email,
-                    FullName = request.FullName,
-                    Mobile = request.Mobile,
                     ProductId = request.ProductId,
                     IP=request.IP,
                     IsActive=false,
@@ -64,13 +62,14 @@ namespace ALO.Service.Service.Product
         {
             try
             {
-                var result = (await _db.GetAllAsync<tbl_ProductComment>(x => x.ProductId == id && x.IsActive==true).ToListAsync())
+                var result = await _db.GetAllAsync<tbl_ProductComment>(x => x.ProductId == id && x.IsActive==true).Include(x=>x.User).ThenInclude(x=>x.Profile)
                     .Select(y => new ProductCommentForWebsiteDto
                     {
+                        
                         Body = y.Body,
-                        FullName = y.FullName,
+                        FullName = y.User.Profile.FirstName+" "+y.User.Profile.LastName,
                         Response = y.Response
-                    }).ToList();
+                    }).ToListAsync();
                 return new ListResultViewModel<IEnumerable<ProductCommentForWebsiteDto>>
                 {
                     model = result,

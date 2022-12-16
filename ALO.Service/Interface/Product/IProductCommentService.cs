@@ -11,6 +11,6 @@ namespace ALO.Service.Interface.Product
     public interface IProductCommentService
     {
         Task<ListResultViewModel<IEnumerable<ProductCommentForWebsiteDto>>> GetProductCommentList(long id);
-        Task<ListResultViewModel<bool>> CreateProductComment(RequestProductCommentDto request);
+        Task<ListResultViewModel<bool>> CreateProductComment(long userId,RequestProductCommentDto request);
     }
 }

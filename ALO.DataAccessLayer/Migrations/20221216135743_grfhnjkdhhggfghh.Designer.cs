@@ -4,14 +4,16 @@ using ALO.DataAccessLayer.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ALO.DataAccessLayer.Migrations
 {
     [DbContext(typeof(ServiceContext))]
-    partial class ServiceContextModelSnapshot : ModelSnapshot
+    [Migration("20221216135743_grfhnjkdhhggfghh")]
+    partial class grfhnjkdhhggfghh
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -377,9 +379,6 @@ namespace ALO.DataAccessLayer.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("BlogCommentId")
-                        .HasColumnType("bigint");
-
                     b.Property<long>("BlogId")
                         .HasColumnType("bigint");
 
@@ -414,8 +413,6 @@ namespace ALO.DataAccessLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BlogCommentId");
 
                     b.HasIndex("BlogId");
 
@@ -1781,6 +1778,12 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Property<long?>("Createdby")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("IP")
                         .HasColumnType("nvarchar(max)");
 
@@ -1790,13 +1793,13 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Property<bool>("IsDelete")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Mobile")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("Modifiedby")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("ProductCommentId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("ProductId")
@@ -1805,16 +1808,9 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Property<string>("Response")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductCommentId");
-
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("tbl_ProductComments");
                 });
@@ -2393,10 +2389,6 @@ namespace ALO.DataAccessLayer.Migrations
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.Blog.tbl_BlogComments", b =>
                 {
-                    b.HasOne("ALO.DomainClasses.Entity.Blog.tbl_BlogComments", "BlogComment")
-                        .WithMany("BlogComments")
-                        .HasForeignKey("BlogCommentId");
-
                     b.HasOne("ALO.DomainClasses.Entity.Blog.tbl_Blog", "Blog")
                         .WithMany("BlogComments")
                         .HasForeignKey("BlogId")
@@ -2410,8 +2402,6 @@ namespace ALO.DataAccessLayer.Migrations
                         .IsRequired();
 
                     b.Navigation("Blog");
-
-                    b.Navigation("BlogComment");
 
                     b.Navigation("User");
                 });
@@ -2737,27 +2727,13 @@ namespace ALO.DataAccessLayer.Migrations
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_ProductComment", b =>
                 {
-                    b.HasOne("ALO.DomainClasses.Entity.Product.tbl_ProductComment", "ProductComment")
-                        .WithMany("ProductComments")
-                        .HasForeignKey("ProductCommentId");
-
                     b.HasOne("ALO.DomainClasses.Entity.Product.tbl_Product", "Product")
                         .WithMany("ProductComments")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ALO.DomainClasses.Entity.Account.tbl_Users", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Product");
-
-                    b.Navigation("ProductComment");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_ProductCustomFieldValues", b =>
@@ -2980,11 +2956,6 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Navigation("Blogs");
                 });
 
-            modelBuilder.Entity("ALO.DomainClasses.Entity.Blog.tbl_BlogComments", b =>
-                {
-                    b.Navigation("BlogComments");
-                });
-
             modelBuilder.Entity("ALO.DomainClasses.Entity.Country.tbl_Country", b =>
                 {
                     b.Navigation("Cities");
@@ -3046,11 +3017,6 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Navigation("Products");
 
                     b.Navigation("SubProductCategories");
-                });
-
-            modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_ProductComment", b =>
-                {
-                    b.Navigation("ProductComments");
                 });
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_ProductCustomFields", b =>

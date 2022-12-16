@@ -1,6 +1,7 @@
 ﻿using ALO.Common.Enums;
 using ALO.Service.Interface.Blog;
 using ALO.ViewModels.Blog;
+using Ghaleb.API.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -26,7 +27,7 @@ namespace Ghaleb.API.Controllers
         {
             try
             {
-                var result = await _blogcomment.CreateBlogComment(request);
+                var result = await _blogcomment.CreateBlogComment(User.UserId(), request);
                 return Ok(new { Data = result.model, message = result.Message, Status = result.Status, result.NotificationType });
             }
             catch (Exception)

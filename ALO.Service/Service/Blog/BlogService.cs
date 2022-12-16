@@ -26,12 +26,12 @@ namespace ALO.Service.Service.Blog
         {
             _db = db;
         }
-        public async Task<ListResultViewModel<IEnumerable<BlogListForWebsiteDTO>>> GetBlogsForWebsite(string category=null)
+        public async Task<ListResultViewModel<IEnumerable<BlogListForWebsiteDTO>>> GetBlogsForWebsite(string category = null)
         {
             try
             {
 
-                var result = (await _db.GetAllAsync<tbl_Blog>(x=>!string.IsNullOrEmpty(category)?x.BlogCategory.Url==category:true, new string[] { "BlogCategory", "Image" }).ToListAsync())
+                var result = (await _db.GetAllAsync<tbl_Blog>(x => !string.IsNullOrEmpty(category) ? x.BlogCategory.Url == category : true, new string[] { "BlogCategory", "Image" }).ToListAsync())
                     .Select(x => new BlogListForWebsiteDTO
                     {
                         Id = x.Id,
@@ -70,7 +70,7 @@ namespace ALO.Service.Service.Blog
         {
             try
             {
-                var query = await _db.GetAsync<tbl_Blog>(x => x.Url == url, new string[] { "BlogCategory", "Image", "BlogComments" });
+                var query = await _db.GetAsync<tbl_Blog>(x => x.Url == url, new string[] { "BlogCategory", "Image", "BlogComments","BlogComments.User","BlogComments.User.Profile" });
                 var Result = new BlogDetailsForHomeDto
                 {
                     Abstract = query.Abstract,
@@ -83,12 +83,13 @@ namespace ALO.Service.Service.Blog
                     PageTitle = query.PageTitle,
                     Url = query.Url,
                     Id = query.Id,
-                    Comments=query.BlogComments.Select(y=>new BlogCommentForWebsiteDto { 
-                        Body=y.Body,
-                        FullName=y.FullName,
-                        Response=y.Response,
-                        Date=y.CreatedDate.ConvertToPesainDate().toPersianNumber()
-                    
+                    Comments = query.BlogComments.Select(y => new BlogCommentForWebsiteDto
+                    {
+                        Body = y.Body,
+                        FullName = y.User.Profile.FirstName + " " + y.User.Profile.LastName,
+                        Response = y.Response,
+                        Date = y.CreatedDate.ConvertToPesainDate().toPersianNumber()
+
                     }).ToList()
 
                 };
@@ -117,14 +118,14 @@ namespace ALO.Service.Service.Blog
             try
             {
 
-                var result = (await _db.GetAllAsync<tbl_Blog>(includes:new string[] { "BlogCategory"}).ToListAsync())
-                    .Select((x,i) => new BlogListForAdminDTO
+                var result = (await _db.GetAllAsync<tbl_Blog>(includes: new string[] { "BlogCategory" }).ToListAsync())
+                    .Select((x, i) => new BlogListForAdminDTO
                     {
-                        Row=i+1,
+                        Row = i + 1,
                         Id = x.Id,
                         Category = x.BlogCategory.Title,
                         Title = x.Title,
-                        Status=x.IsActive?"فعال":"غیرفعال"
+                        Status = x.IsActive ? "فعال" : "غیرفعال"
                     }).ToList();
                 return new ListResultViewModel<IEnumerable<BlogListForAdminDTO>>
                 {
@@ -188,7 +189,7 @@ namespace ALO.Service.Service.Blog
                             BlogCategoryId = model.BlogCategoryId,
                             ShowInHome = model.ShowInHome,
                             Visit = 0,
-                            
+
                         });
                     }
                     await _db.SaveChangesAsync();

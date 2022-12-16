@@ -30,10 +30,10 @@ namespace ALO.DomainClasses.Entity.Content
         [Display(Name = "تلفن")]
         public string Phone { get; set; }
         [Display(Name = "فاو آیکون")]
-        public Guid? FavIconId { get; set; }
+        public long? FavIconId { get; set; }
         public tbl_Image FavIcon{ get; set; }
         [Display(Name = "عکس سئو")]
-        public Guid? OgImageId { get; set; }
+        public long? OgImageId { get; set; }
         public tbl_Image OgImage { get; set; }
         #endregion
 

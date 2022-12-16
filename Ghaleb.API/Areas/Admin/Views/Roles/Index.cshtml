@@ -28,7 +28,10 @@
                             <tr>
                                 <td>@item.RoleName</td>
                                 <td>@item.Users.Count()</td>
-
+                                <td>
+                                    <a class="btn btn-dark" asp-route-roleid="@item.Id" asp-action="Index" asp-controller="Users">اعضا</a>
+                                    <a class="btn btn-success" asp-route-id="@item.Id" asp-action="SendSms">ارسال پیامک</a>
+                                    </td>
                             </tr>
                         }
                     </tbody>

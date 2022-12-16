@@ -21,7 +21,12 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Blog
         }
         public async Task<IActionResult> Index(long? blogId)
         {
-            return View(await _context.tbl_BlogComments.Where(x=>x.IsDelete !=true && blogId !=null?x.BlogId==blogId:true).ToListAsync());
+            return View(await _context.tbl_BlogComments.Include(x=>x.Blog).Include(x=>x.User).ThenInclude(x=>x.Profile).Where(x=>x.IsDelete !=true && blogId !=null?x.BlogId==blogId:true).ToListAsync());
+        }
+        [HttpGet]
+        public async Task<IActionResult> Details(long id)
+        {
+            return View(await _context.tbl_BlogComments.Include(x=>x.User).ThenInclude(x=>x.Profile).Where(x => x.Id == id).FirstOrDefaultAsync());
         }
     }
 }

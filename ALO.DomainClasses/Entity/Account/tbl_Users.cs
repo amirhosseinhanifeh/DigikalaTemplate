@@ -17,9 +17,9 @@ namespace ALO.DomainClasses.Entity.Account
         public long Id { get; set; }
         [Display(Name ="ایمیل")]
         public string Email { get; set; }
-
+        [Display(Name = "موبایل")]
         public string Mobile { get; set; }
-
+        [Display(Name = "رمز  عبور")]
         public string Password { get; set; }
 
         public DateTime RegisteredDate { get; set; } = DateTime.Now;

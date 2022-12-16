@@ -16,9 +16,9 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Users
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(long? roleId)
         {
-            return View(await _context.tbl_Users.Include(x=>x.Profile).Include(x=>x.Orders).ToListAsync());
+            return View(await _context.tbl_Users.Include(x=>x.Profile).Include(x=>x.Orders).Where(x=>roleId!=null?x.Roles.Any(h=>h.Id==roleId):true).ToListAsync());
         }
         [HttpGet]
         public async Task<IActionResult> Addresses(long id)

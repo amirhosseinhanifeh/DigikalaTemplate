@@ -268,6 +268,8 @@ namespace ALO.Service.Service.Product
                     .Include(x => x.Image)
                     .Include(x => x.Images)
                     .Include(x => x.ProductComments)
+                    .ThenInclude(x=>x.User)
+                    .ThenInclude(x=>x.Profile)
                     .Include(x => x.ProductCustomFieldValues)
                     .ThenInclude(x => x.ProductCustomField)
                     .ThenInclude(x => x.ProductCustomFieldsOptionValues)
@@ -322,7 +324,7 @@ namespace ALO.Service.Service.Product
                     Comments = query.ProductComments.Select(y => new ProductCommentForWebsiteDto
                     {
                         Body = y.Body,
-                        FullName = y.FullName,
+                        FullName = y.User.Profile.FirstName+" "+y.User.Profile.LastName,
                         Response = y.Response,
                         Date = y.CreatedDate.ConvertToPesainDate().toPersianNumber()
                     }).ToList(),

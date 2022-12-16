@@ -20,7 +20,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
         }
         public async Task<IActionResult> Index(long? productId)
         {
-            return View(await _context.tbl_ProductComments.Include(x => x.Product).Where(x => x.IsDelete != true && productId !=null?x.ProductId==productId:true).ToListAsync());
+            return View(await _context.tbl_ProductComments.Include(x => x.Product).Include(x=>x.User).ThenInclude(x=>x.Profile).Where(x => x.IsDelete != true && productId !=null?x.ProductId==productId:true).ToListAsync());
         }
     }
 }

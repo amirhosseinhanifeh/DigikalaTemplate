@@ -21,16 +21,14 @@ namespace ALO.Service.Service.Blog
         {
             _db = db;
         }
-        public async Task<ListResultViewModel<bool>> CreateBlogComment(RequestBlogCommentDTO request)
+        public async Task<ListResultViewModel<bool>> CreateBlogComment(long userId, RequestBlogCommentDTO request)
         {
             try
             {
                 tbl_BlogComments model = new tbl_BlogComments()
                 {
+                    UserId= userId,
                     Body = request.Body,
-                    Email = request.Email,
-                    FullName = request.FullName,
-                    Mobile = request.Mobile,
                     BlogId = request.BlogId,
                     IP = request.IP,
                     IsActive = false,

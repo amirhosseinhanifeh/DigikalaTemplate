@@ -9,9 +9,6 @@ namespace ALO.ViewModels.Blog
     public class RequestBlogCommentDTO
     {
         public long BlogId { get; set; }
-        public string FullName { get; set; }
-        public string Email { get; set; }
-        public string Mobile { get; set; }
         public string Body { get; set; }
         public string IP { get; set; }
     }
