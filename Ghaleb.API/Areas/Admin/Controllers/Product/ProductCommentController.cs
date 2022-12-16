@@ -18,9 +18,9 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
         {
             _context = context;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(long? productId)
         {
-            return View(await _context.tbl_ProductComments.Where(x => x.IsDelete != true).Include(x=>x.Product).ToListAsync());
+            return View(await _context.tbl_ProductComments.Include(x => x.Product).Where(x => x.IsDelete != true && productId !=null?x.ProductId==productId:true).ToListAsync());
         }
     }
 }

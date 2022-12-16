@@ -45,8 +45,6 @@ namespace ALO.DataAccessLayer.DataContext
         public DbSet<tbl_Users> tbl_Users { get; set; }
         public DbSet<tbl_UserAddresses> tbl_UserAddresses { get; set; }
 
-        public DbSet<tbl_UserInRole> tbl_UserInRole { get; set; }
-
         public DbSet<tbl_Role> tbl_Role { get; set; }
 
         public DbSet<tbl_City> tbl_City { get; set; }
@@ -328,7 +326,6 @@ namespace ALO.DataAccessLayer.DataContext
             //    modelBuilder.ApplyConfiguration(configurationInstance);
             //}
             modelBuilder.ApplyConfiguration(new UserConfig());
-            modelBuilder.ApplyConfiguration(new UserInRoleConfig());
             modelBuilder.ApplyConfiguration(new CityConfig());
             modelBuilder.ApplyConfiguration(new ProfileConfig());
             modelBuilder.ApplyConfiguration(new CountryConfig());

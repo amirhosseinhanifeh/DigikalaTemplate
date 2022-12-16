@@ -13,5 +13,7 @@ namespace ALO.ViewModels.Product.Admin
         public string Status { get; set; }
         public string SubCategory { get; set; }
         public int OrderCount { get; set; }
+        public int CommentCount { get; set; }
+        public int Visit { get; set; }
     }
 }

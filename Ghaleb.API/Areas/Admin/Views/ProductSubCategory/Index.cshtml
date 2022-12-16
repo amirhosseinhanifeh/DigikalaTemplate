@@ -32,8 +32,9 @@
                                 <td>@item.Title</td>
                                 <td>@item.ProductCategory.Title</td>
                                 <td>
+                                    <a class="btn btn-primary" asp-route-subcategoryId="@item.Id" asp-action="Index" asp-controller="Product">محصولات (@item.Products.Count(x=>x.IsDelete==false))</a>
+                                    <a class="btn btn-success" asp-route-subcategoryid="@item.Id" asp-action="Index" asp-controller="ProductCustomField"> فیلدهای اختصاصی</a>|
                                     <a class="btn btn-warning" asp-route-id="@item.Id" asp-action="Edit">ویرایش</a>
-                                    <a class="btn btn-danger" asp-route-subcategoryid="@item.Id" asp-action="Index" asp-controller="ProductCustomField"> فیلدهای اختصاصی</a>|
                                     <a class="btn btn-danger" asp-route-id="@item.Id" asp-action="Delete">حذف</a>
                                 </td>
                             </tr>

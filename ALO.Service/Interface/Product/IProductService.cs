@@ -29,7 +29,7 @@ namespace ALO.Service.Interface.Product
         Task<ListResultViewModel<IEnumerable<object>>> GetLastVisitCategoryList(long userId);
         Task<ListResultViewModel<IEnumerable<CategoryListForHomeDTO>>> GetHomeProductsByCategoryList();
         Task<ListResultViewModel<ProductDetailsForHomeDto>> GetProductDetails(long url,long? UserId=null);
-        Task<ListResultViewModel<IEnumerable<GetProductListForAdminDto>>> GetProductListForAdmin();
+        Task<ListResultViewModel<IEnumerable<GetProductListForAdminDto>>> GetProductListForAdmin(long? brandId);
         Task<ListResultViewModel<bool>> AddProductForAdmin(AddProductForAdminDTO model);
         Task<ListResultViewModel<AddProductForAdminDTO>> GetProductForAdmin(long Id);
         Task<ListResultViewModel<bool>> UpdateProductForAdmin(AddProductForAdminDTO model);

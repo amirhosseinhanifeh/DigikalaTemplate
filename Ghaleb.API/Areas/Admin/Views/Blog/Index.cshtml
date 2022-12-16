@@ -35,6 +35,7 @@
                                 <td>@item.BlogCategory.Title</td>
                                 <td>@(item.IsActive?"فعال":"غیرفعال")</td>
                                 <td>
+                                    <a class="btn btn-warning"  asp-action="Index" asp-controller="BlogComment" asp-route-blogId="@item.Id" >نظرات (@item.BlogComments.Count())</a>
                                     <a class="btn btn-dark"  asp-action="Edit" asp-route-Id="@item.Id" >ویرایش</a>
                                     <a class="btn btn-danger" asp-action="Delete" asp-area="Admin" asp-controller="Blog" asp-route-id="@item.Id">حذف</a>
                                 </td>

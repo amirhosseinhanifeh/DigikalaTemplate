@@ -53,7 +53,7 @@ namespace ALO.DomainClasses.Entity.Account
 
         public tbl_Profile Profile { get; set; }
 
-        public ICollection<tbl_UserInRole> tbl_UserInRole { get; set; }
+        public ICollection<tbl_Role> Roles { get; set; }
 
         public ICollection<tbl_FinancialAccount> FinancialAccounts { get; set; }
 

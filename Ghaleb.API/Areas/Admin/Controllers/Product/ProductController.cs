@@ -37,10 +37,10 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(long? brandId)
 
         {
-            var Result = await _productService.GetProductListForAdmin();
+            var Result = await _productService.GetProductListForAdmin(brandId);
             return View(Result.model);
         }
         public async Task<IActionResult> Create()

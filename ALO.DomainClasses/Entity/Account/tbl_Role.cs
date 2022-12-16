@@ -11,7 +11,7 @@ namespace ALO.DomainClasses.Entity.Account
 
         #region Navigation
 
-        public ICollection<tbl_UserInRole> tbl_UserInRoles { get; set; }
+        public ICollection<tbl_Users> Users{ get; set; }
 
         #endregion
 

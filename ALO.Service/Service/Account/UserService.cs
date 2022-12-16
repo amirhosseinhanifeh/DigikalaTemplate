@@ -24,11 +24,11 @@ namespace ALO.Service.Service.Account
             _mapper = mapper;
         }
 
-        public async Task<ListResultViewModel<tbl_Users>> Authenticate(string username,string password)
+        public async Task<ListResultViewModel<tbl_Users>> Authenticate(string username, string password)
         {
             try
             {
-                var data = await _db.GetAsync<tbl_Users>(x => x.Email == username && x.Password==password, new[] { "Profile", "tbl_UserInRole", "tbl_UserInRole.Role" });
+                var data = await _db.GetAsync<tbl_Users>(x => x.Email == username && x.Password == password, new[] { "Profile", "tbl_UserInRole", "tbl_UserInRole.Role" });
                 if (data != null)
                 {
                     return new ListResultViewModel<tbl_Users>
@@ -211,21 +211,15 @@ namespace ALO.Service.Service.Account
                     tbl_Users user = new tbl_Users()
                     {
                         Email = model.Email,
-                        Mobile=model.Mobile,
+                        Mobile = model.Mobile,
                         IP = "",
-                        Password=model.Password,
-                        Registeredby=model.Registeredby,
-                        
-                    };
-                    user.tbl_UserInRole = new List<tbl_UserInRole>();
-                    user.tbl_UserInRole.Add(new tbl_UserInRole
-                    {
-                        Role = role,
-                        User = user
+                        Password = model.Password,
+                        Registeredby = model.Registeredby,
 
-                    });
-                    _db.tbl_Users.Attach(user);
-                    _db.Create(user);
+                    };
+                    user.Roles = new List<tbl_Role>();
+                    user.Roles.Add(role);
+                    await _db.tbl_Users.AddAsync(user);
                     await _db.SaveChangesAsync();
 
                     return new ListResultViewModel<tbl_Users>
@@ -240,13 +234,13 @@ namespace ALO.Service.Service.Account
                 {
                     return new ListResultViewModel<tbl_Users>
                     {
-                        model = await _db.GetAsync<tbl_Users>(x=>x.Email==model.Email),
+                        model = await _db.GetAsync<tbl_Users>(x => x.Email == model.Email),
                         Status = Status.Failed,
                         NotificationType = NotificationType.warning,
                         Message = ExistMessage
                     };
                 }
-               
+
             }
             catch (Exception e)
             {

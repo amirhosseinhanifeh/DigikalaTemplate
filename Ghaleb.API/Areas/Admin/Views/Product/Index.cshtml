@@ -28,6 +28,7 @@
                             <th>نام محصول</th>
                             <th>دسته</th>
                             <th>تعداد سفارش</th>
+                            <th>تعداد بازدید</th>
                             <th>قیمت</th>
                             <th>وضعیت</th>
                             <th></th>
@@ -42,11 +43,13 @@
                                 <td>@item.Title</td>
                                 <td>@item.SubCategory</td>
                                 <td>@item.OrderCount</td>
+                                <td>@item.Visit</td>
                                 <td>@item.Cost</td>
                                 <td>@item.Status</td>
                                 <td>
-                                    <a class="btn btn-dark" asp-route-productId="@item.Id" asp-controller="ProductPriceHistory" asp-action="Index">قیمت گذاری</a>
-                                    <a class="btn btn-dark" asp-route-id="@item.Id" asp-action="Edit">ویرایش</a>
+                                    <a class="btn btn-warning" asp-route-productId="@item.Id" asp-controller="ProductComment" asp-action="Index">نظرات(@item.CommentCount)</a>|
+                                    <a class="btn btn-primary" asp-route-productId="@item.Id" asp-controller="ProductPriceHistory" asp-action="Index">قیمت گذاری</a>|
+                                    <a class="btn btn-dark" asp-route-id="@item.Id" asp-action="Edit">ویرایش</a>|
                                     <a class="btn btn-danger" asp-action="Delete" asp-area="Admin" asp-controller="Product" asp-route-id="@item.Id">حذف</a>
                                 </td>
                             </tr>

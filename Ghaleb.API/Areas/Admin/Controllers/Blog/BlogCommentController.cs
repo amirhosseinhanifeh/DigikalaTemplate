@@ -19,9 +19,9 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Blog
         {
             _context = context;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(long? blogId)
         {
-            return View(await _context.tbl_BlogComments.Where(x=>x.IsDelete !=true).ToListAsync());
+            return View(await _context.tbl_BlogComments.Where(x=>x.IsDelete !=true && blogId !=null?x.BlogId==blogId:true).ToListAsync());
         }
     }
 }

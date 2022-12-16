@@ -1,5 +1,6 @@
 ﻿using ALO.DataAccessLayer.DataContext;
 using ALO.DomainClasses.Entity.IMG;
+using ALO.DomainClasses.EntityHelpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using System;
@@ -44,7 +45,7 @@ namespace AyandeNama.Web.Helpers.TagHelpers
                 var url = _context.GetAsync<tbl_Image>(x => x.Id == (long)For.Model).Result;
                 if (url != null)
                 {
-                    sb.AppendFormat("<img src='{0}' style='width:100px;height:100px' />", url.Url);
+                    sb.AppendFormat("<img src='{0}' style='width:100px;height:100px' />", url.BindImage());
                 }
 
             }

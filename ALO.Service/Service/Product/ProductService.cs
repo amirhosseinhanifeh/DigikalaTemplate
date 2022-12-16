@@ -218,7 +218,7 @@ namespace ALO.Service.Service.Product
                     {
                         Title = x.Title,
                         Id = x.Id,
-                        Products = x.Products.Where(x => x.IsActive == true && x.IsDelete == false).Select(y => new ProductListForHomeDto
+                        Products = x.Products.Where(x => x.IsActive == true && x.IsDelete == false).OrderByDescending(x=>x.Id).Take(10).Select(y => new ProductListForHomeDto
                         {
                             Id = y.Id,
                             Abstract = y.Abstract,
@@ -548,17 +548,20 @@ namespace ALO.Service.Service.Product
 
         }
 
-        public async Task<ListResultViewModel<IEnumerable<GetProductListForAdminDto>>> GetProductListForAdmin()
+        public async Task<ListResultViewModel<IEnumerable<GetProductListForAdminDto>>> GetProductListForAdmin(long? brandId)
         {
             try
             {
 
                 var result = (await _db.tbl_Products.Include(x=>x.Image)
+                    .Include(x=>x.ProductVisits)
+                    .Include(x=>x.ProductComments)
                     .Include(x=>x.ProductPriceHistories)
                     .ThenInclude(x=>x.OrderDetails)
                     .ThenInclude(x=>x.Order)
                     .Include(x=>x.SubProductCategory)
                     .OrderByDescending(x => x.CreatedDate)
+                    .Where(x=>brandId !=null?x.BrandId==brandId:true)
                     .ToListAsync())
                     .Select((x, i) => new GetProductListForAdminDto
                     {
@@ -569,7 +572,9 @@ namespace ALO.Service.Service.Product
                         OrderCount = x.ProductPriceHistories.SelectMany(x => x.OrderDetails).Count(h=>h.Order.OrderState==DomainClasses.Entity.Order.OrderState.PAYED),
                         SubCategory = x.SubProductCategory.Title,
                         Status = x.IsActive ? "فعال" : "غیر فعال",
-                        Cost = x.GetLastPrice().ToString("n0").toPersianNumber() + " تومان"
+                        Cost = x.GetLastPrice().ToString("n0").toPersianNumber() + " تومان",
+                        CommentCount=x.ProductComments.Count(),
+                        Visit=x.ProductVisits.Count()
                     });
 
                 return new ListResultViewModel<IEnumerable<GetProductListForAdminDto>>

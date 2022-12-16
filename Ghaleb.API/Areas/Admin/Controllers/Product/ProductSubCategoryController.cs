@@ -29,7 +29,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
 
         public async Task<IActionResult> Index(long? productcategoryId=null)
         {
-            return View(await _context.GetAllAsync<tbl_SubProductCategory>(x=>(productcategoryId!=null? x.ProductCategoryId==productcategoryId:true)&& x.IsDelete == false, includes:new string[] { "ProductCategory" }).ToListAsync());
+            return View(await _context.GetAllAsync<tbl_SubProductCategory>(x=>(productcategoryId!=null? x.ProductCategoryId==productcategoryId:true)&& x.IsDelete == false, includes:new string[] { "ProductCategory","Products" }).ToListAsync());
         }
         public async Task<IActionResult> Create()
         {

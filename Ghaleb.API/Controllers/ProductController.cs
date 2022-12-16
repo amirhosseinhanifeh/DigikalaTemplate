@@ -53,7 +53,7 @@ namespace Ghaleb.API.Controllers
             string title = null,
             string order = null,
             int page = 1,
-            int pageSize = 10
+            int pageSize = 100
             )
         {
 
@@ -119,14 +119,14 @@ namespace Ghaleb.API.Controllers
                     h.Visit,
                     h.Abstract
                 }).ToListAsync();
-                var slideShows = await _context.tbl_SlideShows.Where(x=>x.IsDelete!=false).Include(x => x.Image).Where(h => h.IsActive && h.IsDelete != true).OrderByDescending(x => x.Id).Take(4).Select(h => new
+                var slideShows = await _context.tbl_SlideShows.Include(x => x.Image).Where(h => h.IsActive && h.IsDelete != true).OrderByDescending(x => x.Id).Take(4).Select(h => new
                 {
                     Id = h.Id,
                     Image = h.Image.BindImage(),
                     h.Link,
                 }).ToListAsync();
 
-                var blocks = await _context.tbl_Blocks.Where(x => x.IsDelete != false).Where(h => h.IsActive && h.IsDelete != true).OrderByDescending(x => x.Id).Take(4).Select(h => new
+                var blocks = await _context.tbl_Blocks.Where(h => h.IsActive && h.IsDelete != true).OrderBy(x => x.Id).Select(h => new
                 {
                     Id = h.Id,
                     h.Title,

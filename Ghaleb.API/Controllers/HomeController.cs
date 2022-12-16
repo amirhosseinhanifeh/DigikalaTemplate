@@ -57,9 +57,18 @@ namespace Ghaleb.API.Controllers
                     h.Title,
                 })
             }).ToListAsync();
+            var blocks = await _context.tbl_Blocks.Where(x => x.IsActive && x.IsDelete != true).Select(x => new
+            {
+                x.Id,
+                x.Title,
+                x.Description,
+                Image=x.Image.BindImage(),
+                x.RouteName,
+            }).ToListAsync();
             return Ok(new
             {
-                links
+                links,
+                blocks
             });
         }
     }

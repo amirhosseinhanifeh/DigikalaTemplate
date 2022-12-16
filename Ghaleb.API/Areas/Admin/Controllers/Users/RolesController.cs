@@ -17,7 +17,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Users
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.tbl_Role.ToListAsync());
+            return View(await _context.tbl_Role.Include(x=>x.Users).ToListAsync());
         }
     }
 }

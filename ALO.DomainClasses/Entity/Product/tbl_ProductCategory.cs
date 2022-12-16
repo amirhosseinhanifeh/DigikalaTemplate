@@ -13,6 +13,7 @@ namespace ALO.DomainClasses.Entity.Product
         public tbl_MainProductCategory MainProuctCategory { get; set; }
         public ICollection<tbl_SubProductCategory> SubProductCategories { get; set; }
         public ICollection<tbl_ProductCustomFields> ProductCustomFields { get; set; }
+        public ICollection<tbl_Product> Products { get; set; }
 
         #region Seo
         public string Url { get; set; }
