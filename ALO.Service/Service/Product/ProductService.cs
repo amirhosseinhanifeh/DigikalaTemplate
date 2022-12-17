@@ -298,7 +298,9 @@ namespace ALO.Service.Service.Product
                     Colors = query.ProductPriceHistories.Select(x => x.Color).Select(h => new ProductBrandDto
                     {
                         Id = h.Id,
-                        Name = h.Name
+                        Name = h.Name,
+                        Hex = h.Hex,
+                        
                     }).ToList(),
                     CostDisplay = query.GetLastPrice().ToString("n0").toPersianNumber(),
                     Cost = query.GetLastPrice(),

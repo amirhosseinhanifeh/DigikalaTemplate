@@ -48,7 +48,7 @@ namespace Ghaleb.API.Controllers
                 x.Id,
                 x.Title,
                 x.RouteName,
-                links = x.LinkManagements.OrderBy(x=>x.Order).Select(h => new
+                links = x.LinkManagements.Where(x=>x.IsActive && x.IsDelete ==false).OrderBy(x=>x.Order).Select(h => new
                 {
                     Image = h.Image.BindImage(),
                     h.Description,

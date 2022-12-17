@@ -25,6 +25,11 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Users
         {
             return View(await _context.tbl_UserAddresses.Where(x=>x.UserId==id).ToListAsync());
         }
+        public async Task<IActionResult> Sendsms(long id)
+        {
+            //send sms
+            return Redirect("~/");
+        }
         
     }
 }
