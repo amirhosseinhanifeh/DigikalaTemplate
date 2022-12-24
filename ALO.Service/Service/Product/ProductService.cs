@@ -495,11 +495,7 @@ namespace ALO.Service.Service.Product
             {
                 strQuery = strQuery.And(x => x.OwnerId == ownerId);
             }
-            if (ownerId == null)
-            {
-                strQuery = strQuery.And(x => x.State == ProductState.ACTIVED);
-            }
-            var result = _db.GetAllAsync<tbl_Product>(strQuery, new string[] { "Image", "ProductCustomFieldValues", "ProductCustomFieldValues.ProductCustomField", "ProductPriceHistories" })
+            var result = _db.GetAllAsync<tbl_Product>(strQuery, new string[] { "Image", "ProductPriceHistories" })
                 .Select(x => new ProductListForHomeDto
                 {
                     Id = x.Id,
@@ -510,12 +506,6 @@ namespace ALO.Service.Service.Product
                     Date = x.CreatedDate.RelativeDate().toPersianNumber(),
                     Url = x.Url,
                     State = x.State.ToString(),
-                    Values = x.ProductCustomFieldValues.Where(x => x.ProductCustomField.ShowInList).Select(x => new ProductCustomFields
-                    {
-                        Key = x.ProductCustomField.Key,
-                        Name = x.ProductCustomField.Name,
-                        Value = x.PersianValue.toPersianNumber()
-                    }).ToList(),
                     Cost=x.GetLastPrice().ToString("n0").toPersianNumber(),
                     Discount=x.GetDiscountPrice() !=null?x.GetDiscountPrice().Value.ToString("n0").toPersianNumber():null,
                     Call=x.GetLastPrice()==0
@@ -793,6 +783,7 @@ namespace ALO.Service.Service.Product
                     }
                     
                 })
+                .OrderBy(x=>x.Title.StartsWith(name))
                 .ToListAsync();
 
             return new ListResultViewModel<object>

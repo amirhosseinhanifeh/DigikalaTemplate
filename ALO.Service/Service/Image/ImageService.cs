@@ -113,7 +113,7 @@ namespace ALO.Service.Service.ImageService
                                 {
                                     Quality = 30
                                 };
-                                image.SaveAsWebp("wwwroot/Uploads/Images/"+name + ".webp");
+                                image.SaveAsWebp("wwwroot/Uploads/Images/"+name + ".webp",encoder);
                                 data = name + ".webp";
                                 // act on the Base64 data
                             }

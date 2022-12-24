@@ -21,8 +21,8 @@ namespace ALO.DomainClasses.EntityHelpers
             if (model != null)
             {
 
-                return _httpContextAccessor.HttpContext.Request.Scheme + "://" + _httpContextAccessor.HttpContext.Request.Host.Value +"/Uploads/Images/"+ model.Image_thumb;
-                //return "https://api.amirprinter.ir" +"/Uploads/Images/"+ model.Image_thumb;
+                //return _httpContextAccessor.HttpContext.Request.Scheme + "://" + _httpContextAccessor.HttpContext.Request.Host.Value +"/Uploads/Images/"+ model.Image_thumb;
+                return "https://api.amirprinter.ir" +"/Uploads/Images/"+ model.Image_thumb;
 
             }
             return "http://www.mstp.ir/images-files/Daneshbonyan-Img/2018-4-11-10-4-7-75-8857.jpg";

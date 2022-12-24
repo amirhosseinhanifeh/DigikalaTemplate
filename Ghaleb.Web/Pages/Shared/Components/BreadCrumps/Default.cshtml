@@ -1,0 +1,39 @@
+﻿@model dynamic
+@{
+}
+<style>
+        .bgcover {
+        position: relative;
+        height: 250px;
+        background: url(https://thumbs.dreamstime.com/b/businessman-bend-down-to-remove-paper-stuck-printer-businessman-bend-down-to-remove-paper-stuck-printer-office-256063156.jpg);
+        background-repeat: no-repeat;
+        background-size: 100%;
+        background-position: center;
+        color: #fff;
+    }
+
+        .bgcover * {
+            display: block;
+            z-index: 99999;
+            display: inline;
+        }
+
+        .bgcover:before {
+            position: absolute;
+            content: '';
+            top: 0;
+            left: 0;
+            width: 100%;
+            bottom: 0;
+            background-color: #000000a6;
+        }
+
+</style>
+@if (Model != null)
+{
+    <div class="col-12 bgcover d-flex justify-content-center align-items-center flex-column">
+        <h1>@Model.Title</h1>
+        <br />
+        <div class="breadcramps"><a href="@Url.Page("index")">خانه </a> > @Model.PageTitle</div>
+    </div>
+}

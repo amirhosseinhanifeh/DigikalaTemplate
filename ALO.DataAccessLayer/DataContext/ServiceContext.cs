@@ -32,7 +32,7 @@ using System.Threading.Tasks;
 
 namespace ALO.DataAccessLayer.DataContext
 {
-    public class ServiceContext : DbContext, IUnitOfWork
+    public class ServiceContext : DbContext, IUnitOfWork,IDisposable
     {
         public ServiceContext(DbContextOptions<ServiceContext> options) : base(options)
         {
@@ -339,6 +339,9 @@ namespace ALO.DataAccessLayer.DataContext
         {
             throw new NotImplementedException();
         }
-
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
     }
 }

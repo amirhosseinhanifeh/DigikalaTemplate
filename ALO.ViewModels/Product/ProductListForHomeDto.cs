@@ -23,6 +23,7 @@ namespace ALO.ViewModels.Product
         public string State { get; set; }
         public List<ProductCustomFields> Values { get; set; }
         public bool Call { get; set; }
+        public int? Percent { get; set; }
     }
 
 }

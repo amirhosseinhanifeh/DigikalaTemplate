@@ -39,7 +39,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers
         {
             try
             {
-                var result = await _img.UploadAsync(file, file.FileName);
+                var result = await _img.UploadAsync(file, file.FileName.Split('.')[0]);
                 if (result != null)
                 {
                     var data = await _img.CreateAsync(result.model);

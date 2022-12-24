@@ -1,0 +1,96 @@
+﻿@page
+@using ALO.DomainClasses.EntityHelpers
+@model IndexModel
+@{
+    ViewData["Seo"] = Model.Seo;
+}
+    <div class="swiper slideshow">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+            <!-- Slides -->
+            @foreach (var item in Model.SlideShows)
+            {
+                <div class="swiper-slide">
+                    <a href="@Url.Content(item.Link)">
+                    <img src="@item.Image.BindImage()" class="img-fluid" style="height:400px ;">
+                    </a>
+                </div>
+            }
+        </div>
+        <!-- If we need pagination -->
+        <div class="swiper-pagination"></div>
+
+        <!-- If we need navigation buttons -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+
+    </div>
+
+    <div class="col-11 col-lg-11 mx-auto">
+
+        <partial name="~/Components/Product/ProductRow/Row.cshtml" model="Model.HasDiscounts" view-data='@new ViewDataDictionary(ViewData) { {"HeaderTitle", "دارای تخفیف " }}' />
+        @foreach (var item in Model.CategoryProducts.Where(x => x.Products.Any()))
+        {
+            <partial name="~/Components/Product/ProductRow/Row.cshtml" model="item.Products" view-data='@new ViewDataDictionary(ViewData) { 
+{"HeaderTitle", "تازه های "+item.Title },
+{"SubCategoryId",item.Id},
+{"SubCategoryUrl",item.Url}
+}' />
+        }
+
+
+        <div class="row mt-5 mb-5">
+            @{
+                var repair = Model.Blocks.Where(x => x.RouteName == "/repair").FirstOrDefault();
+            }
+            <div class="col-12 col-lg-6">
+                <a href="@Url.Content(repair?.RouteName)">
+                    <img src="@repair?.Image.BindImage()" style="border-radius:
+                        40px;" class="img-fluid">
+                </a>
+            </div>
+            @{
+                var whyus = Model.Blocks.Where(x => x.RouteName == "why-us").FirstOrDefault();
+            }
+            <div class="col-12 col-lg-6">
+                <h4 style="font-weight: 900; text-align: center;">@whyus?.Title</h4>
+                <div style="line-height: 41px;
+                    font-size: 18px;
+                    text-align: center;">
+                    @Html.Raw(whyus?.Description)
+                </div>
+            </div>
+        </div>
+
+        <app-productrow [showheaderButton]="false"
+                        [header]="{title:'براساس بازید های شما'}"
+                        [items]="data?.yourVisits">
+        </app-productrow>
+
+       @await Component.InvokeAsync("Brand")
+
+       @await Component.InvokeAsync("Blog")
+
+    </div>
+@*    <div class="col-12" style="background: #3d9ff3;
+    color: #fff;
+    font-size: 16px;
+    text-shadow: 1px 1px 14px #343434;
+    font-weight: bolder;">
+        <div class="container">
+            <div class="row" style="min-height: 150px; display: flex;align-items: center;">
+                <div class="col-12 col-xl-6">
+                    <i class="fa-light fa-location-dot"></i> {{data?.contactus?.address}}
+                    <br>
+                    <br>
+                    شنبه - چهارشنبه: 8 الی 18 / پنجشنبه: 8 الی 14
+                </div>
+                <div class="col-12 col-xl-6">
+                    تلفن تماس : {{data?.contactus?.phone}}
+                    <br>
+                    <br>
+
+                </div>
+            </div>
+        </div>
+    </div>*@
