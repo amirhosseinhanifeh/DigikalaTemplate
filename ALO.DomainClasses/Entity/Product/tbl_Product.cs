@@ -20,7 +20,7 @@ namespace ALO.DomainClasses.Entity.Product
         public string Description { get; set; }
         public string Abstract { get; set; }
         public bool IsSpecial { get; set; }
-
+        public long Visit { get; set; }
         public ProductState State { get; set; }
         public long? ImageId { get; set; }
         public tbl_Image Image { get; set; }

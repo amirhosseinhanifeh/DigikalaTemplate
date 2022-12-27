@@ -6,6 +6,8 @@ namespace ALO.ViewModels.Product.Admin
     {
         public int Row { get; set; }
         public long Id { get; set; }
+        public string Url { get; set; }
+        public string LastModified { get; set; }
         public string Title { get; set; }
         public string Cost { get; set; }
         public string Image { get; set; }
@@ -15,5 +17,6 @@ namespace ALO.ViewModels.Product.Admin
         public int OrderCount { get; set; }
         public int CommentCount { get; set; }
         public int Visit { get; set; }
+        public long AllVisit { get; set; }
     }
 }

@@ -12,10 +12,12 @@ namespace Ghaleb.Web.Pages.ViewComponents.TopMenu
     {
         private readonly ServiceContext _context;
         private readonly IMemoryCache _memoryCache;
-        public TopMenuViewComponent(ServiceContext context, IMemoryCache memoryCache)
+        private readonly IConfiguration  configuration;
+        public TopMenuViewComponent(ServiceContext context, IMemoryCache memoryCache, IConfiguration configuration)
         {
             _context = context;
             _memoryCache = memoryCache;
+            this.configuration = configuration;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(string routeName)
@@ -26,6 +28,7 @@ namespace Ghaleb.Web.Pages.ViewComponents.TopMenu
                return await _context.tbl_LinkManagements.Where(x => x.IsActive && x.IsDelete != true && x.GroupLinkManagement.RouteName == routeName).ToListAsync();
             });
             ViewBag.Phone = (await _context.tbl_ContactUsDetails.FirstOrDefaultAsync()).Phone.ToString().toPersianNumber();
+            ViewBag.Cat = configuration.GetSection("SiteSetting:CategoryName").Value;
             return View(res);
         }
     }

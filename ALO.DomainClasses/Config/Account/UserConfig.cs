@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ALO.DomainClasses.Configuration.Account
+namespace ALO.DomainClasses.Config.Account
 {
     public class UserConfig : IEntityTypeConfiguration<tbl_Users>
     {

@@ -17,5 +17,10 @@ namespace ALO.DomainClasses.Entity.Product
 
         public ICollection<tbl_Product> Products { get; set; }
         public ICollection<tbl_Brands> Brands { get; set; }
+
+        public string Url { get; set; }
+        public string PageTitle { get; set; }
+        public string MetaKeyword { get; set; }
+        public string MetaDescription { get; set; }
     }
 }

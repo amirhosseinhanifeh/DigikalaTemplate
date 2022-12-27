@@ -532,6 +532,9 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Property<long?>("LanguageId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("Link")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
@@ -542,9 +545,6 @@ namespace ALO.DataAccessLayer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RouteName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -579,6 +579,9 @@ namespace ALO.DataAccessLayer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GermanyAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapFrame")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
@@ -879,6 +882,45 @@ namespace ALO.DataAccessLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("tbl_SocialNetworks");
+                });
+
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Content.tbl_Tools", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Createdby")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modifiedby")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tool")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_Tools");
                 });
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.Country.tbl_Country", b =>
@@ -1503,6 +1545,12 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Property<long?>("MainProductCategoryId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("MetaDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MetaKeyword")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
@@ -1512,8 +1560,14 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PageTitle")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long?>("ParentId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -1693,6 +1747,9 @@ namespace ALO.DataAccessLayer.Migrations
 
                     b.Property<string>("Url")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Visit")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 

@@ -5,6 +5,7 @@ using ALO.DomainClasses.EntityHelpers;
 using ALO.Service.Interface.Product;
 using ALO.ViewModels.Product;
 using ALO.ViewModels.Result;
+using Ghaleb.API.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -24,28 +25,35 @@ namespace Ghaleb.Web.Pages
         public ProductDetailsForHomeDto Product { get; set; }
         public long? Color { get; set; }
         public List<ProductListForHomeDto> RelatedProducts { get; set; }
-        public async Task OnGetAsync(long id,long? color=null)
+        public async Task<IActionResult> OnGetAsync(long? id, long? color = null)
         {
-            //if (User.Identity.IsAuthenticated)
-            //{
-            //    result = await _product.GetProductDetails(id, User.Identity.Name.Tolong());
-            //    if (result.model != null)
-            //    {
-            //        await _product.AddProductVisit(result.model.Id, User.UserId());
-            //    }
-            //}
-            //else
-            //{
-            Product = (await _product.GetProductDetails(id)).model;
+            if (id == null)
+                return RedirectToPage("Error");
+
+            if (User.Identity.IsAuthenticated)
+            {
+                Product = (await _product.GetProductDetails(id.GetValueOrDefault(), User.UserId())).model;
+                if (Product != null)
+                {
+                    await _product.AddProductVisit(Product.Id, User.UserId());
+                }
+            }
+            else
+            {
+                Product = (await _product.GetProductDetails(id.GetValueOrDefault())).model;
+            }
+            if(Product==null)
+                return RedirectToPage("Error");
+
             if (color == null)
             {
-                Color = Product.Colors.First().Id;
+                Color = Product.Colors.FirstOrDefault()?.Id;
             }
             else
             {
                 Color = color;
             }
-            RelatedProducts = await _context.tbl_Products.Where(h => h.IsDelete == false && h.IsActive == true && h.Id !=id && h.ProductCategory.Id==Product.Category.Id && h.BrandId==Product.Brand.Id).Select(y => new ProductListForHomeDto
+            RelatedProducts = await _context.tbl_Products.Where(h => h.IsDelete == false && h.IsActive == true && h.Id != id && h.ProductCategory.Id == Product.Category.Id && h.BrandId == Product.Brand.Id).Select(y => new ProductListForHomeDto
             {
                 Id = y.Id,
                 Abstract = y.Abstract,
@@ -57,6 +65,8 @@ namespace Ghaleb.Web.Pages
                 Url = y.Url,
                 Call = y.GetLastPrice() == 0
             }).ToListAsync();
+
+            return Page();
         }
     }
 }

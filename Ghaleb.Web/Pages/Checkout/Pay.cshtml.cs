@@ -30,10 +30,10 @@ namespace Ghaleb.Web.Pages.Checkout
                 Email = "hosseinhanifeh@gmail.com",
                 Amount = (int)o.OrderDetails.Sum(x => x.Count * x.ProductPriceHistory.GetPrice()),
                 MerchantId = "37b2d480-b4c0-44d6-921c-26e588592f32",
-            }, ZarinPal.Class.Payment.Mode.sandbox);
+            }, ZarinPal.Class.Payment.Mode.zarinpal);
             if (result.Status == 100)
             {
-                return Redirect($"https://sandbox.zarinpal.com/pg/StartPay/{result.Authority}");
+                return Redirect($"https://zarinpal.com/pg/StartPay/{result.Authority}");
             }
             return RedirectToPage("Error");
         }

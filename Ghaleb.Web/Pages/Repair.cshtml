@@ -1,0 +1,41 @@
+﻿@page
+@model Ghaleb.Web.Pages.RepairModel
+@{
+        ViewData["Seo"] = Model.Seo;
+}
+    @await Component.InvokeAsync("BreadCrumps",Model.Seo)
+<div class="container-fluid bg">
+    <div class="row box  p-2 p-sm-5" style="    height: 100vh;
+    display: flex;
+    align-items: center;">
+
+        <div class="col-12 bg-white col-sm-12 col-md-12 col-lg-12 col-xl-3 mx-auto p-5" style="    border: 1px solid #e7e7e7;
+        border-radius: 5px;">
+            <h4 class="text-center">درخواست تعمیرات</h4>
+    <span class="d-block text-center">بعد از ثبت درخواست ، همکاران ما با شما تماس خواهند گرفت </span>
+            <form method="post" class="row mt-5">
+                <div class="col-12 form-group mt-2">
+                    <input name="firstName" class="form-control" value=""
+                        placeholder="نام خود را وارد نمایید">
+                </div>
+                <div class="col-12 form-group mt-2">
+                    <input name="lastName" class="form-control" value=""
+                        placeholder="نام خانوادگی خود را وارد نمایید">
+                </div>
+                <div class="col-12 form-group mt-2">
+                    <input name="mobile" class="form-control" value=""
+                        placeholder="تلفن همراه خود را وارد نمایید">
+                </div>
+                <div class="col-12 form-group mt-2">
+                    <textarea name="body" class="form-control" value="" rows="8"
+                        placeholder="توضیحی در مورد اشکال پرینتر خود بنویسید"></textarea>
+                </div>
+                <div class="col-12 form-group mt-4">
+                    <button type="submit" class="btn btn-danger col-12" style="padding: 11px;
+                    border-radius: 25px;">ثبت درخواست</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

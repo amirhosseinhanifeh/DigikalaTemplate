@@ -46,6 +46,7 @@ namespace ALO.Service.Service.PageContent
                     Phone=result.Phone.toPersianNumber(),
                     Tel=result.Tel,
                     Email=result.Email,
+                    Google=result.GoogleMapFrame
                 };
                 return new ListResultViewModel<ContactUsDetailsDTO>
                 {

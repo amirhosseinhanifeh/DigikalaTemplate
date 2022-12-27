@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Collections.Generic;
 
-namespace ALO.DomainClasses.Configuration.Country
+namespace ALO.DomainClasses.Config.Country
 {
     public class CountryConfig : IEntityTypeConfiguration<tbl_Country>
     {

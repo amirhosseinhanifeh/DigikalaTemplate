@@ -32,9 +32,11 @@ namespace Ghaleb.Web.Pages
         }
         public IEnumerable<CategoryListForHomeDTO> CategoryProducts { get; set; }
         public List<ProductListForHomeDto> HasDiscounts { get; set; }
+        public List<ProductListForHomeDto> YourVisits { get; set; }
+        public List<ProductListForHomeDto> MoreSell { get; set; }
         public List<ALO.DomainClasses.Entity.Content.tbl_Blocks> Blocks { get; set; }
-        public GetHomePageSeoDTO  Seo { get; set; }
-        public List<tbl_SlideShow>  SlideShows { get; set; }
+        public GetHomePageSeoDTO Seo { get; set; }
+        public List<tbl_SlideShow> SlideShows { get; set; }
         public async Task OnGetAsync()
         {
             CategoryProducts = (await _product.GetHomeProductsByCategoryList()).model;
@@ -49,46 +51,37 @@ namespace Ghaleb.Web.Pages
                 Url = h.Url
             }).ToListAsync();
 
-            object YourVisits = null;
-
+            MoreSell = await _context.tbl_ProductPriceHistory.Where(h => h.IsDelete == false && h.IsActive == true && h.OrderDetails.Any(g => g.Order.OrderState == ALO.DomainClasses.Entity.Order.OrderState.PAYED)).OrderByDescending(x => x.OrderDetails.Count()).Select(h => new ProductListForHomeDto
+            {
+                Id = h.Product.Id,
+                Cost = h.Product.GetLastPrice().ToString("n0").toPersianNumber(),
+                Discount = h.Product.GetDiscountPrice() != null ? h.Product.GetDiscountPrice().Value.ToString("n0").toPersianNumber() : null,
+                Image = h.Product.Image.BindImage(),
+                Title = h.Product.Title,
+                Percent = h.Product.CalculatePercent(),
+                Url = h.Product.Url
+            }).Take(10).ToListAsync();
             if (User.Identity.IsAuthenticated)
             {
-                YourVisits = await _context.tbl_Products.Where(h => h.IsDelete == false && h.IsActive == true && h.ProductVisits.Any(g => g.UserId == User.UserId())).Select(h => new
+                YourVisits = await _context.tbl_Products.Where(h => h.IsDelete == false && h.IsActive == true && h.ProductVisits.Any(g => g.UserId == User.UserId())).Select(y => new ProductListForHomeDto
                 {
-                    Id = h.Id,
-                    Cost = h.GetLastPrice().ToString("n0").toPersianNumber(),
-                    Discount = h.GetDiscountPrice() != null ? h.GetDiscountPrice().Value.ToString("n0").toPersianNumber() : null,
-                    Image = h.Image.BindImage(),
-                    Title = h.Title,
-                    Url = h.Url,
-                    Call = h.GetLastPrice() == 0
+                    Id = y.Id,
+                    Abstract = y.Abstract,
+                    Discount = y.GetDiscountPrice() != null ? y.GetDiscountPrice().Value.ToString("n0").toPersianNumber() : null,
+                    Cost = y.GetLastPrice().ToString("n0").toPersianNumber(),
+                    Image = y.Image.BindImage(),
+                    IsSpecial = y.IsSpecial,
+                    Title = y.Title,
+                    Url = y.Url,
+                    Call = y.GetLastPrice() == 0
                 }).ToListAsync();
             }
-            var blogs = await _context.tbl_Blogs.Where(h => h.ShowInHome && h.IsActive && h.IsDelete != true).OrderByDescending(x => x.Id).Take(4).Select(h => new
-            {
-                Id = h.Id,
-                Title = h.Title,
-                h.Url,
-                Image = h.Image.BindImage(),
-                h.Visit,
-                h.Abstract
-            }).ToListAsync();
+
             SlideShows = await _context.tbl_SlideShows.Include(x => x.Image).Where(h => h.IsActive && h.IsDelete != true).OrderByDescending(x => x.Id).Take(4).ToListAsync();
 
-            Blocks = await _context.tbl_Blocks.Include(x=>x.Image).Where(h => h.IsActive && h.IsDelete != true).OrderBy(x => x.Id).ToListAsync();
+            Blocks = await _context.tbl_Blocks.Include(x => x.Image).Where(h => h.IsActive && h.IsDelete != true).OrderBy(x => x.Id).ToListAsync();
 
-            var contactus = await _context.tbl_ContactUsDetails.Select(h => new
-            {
-                h.Lat,
-                h.Lng,
-                h.Mobile,
-                h.Phone,
-                h.Address,
-                h.Email,
-                h.Tel,
-
-            }).FirstOrDefaultAsync();
-            Seo =(await _seoService.Get()).model;
+            Seo = (await _seoService.Get()).model;
         }
     }
 }

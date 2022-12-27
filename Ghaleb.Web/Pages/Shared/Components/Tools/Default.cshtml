@@ -1,0 +1,8 @@
+﻿@model IEnumerable<ALO.DomainClasses.Entity.Content.tbl_Tools>
+@{
+}
+
+@foreach (var item in Model)
+{
+    @Html.Raw(item.Tool)
+}

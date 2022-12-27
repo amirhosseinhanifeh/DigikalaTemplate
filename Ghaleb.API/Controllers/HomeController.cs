@@ -60,7 +60,7 @@ namespace Ghaleb.API.Controllers
             var blocks = await _context.tbl_Blocks.Where(x => x.IsActive && x.IsDelete != true).Select(x => new
             {
                 x.Id,
-                x.Title,
+                x.Link,
                 x.Description,
                 Image=x.Image.BindImage(),
                 x.RouteName,

@@ -1,12 +1,18 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+<!DOCTYPE html>
 <html lang="fa">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <partial name="_SeoPartial" model="@ViewData["Seo"]" />
 
+
+    <partial name="_SeoPartial" model="@ViewData["Seo"]" />
+    @await Component.InvokeAsync("Tools" ,new {type="meta"})
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.amirprinter.ir/font-awesome/css/all.css" />
+    <link rel="stylesheet" href="https://cdn.amirprinter.ir/font.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.5/swiper-bundle.css" integrity="sha512-jxGmKjC/OykrTklkNK2NgnhNtKtUAADFY+rvSi3nA7dbaPRfjrSXYxHqX8iq5N6WTOntqEQZrEwW3L84sirfKQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -14,27 +20,22 @@
 </head>
 <body>
     <div class="container-fluid">
-        @*        <div class="row top-header border-bottom bg-white">
-        <div class="col-12 col-lg-2 align-items-center d-lg-none d-md-flex">
-        <button class="btn btn-menu" (click)="openMenu()">
-        <i (click)="openMenu()"
-        class="fas fa-bars icon" style="font-size:24px ;"></i>
-        </button>
-        </div>
-        </div>*@
         <div class="row justify-content-center align-items-center h-100 bg-white">
             <div class="col-12 col-lg-11 mx-auto">
                 <div class="row mt-2 d-flex justify-content-center align-items-center">
-                    <div class="col-lg-2 col-12 ">
+                    <div class="col-lg-2 col-12 d-flex justify-content-between align-items-center">
                         <a href="/">
-                            <img class="img-fluid" src="https://amir-printer.com/assets/images/logo.png"
+                            <img class="img-fluid" src="~/images/logo.png"
                                  style="width:99px ;" alt="امیرپرینتر">
                         </a>
+                        <button class="btn btn-menu d-lg-none d-md-flex">
+                            <i class="fas fa-bars icon" style="font-size:24px ;"></i>
+                        </button>
                     </div>
                     <form method="get" asp-page="Search" class="col-lg-6 col-12 mt-3 mt-md-0 top-search-input" style="position:relative ; border-radius:15px;height:47px">
                         <input class="form-control "
                                placeholder="کالای مورد نظر را جستجو کنید..." name="q" id="search-input">
-                               
+
                         <ul id="search-items" style="position: absolute;
     width: 100%;
     right: 0;
@@ -45,28 +46,6 @@
     border-radius: 0px 0px 10px 10px;
     background: #f3f3f3;">
                             <li></li>
-                        </ul>
-                        @*                <ul class="bg-white" style="box-shadow: 0px 2px 10px #ebebeb;
-                        position: absolute;
-                        width: 100%;
-                        z-index: 999;
-                        overflow-y: scroll;
-                        max-height: 300px;">
-
-                        <li class="border-bottom" *ngFor="let item of data" style="padding:
-                        20px;">
-                        <a class="d-flex align-items-center" href="" target="_blank"
-                        [routerLink]="['/product/'+item.id+'/'+item.url]">
-                        <img [src]="item.image" style="width:75px ;">
-                        <div style="margin-right:10px ;">
-                        {{item.title}}
-                        <br>
-                        دسته : {{item.category.title}}
-                        </div>
-                        </a>
-
-                        </li>*@
-
                         </ul>
                     </form>
                     <div class="col-12 col-lg-4 mt-3">
@@ -116,7 +95,7 @@ justify-content: center;
                                     </div>
                                     <div style="color: #8f8f8f;" class="col-6 col-lg-2 d-flex align-items-center
               justify-content-center">
-                                    @await Component.InvokeAsync("TopBasket")
+                                        @await Component.InvokeAsync("TopBasket")
                                     </div>
                                 </div>
                             </div>
@@ -167,7 +146,7 @@ justify-content: center;
                        href="https://trustseal.enamad.ir/?id=313465&amp;Code=EWG11XOUtyAW81zxS2GI">
                         <img referrerpolicy="origin"
                              src="https://Trustseal.eNamad.ir/logo.aspx?id=313465&amp;Code=EWG11XOUtyAW81zxS2GI"
-                             alt="" style="cursor:pointer;
+                             alt="اینماد" style="cursor:pointer;
     width: 89px;
     border: 1px solid #e3e3e3;
     padding: 10px;
@@ -181,24 +160,16 @@ justify-content: center;
                          onclick='window.open("https://logo.samandehi.ir/Verify.aspx?id=321166&p=xlaouiwkrfthrfthgvkagvka",
               "Popup"," toolbar=no, scrollbars=no, location=no,statusbar=no,menubar=no, resizable=0, width=450, height=630,top=30")'
                          alt='logo-samandehi' src='https://logo.samandehi.ir/logo.aspx?id=321166&p=qftiodrfnbpdnbpdwlbqwlbq' />
-                    <br>
-                    <h1 class="h6 d-block">تلفن پشتیبانی : 88842746</h1>
                 </div>
             </div>
             <div class="col-12 col-xl-4">
-                <h1 class="h6" style="font-weight: bold;">
+                <h6 class="h6" style="font-weight: bold;">
                     لینک های مرتبط
-                </h1>
+                </h6>
                 <a style="display: block;">شرایط استفاده</a>
                 <a style="display: block;">حریم خصوصی</a>
                 <a style="display: block;">گزارش باگ</a>
                 <a style="display: block;">شیوه های پرداخت</a>
-            </div>
-            <div class="col-12 col-xl-4">
-                <h1 class="h6" style="font-weight: bold;">
-                    آدرس امیرپرینتر روی نقشه
-                </h1>
-                <iframe class="mt-4" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1619.952097901455!2d51.42489090823057!3d35.7039751196723!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xf10404c8c2d7dd90!2zMzXCsDQyJzE0LjIiTiA1McKwMjUnMzMuMCJF!5e0!3m2!1sen!2suk!4v1670938795389!5m2!1sen!2suk" height="400" style="border:0;width: 100%;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
 
             <div class="col-12">
@@ -213,7 +184,7 @@ justify-content: center;
                          style="background-color:#0046bf ;">
                         <div class="row">
                             <div class="col-10 mx-auto">
-@await Component.InvokeAsync("FooterMenu",new {routeName="footer-menu"})
+                                @await Component.InvokeAsync("FooterMenu",new {routeName="footer-menu"})
                             </div>
                         </div>
                     </div>
@@ -231,20 +202,51 @@ justify-content: center;
     </div>
     <div class="mobile-menu" [ngClass]="{'show':isOpen}">
         <div class="row">
-            <div class="col-12 mt-5 d-flex justify-content-center">
-                <img class="img-fluid" src="assets/images/logo.png"
+            <div class="col-12 mt-2 d-flex justify-content-center">
+                <img class="img-fluid" alt="امیر پرینتر" src="/images/logo.png"
                      style="width:115px ;">
             </div>
             <div>
             </div>
             <div class="col-8 mx-auto mt-5">
                 <div class="row border-bottom">
-                    <a class="col-12 mb-4" style="font-size: 15px;"
-                       [routerLink]="[item.link]" *ngFor="let item of
-          filterLinks(links,'top-menu')">{{item.title}}</a>
+                    <a class="top-menu-items" href="/index">
+                       صفحه اصلی
+                    </a>
+                    <a class="top-menu-items" href="/repair">
+                        درخواست تعمیرات
+                    </a>
+                    <a class="top-menu-items" href="/files">
+                        فایل ها
+                    </a>
+                    <a class="top-menu-items" href="/faq">
+                        سوالی دارید ؟
+                    </a>
+                    <a class="top-menu-items" href="/page/printer-repair">تعمیر پرینتر</a>
+                    <a class="top-menu-items" href="/contactus">تماس با ما</a>
+                    <a class="top-menu-items" href="/page/about-us">درباره ما</a>
+                    <a class="top-menu-items" href="/page/rules">قوانین و مقررات</a>
+                    <a class="top-menu-items" href="/page/help">راهنمای خرید</a>
+                    <a class="top-menu-items" href="/faq">سوالات متداول</a>
+
                 </div>
                 <div class="row mt-4">
                     <h6>دسته بندی کالا</h6>
+                    <ul class="sub-category bg-white col-10 mx-auto">
+                        <li>
+                            <a href="/Search/1/printer/1/printer-laserjet">پرینتر های لیزری</a>
+                        </li>
+                        <li>
+                            <a href="/Search/1/printer/2/printer-color">پرینتر های جوهر افشان</a>
+                        </li>
+                        <li>
+                            <a href="/Search/1/printer/4/multifunction-printer-laserjet">پرینتر چند کاره (لیزری)</a>
+                        </li>
+                        <li>
+                            <a href="/Search/1/printer/6/multifunction-printer-color">پرینتر چند کاره (جوهر افشان)</a>
+                        </li>
+
+                    </ul>
                 </div>
             </div>
         </div>
@@ -254,16 +256,19 @@ justify-content: center;
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js" integrity="sha512-2rNj2KJ+D8s1ceNasTIex6z4HWyOnEYLVC3FigGOmyQCZc2eBXKgOxQmo3oKLHyfcj53uz4QMsRCWNbLd32Q1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.5/swiper-bundle.min.js" integrity="sha512-wdUM0BxMyMC/Yem1RWDiIiXA6ssXMoxypihVEwxDc+ftznGeRu4s9Fmxl8PthpxOh5CQ0eqjqw1Q8ScgNA1moQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await Component.InvokeAsync("Tools" ,new {type="script"})
 
     @await RenderSectionAsync("Scripts", required: false)
     <script>
         $("#search-input").keyup(function() {
             $("#search-items").children().remove();
             $.ajax({
-                url: "https://api.amirprinter.ir/api/Product/Search?name=" + $(this).val(),
+                url: "@(Configuration.GetSection("SiteSetting:ApiUrl").Value)/api/Product/Search?name=" + $(this).val(),
                 method: "GET"
             }).done(function(res) {
                 console.log(res);
@@ -272,7 +277,30 @@ justify-content: center;
                 });
             });
         });
+        $(".btn-menu").click(function(event) {
+            event.stopPropagation();
+            if ($(".mobile-menu").hasClass("show")) {
 
+                $(".mobile-menu").removeClass("show");
+                document.body.classList.remove('overlay');
+
+            }
+            else {
+                $(".mobile-menu").addClass("show");
+                document.body.classList.add('overlay');
+            }
+        })
+        document.body.addEventListener('click', (e) => {
+            if (document.getElementsByClassName('btn-menu')[0].isSameNode(e.target) || document.getElementsByClassName('icon')[0].isSameNode(e.target) || document.getElementsByClassName('mobile-menu')[0].isSameNode(e.target)) {
+                // Event triggered from within the #menutop div element
+                // Do nothing and return
+                return;
+            }
+            else {
+                $(".mobile-menu").removeClass("show");
+                document.body.classList.remove('overlay');
+            }
+        });
     </script>
 </body>
 </html>

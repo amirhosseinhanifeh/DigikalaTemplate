@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ALO.DomainClasses.Configuration.Account
+namespace ALO.DomainClasses.Config.Account
 {
     class RoleConfig
     {

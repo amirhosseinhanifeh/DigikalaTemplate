@@ -73,8 +73,8 @@ namespace Ghaleb.API.Controllers
             {
                 options = JsonConvert.DeserializeObject<long[]>(optionIds);
             }
-            var result = (await _product.GetProductList(mainCategoryId, categoryies, subcategoryId, brands, options, title, order, page, pageSize, userId));
-            return Ok(new { Data = result.model, message = result.Message, Status = result.Status, result.NotificationType });
+            var result = (_product.GetProductList(mainCategoryId, categoryies, subcategoryId, brands, options, title, order, page, pageSize, userId));
+            return Ok(new { Data =await result.model.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync(), message = result.Message, Status = result.Status, result.NotificationType });
         }
         [HttpGet]
         public async Task<ActionResult<List<CategoryListForHomeDTO>>> GetAllByCategoryAsync()
@@ -129,7 +129,7 @@ namespace Ghaleb.API.Controllers
                 var blocks = await _context.tbl_Blocks.Where(h => h.IsActive && h.IsDelete != true).OrderBy(x => x.Id).Select(h => new
                 {
                     Id = h.Id,
-                    h.Title,
+                    h.Link,
                     h.Name,
                     h.Description,
                     Image = h.Image.BindImage(),

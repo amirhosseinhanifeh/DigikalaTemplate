@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ALO.DomainClasses.Configuration.Financial
+namespace ALO.DomainClasses.Config.Financial
 {
     public class FinancialAccountConfig : IEntityTypeConfiguration<tbl_FinancialAccount>
     {

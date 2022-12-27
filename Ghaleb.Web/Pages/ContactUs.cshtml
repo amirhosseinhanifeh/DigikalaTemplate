@@ -10,22 +10,22 @@
 </style>
 @await Component.InvokeAsync("BreadCrumps",Model.Seo)
 <div class="row bg-white p-5 table-responsive contactus">
-    <h4 class="text-center mb-5">تماس با شرکت امیر پرینتر</h4>
+    <h4 class="text-center mb-5">تماس با شرکت</h4>
     <div class="col-6 mt-2">
         <span>تلفن بخش فروش : @Model.ContactUs.Phone</span>
     </div>
     <div class="col-6 mt-2">
-        <span>   تلفن بخش تعمیرات : @Model.ContactUs.Tel.toPersianNumber()</span>
+        <span>   تلفن دیگر : @Model.ContactUs.Tel.toPersianNumber()</span>
     </div>
     <div class="col-6 mt-2">
-        <span>  تلفن همراه : @Model.ContactUs.Mobile</span>
+        <span>  شماره همراه : @Model.ContactUs.Mobile</span>
     </div>
 
     <div class="col-6 mt-2">
         <span>   ایمیل شرکت : @Model.ContactUs.Email</span>
     </div>
     <div class="col-12 mt-2">
-        <span>   آدرس محل تعمیرات : @Model.ContactUs.Address</span>
+        <span>   آدرس ما : @Model.ContactUs.Address</span>
     </div>
     <div class="col-12 col-xl-6 mt-5">
         <h5 class="text-center">پیام خود را برای ما ارسال کنید</h5>
@@ -59,6 +59,7 @@
         </form>
     </div>
     <div class="col-12 col-xl-6 mt-5">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1619.952097901455!2d51.42489090823057!3d35.7039751196723!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xf10404c8c2d7dd90!2zMzXCsDQyJzE0LjIiTiA1McKwMjUnMzMuMCJF!5e0!3m2!1sen!2suk!4v1670938795389!5m2!1sen!2suk" width="800" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        @Html.Raw(Model.ContactUs.Google)
+       
     </div>
 </div>

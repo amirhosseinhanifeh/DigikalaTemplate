@@ -2,21 +2,40 @@
 @model Ghaleb.Web.Pages.SearchModel
 @{
 }
+<style>
+    .page-item:first-child .page-link {
+        border-top-right-radius: 0.25rem;
+        border-bottom-right-radius: 0.25rem;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+
+    .page-item:last-child .page-link {
+        border-top-left-radius: 0.25rem;
+        border-bottom-left-radius: 0.25rem;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+</style>
 <div class="row d-flex justify-content-between">
     @if (Model.Brand != null)
     {
-        ViewData["Seo"] = new
-        {
-            PageTitle = "پرینتر های با برند " + Model.Brand.Name,
-            MetaDescription = Model.Brand.Description,
-            MetaKeyword = Model.Brand.Name
-        };
+        ViewData["Seo"] = Model.Brand;
         <div class="col-12 bg-white  p-2 mb-3">
             <img src="@Model.Brand.Logo.BindImage()" style="width:250px">
             @Model.Brand.Name
             <br>
             @Model.Brand.Description
         </div>
+    }
+    @if (Model.ProductCategory != null)
+    {
+        ViewData["Seo"] = Model.ProductCategory;
+    }
+    @if (Model.SubProductCategory != null)
+    {
+        ViewData["Seo"] = Model.SubProductCategory;
     }
     <div class="col-12 col-sm-2">
         <form method="get" class="row">
@@ -25,13 +44,16 @@
                 <div class="col-12 bg-white  p-2" *ngIf="brand!=null">
                     <label class="border-bottom p-2 d-block">دسته بندی</label>
                     <ul>
-                        <li style="display: flex;justify-content: space-between;"
-                        *ngFor="let item of brand.categories">
-                            {{item.name}}
-                            <label>
-                                <input type="checkbox" name="check" [value]="item.id" (change)="filterCategory($event)" /><span class="label-text"></span>
-                            </label>
-                        </li>
+                        @foreach (var item in Model.ProductCategories)
+                        {
+                            <li style="display: flex;justify-content: space-between;">
+                                @item.Title
+                                <label>
+                                    <input type="checkbox" name="categoryIds" @(Model.CategoryIds.Any(h=>h==item.Id)?"checked":"") value="@item.Id" /><span class="label-text"></span>
+                                </label>
+                            </li>
+                        }
+
                     </ul>
                 </div>
             }
@@ -40,41 +62,58 @@
                 <div class="col-12 bg-white p-2" *ngIf="brand==null">
                     <label class="border-bottom p-2 d-block">برند</label>
                     <ul>
-                        <li style="display: flex;justify-content: space-between;"
-                        *ngFor="let item of brands">
-                            {{item.name}}
+                        @foreach (var item in Model.Brands)
+                        {
 
-                            <label>
-                                <input type="checkbox" name="check" [value]="item.id" (change)="filterBrand($event)" /><span class="label-text"></span>
-                            </label>
-                        </li>
+                            <li style="display: flex;justify-content: space-between;">
+                                @item.Name
+
+                                <label>
+                                    <input type="checkbox" name="brandIds" @(Model.BrandIds.Any(h=>h==item.Id)?"checked":"") value="@item.Id" /><span class="label-text"></span>
+                                </label>
+                            </li>
+
+                        }
                     </ul>
                 </div>
             }
-            <div class="col-12 bg-white p-2"
+            @if (Model.ProductCustomFields.Any())
+            {
+                <div class="col-12 bg-white p-2"
                  *ngIf="fields?.length>0">
-                <div *ngFor="let item of
-                    fields">
-                    <label class="border-bottom p-2 d-block">{{item.name}}</label>
-                    <div style="display: flex;justify-content: space-between;"
+                    @foreach (var item in Model.ProductCustomFields)
+                    {
+
+                        <div>
+                            <label class="border-bottom p-2 d-block">@item.Name</label>
+                            @foreach (var item2 in item.ProductCustomFieldsOptionValues)
+                            {
+
+                                <div style="display: flex;justify-content: space-between;"
                          *ngFor="let item2 of item.options">
-                        {{item2.value}}
-                        <label>
-                            <input type="checkbox" name="check" [value]="item2.id" (change)="filterAttr($event)" /><span class="label-text"></span>
-                        </label>
-                    </div>
+                                    @item2.Value
+                                    <label>
+                                        <input type="checkbox" name="optionIds" @(Model.OptionIds.Any(h=>h==item2.Id)?"checked":"") value="@item2.Id" /><span class="label-text"></span>
+                                    </label>
+                                </div>
+
+                            }
+                        </div>
+
+                    }
                 </div>
-            </div>
+            }
             <div class="col-12 bg-white p-2">
                 <div>
                     <div style="display: flex;justify-content: space-between;">
-                        کالاهای موجود
+                        فقط کالاهای موجود
                         <label>
-                            <input type="checkbox" name="check" /><span class="label-text"></span>
+                            <input type="checkbox" asp-for="IsExists" /><span class="label-text"></span>
                         </label>
                     </div>
                 </div>
             </div>
+            <button type="submit" class="btn btn-danger"> اعمال فیلتر</button>
         </form>
     </div>
     <div class="col-12 col-sm-10">
@@ -131,7 +170,24 @@
                 }
 
             </div>
+            <div class="row">
+                @{
+                    double pageCount = (double)((decimal)Model.TotalCount / Convert.ToDecimal(Model.PageSize));
 
+                }
+                <nav aria-label="Page navigation example ">
+                    <ul class="pagination justify-content-center">
+                        @for (int i = 1; i <= (int)Math.Ceiling(pageCount); i++)
+                        {
+                            <li class="page-item">
+                                <a  asp-route-pagenumber="@i" class="page-link">@i</a>
+                            </li>
+                        }
+
+                    </ul>
+                </nav>
+
+            </div>
         </div>
 
     </div>

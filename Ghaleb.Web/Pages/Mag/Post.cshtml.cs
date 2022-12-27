@@ -17,7 +17,9 @@ namespace Ghaleb.Web.Pages.Mag
         public tbl_Blog Blog { get; set; }
         public async Task OnGetAsync(long id)
         {
-            var res = await _context.tbl_Blogs.SingleOrDefaultAsync(x => x.Id == id);
+            var res = await _context.tbl_Blogs.Include(x=>x.Image).SingleOrDefaultAsync(x => x.Id == id);
+            res.Visit = res.Visit + 1;
+            await _context.SaveChangesAsync();
             Blog = res;
         }
     }

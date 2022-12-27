@@ -1,0 +1,6 @@
+﻿@page
+@model Ghaleb.Web.Pages.FilesModel
+@{
+    ViewData["Seo"] = Model.Seo;
+}
+@await Component.InvokeAsync("BreadCrumps",Model.Seo)

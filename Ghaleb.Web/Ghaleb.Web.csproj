@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\sitemap.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ALO.Common\ALO.Common.csproj" />
     <ProjectReference Include="..\ALO.DataAccessLayer\ALO.DataAccessLayer.csproj" />
     <ProjectReference Include="..\ALO.DomainClasses\ALO.DomainClasses.csproj" />

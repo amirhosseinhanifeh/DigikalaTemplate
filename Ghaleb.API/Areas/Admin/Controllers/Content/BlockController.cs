@@ -54,7 +54,7 @@ namespace AyandeNama.Web.Areas.Admin.Controllers.Content
                 {
                     data.Description = model.Description;
                     data.ImageId = model.ImageId;
-                    data.Title = model.Title;
+                    data.Link = model.Link;
                     data.Name = model.Name;
                 }
                 await _context.SaveChangesAsync();

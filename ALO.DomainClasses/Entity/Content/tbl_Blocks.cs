@@ -15,8 +15,8 @@ namespace ALO.DomainClasses.Entity.Content
         public string Name { get; set; }
         [Display(Name = "نام مسیر")]
         public string RouteName { get; set; }
-        [Display(Name = "عنوان")]
-        public string Title { get; set; }
+        [Display(Name = "هدایت به مسیر")]
+        public string Link { get; set; }
         [Display(Name = "عنوان")]
 
         public string Description { get; set; }

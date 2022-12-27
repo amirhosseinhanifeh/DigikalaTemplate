@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ALO.DomainClasses.Configuration.City
+namespace ALO.DomainClasses.Config.City
 {
     public class CityConfig : IEntityTypeConfiguration<tbl_City>
     {

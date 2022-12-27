@@ -1,4 +1,4 @@
-﻿@page "{id}/{url}"
+﻿@page "{id?}/{url?}"
 @model Ghaleb.Web.Pages.ProductModel
 @{
     ViewData["Seo"] = Model.Product;
@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-12">
                 <img style="width: 400px;" class="img-fluid mx-auto d-block"
-                     [src]="@Model.Product.Image">
+                     src="@Model.Product.Image" alt="@Model.Product.Title">
             </div>
             <div class="col-12 justify-content-center d-flex">
                 @foreach (var item in Model.Product.Images)
@@ -27,7 +27,7 @@
     <div class="col-12 col-lg-4 mt-5">
         <div class="row">
             <div class="col-12">
-               <a href="/Product/@Model.Product.Id/@Model.Product.Url"><h4>@Model.Product.Title</h4></a>
+                <a href="/Product/@Model.Product.Id/@Model.Product.Url"><h1 class="h4">@Model.Product.Title</h1></a>
                 <h6 style="color: rgb(189, 189, 189);">@Model.Product.EnTitle</h6>
             </div>
             <div class="col-12">
@@ -57,10 +57,9 @@
                 رنگ :
                 @foreach (var item in Model.Product.Colors)
                 {
-                    <a asp-route-color="@item.Id" class="color d-flex justify-content-center align-items-center"
-                   (click)="SelectColor(data?.id,item.id)" style="border-radius: 50px;border: 2px
+                    <a asp-route-color="@item.Id" class="color d-flex justify-content-center align-items-center" style="border-radius: 50px;border: 2px
                     solid gray;margin-right:15px; width: 35px;height: 35px;background-color:@item.Hex"
-                   title="@item.Name">
+                   data-bs-toggle="tooltip" data-bs-placement="top" title="@item.Name">
                         @if (item.Id == Model.Color)
                         {
                             <i class="fa-regular fa-check"></i>
@@ -183,7 +182,7 @@
 
     </div>
 </div>
-        <partial name="~/Components/Product/ProductRow/Row.cshtml" model="Model.RelatedProducts" view-data='@new ViewDataDictionary(ViewData) { {"HeaderTitle", "محصولات مشابه " }}' />
+<partial name="~/Components/Product/ProductRow/Row.cshtml" model="Model.RelatedProducts" view-data='@new ViewDataDictionary(ViewData) { {"HeaderTitle", "محصولات مشابه " }}' />
 <!-- <div class="row box bg-white mt-5 p-3">
 
 </div>
@@ -204,6 +203,35 @@
         });
         function LoadPrice() {
             $("#price").load("/_LoadProductPrice?id=@Model.Product.Id&colorId=@Model.Color");
+        }
+    </script>
+
+    <script type="application/ld+json">
+        {
+          "@@context": "https://schema.org/",
+          "@@type": "Recipe",
+          "name": "@Model.Product.Title",
+          "author": "امیر حسین حنیفه",
+          "image": "@Model.Product.Image",
+          "description": "A classic apple pie.",
+          "aggregateRating": {
+            "@@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "reviewCount": "7462",
+            "bestRating": "5",
+            "worstRating": "1"
+          },
+          "prepTime": "PT30M",
+          "totalTime": "PT1H30M",
+          "recipeYield": "8",
+          "nutrition": {
+            "@@type": "NutritionInformation",
+            "calories": "512 calories"
+          },
+          "recipeIngredient": [
+            "1 box refrigerated pie crusts, softened as directed on box",
+            "6 cups thinly sliced, peeled apples (6 medium)"
+          ]
         }
     </script>
         }

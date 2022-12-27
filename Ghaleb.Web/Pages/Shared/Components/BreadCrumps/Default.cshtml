@@ -1,11 +1,12 @@
-﻿@model dynamic
+﻿@using Microsoft.AspNetCore.Http.Extensions;
+@model dynamic
 @{
 }
 <style>
         .bgcover {
         position: relative;
         height: 250px;
-        background: url(https://thumbs.dreamstime.com/b/businessman-bend-down-to-remove-paper-stuck-printer-businessman-bend-down-to-remove-paper-stuck-printer-office-256063156.jpg);
+        background: url('/images/bg.jpg');
         background-repeat: no-repeat;
         background-size: 100%;
         background-position: center;
@@ -32,8 +33,8 @@
 @if (Model != null)
 {
     <div class="col-12 bgcover d-flex justify-content-center align-items-center flex-column">
-        <h1>@Model.Title</h1>
+        <a href="@Context.Request.GetDisplayUrl()"><h1>@Model.Title</h1></a>
         <br />
-        <div class="breadcramps"><a href="@Url.Page("index")">خانه </a> > @Model.PageTitle</div>
+        <div class="breadcramps"><a href="@Url.Page("index")">خانه </a> > <a href="@Context.Request.GetDisplayUrl()"> @Model.PageTitle</a></div>
     </div>
 }

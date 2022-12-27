@@ -58,8 +58,8 @@ namespace ALO.Service.Service.Product
                         ProductCategoryId = model.ProductCategoryId,
                         State = ProductState.ACTIVED,
                         EnTitle = model.EnTitle,
-                        FileId=model.FileId,
-                        
+                        FileId = model.FileId,
+
 
                     };
                     data.ProductCustomFieldValues = new List<tbl_ProductCustomFieldValues>();
@@ -218,11 +218,11 @@ namespace ALO.Service.Service.Product
                     {
                         Title = x.Title,
                         Id = x.Id,
-                        Products = x.Products.Where(x => x.IsActive == true && x.IsDelete == false).OrderByDescending(x=>x.Id).Take(10).Select(y => new ProductListForHomeDto
+                        Products = x.Products.Where(x => x.IsActive == true && x.IsDelete == false).OrderByDescending(x => x.Id).Take(10).Select(y => new ProductListForHomeDto
                         {
                             Id = y.Id,
                             Abstract = y.Abstract,
-                            Discount = y.GetDiscountPrice() !=null?y.GetDiscountPrice().Value.ToString("n0").toPersianNumber():null,
+                            Discount = y.GetDiscountPrice() != null ? y.GetDiscountPrice().Value.ToString("n0").toPersianNumber() : null,
                             Cost = y.GetLastPrice().ToString("n0").toPersianNumber(),
                             Image = y.Image.BindImage(),
                             IsSpecial = y.IsSpecial,
@@ -268,8 +268,8 @@ namespace ALO.Service.Service.Product
                     .Include(x => x.Image)
                     .Include(x => x.Images)
                     .Include(x => x.ProductComments)
-                    .ThenInclude(x=>x.User)
-                    .ThenInclude(x=>x.Profile)
+                    .ThenInclude(x => x.User)
+                    .ThenInclude(x => x.Profile)
                     .Include(x => x.ProductCustomFieldValues)
                     .ThenInclude(x => x.ProductCustomField)
                     .ThenInclude(x => x.ProductCustomFieldsOptionValues)
@@ -284,10 +284,11 @@ namespace ALO.Service.Service.Product
                         NotificationType = NotificationType.error,
                         Status = Status.Warning
                     };
-
+                query.Visit = query.Visit + 1;
+                await _db.SaveChangesAsync();
                 var Result = new ProductDetailsForHomeDto
                 {
-                    EnTitle=query.EnTitle,
+                    EnTitle = query.EnTitle,
                     Abstract = query.Abstract,
                     Category = query.SubProductCategory != null ? new ProductBrandDto
                     {
@@ -300,7 +301,7 @@ namespace ALO.Service.Service.Product
                         Id = h.Id,
                         Name = h.Name,
                         Hex = h.Hex,
-                        
+
                     }).ToList(),
                     CostDisplay = query.GetLastPrice().ToString("n0").toPersianNumber(),
                     Cost = query.GetLastPrice(),
@@ -326,7 +327,7 @@ namespace ALO.Service.Service.Product
                     Comments = query.ProductComments.Select(y => new ProductCommentForWebsiteDto
                     {
                         Body = y.Body,
-                        FullName = y.User.Profile.FirstName+" "+y.User.Profile.LastName,
+                        FullName = y.User.Profile.FirstName + " " + y.User.Profile.LastName,
                         Response = y.Response,
                         Date = y.CreatedDate.ConvertToPesainDate().toPersianNumber()
                     }).ToList(),
@@ -363,7 +364,7 @@ namespace ALO.Service.Service.Product
             try
             {
 
-                var result = (await _db.GetAsync<tbl_Product>(x => x.Id == Id, includes: new string[] {  "ProductPriceHistories" }));
+                var result = (await _db.GetAsync<tbl_Product>(x => x.Id == Id, includes: new string[] { "ProductPriceHistories" }));
                 var data = new AddProductForAdminDTO
                 {
                     Abstract = result.Abstract,
@@ -378,9 +379,10 @@ namespace ALO.Service.Service.Product
                     SubProductCategoryId = result.SubProductCategoryId,
                     Title = result.Title,
                     Url = result.Url,
-                    BrandId=result.BrandId,
-                    EnTitle=result.EnTitle,
-                    MainProuctCategoryId=result.MainProductCategoryId
+                    BrandId = result.BrandId,
+                    EnTitle = result.EnTitle,
+                    MainProuctCategoryId = result.MainProductCategoryId,
+
                 };
 
                 return new ListResultViewModel<AddProductForAdminDTO>
@@ -431,7 +433,7 @@ namespace ALO.Service.Service.Product
                 Status = Status.Success
             };
         }
-        public async Task<ListResultViewModel<IEnumerable<ProductListForHomeDto>>> GetProductList(
+        public ListResultViewModel<IQueryable<ProductListForHomeDto>> GetProductList(
             long? maincategoryId = null,
             long[] categoryIds = null,
             long? subcategoryId = null,
@@ -441,7 +443,8 @@ namespace ALO.Service.Service.Product
             string order = null,
             int page = 1,
             int pageSize = 10,
-            long? ownerId = null)
+            long? ownerId = null,
+            bool? isExists = null)
         {
 
 
@@ -467,7 +470,7 @@ namespace ALO.Service.Service.Product
 
                 foreach (var item in optionIds)
                 {
-                    m = m.Or(y => y.ProductCustomFieldValues.Any(h=>h.ProductCustomFieldsOptionValueId==item));
+                    m = m.Or(y => y.ProductCustomFieldValues.Any(h => h.ProductCustomFieldsOptionValueId == item));
 
                 }
                 strQuery = strQuery.And(m);
@@ -495,6 +498,10 @@ namespace ALO.Service.Service.Product
             {
                 strQuery = strQuery.And(x => x.OwnerId == ownerId);
             }
+            if (isExists == true)
+            {
+                strQuery = strQuery.And(x => !x.ProductPriceHistories.Any(h => h.IsActive && h.OrderDetails.Count() == h.Inventory));
+            }
             var result = _db.GetAllAsync<tbl_Product>(strQuery, new string[] { "Image", "ProductPriceHistories" })
                 .Select(x => new ProductListForHomeDto
                 {
@@ -506,9 +513,9 @@ namespace ALO.Service.Service.Product
                     Date = x.CreatedDate.RelativeDate().toPersianNumber(),
                     Url = x.Url,
                     State = x.State.ToString(),
-                    Cost=x.GetLastPrice().ToString("n0").toPersianNumber(),
-                    Discount=x.GetDiscountPrice() !=null?x.GetDiscountPrice().Value.ToString("n0").toPersianNumber():null,
-                    Call=x.GetLastPrice()==0
+                    Cost = x.GetLastPrice().ToString("n0").toPersianNumber(),
+                    Discount = x.GetDiscountPrice() != null ? x.GetDiscountPrice().Value.ToString("n0").toPersianNumber() : null,
+                    Call = x.GetLastPrice() == 0
 
                 });
 
@@ -529,10 +536,9 @@ namespace ALO.Service.Service.Product
             {
                 result = result.OrderBy(x => x.Cost);
             }
-            var res = await result.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
-            return new ListResultViewModel<IEnumerable<ProductListForHomeDto>>
+            return new ListResultViewModel<IQueryable<ProductListForHomeDto>>
             {
-                model = res,
+                model = result,
                 Message = SuccessfullMessage,
                 NotificationType = NotificationType.success,
                 Status = Status.Success
@@ -547,15 +553,15 @@ namespace ALO.Service.Service.Product
             try
             {
 
-                var result = (await _db.tbl_Products.Include(x=>x.Image)
-                    .Include(x=>x.ProductVisits)
-                    .Include(x=>x.ProductComments)
-                    .Include(x=>x.ProductPriceHistories)
-                    .ThenInclude(x=>x.OrderDetails)
-                    .ThenInclude(x=>x.Order)
-                    .Include(x=>x.SubProductCategory)
+                var result = (await _db.tbl_Products.Include(x => x.Image)
+                    .Include(x => x.ProductVisits)
+                    .Include(x => x.ProductComments)
+                    .Include(x => x.ProductPriceHistories)
+                    .ThenInclude(x => x.OrderDetails)
+                    .ThenInclude(x => x.Order)
+                    .Include(x => x.SubProductCategory)
                     .OrderByDescending(x => x.CreatedDate)
-                    .Where(x=>brandId !=null?x.BrandId==brandId:true)
+                    .Where(x => brandId != null ? x.BrandId == brandId : true)
                     .ToListAsync())
                     .Select((x, i) => new GetProductListForAdminDto
                     {
@@ -563,12 +569,15 @@ namespace ALO.Service.Service.Product
                         Id = x.Id,
                         Title = x.Title,
                         Image = x.Image.BindImage(),
-                        OrderCount = x.ProductPriceHistories.SelectMany(x => x.OrderDetails).Count(h=>h.Order.OrderState==DomainClasses.Entity.Order.OrderState.PAYED),
+                        OrderCount = x.ProductPriceHistories.SelectMany(x => x.OrderDetails).Count(h => h.Order.OrderState == DomainClasses.Entity.Order.OrderState.PAYED),
                         SubCategory = x.SubProductCategory.Title,
                         Status = x.IsActive ? "فعال" : "غیر فعال",
                         Cost = x.GetLastPrice().ToString("n0").toPersianNumber() + " تومان",
-                        CommentCount=x.ProductComments.Count(),
-                        Visit=x.ProductVisits.Count()
+                        CommentCount = x.ProductComments.Count(),
+                        Visit = x.ProductVisits.Count(),
+                        AllVisit = x.Visit,
+                        Url = x.Url,
+                        LastModified = x.ModifiedDate?.ConvertToPesainDate().toPersianNumber()
                     });
 
                 return new ListResultViewModel<IEnumerable<GetProductListForAdminDto>>
@@ -604,7 +613,7 @@ namespace ALO.Service.Service.Product
             {
                 if (!_db.tbl_Products.Any(y => y.Url == model.Url && y.IsDelete != true && y.Id != model.Id))
                 {
-                    var pr = await _db.tbl_Products.Include(x=>x.ProductCustomFieldValues).FirstOrDefaultAsync(h => h.Id == model.Id);
+                    var pr = await _db.tbl_Products.Include(x => x.ProductCustomFieldValues).FirstOrDefaultAsync(h => h.Id == model.Id);
 
 
                     pr.Id = model.Id;
@@ -771,19 +780,19 @@ namespace ALO.Service.Service.Product
                 .Where(x => x.Title.Contains(name))
                 .Select(x => new
                 {
-                    Id=x.Id,
+                    Id = x.Id,
                     Title = x.Title,
                     Image = x.Image.BindImage(),
-                    Url=x.Url,
-                    Category=new
+                    Url = x.Url,
+                    Category = new
                     {
-                       Id= x.SubProductCategoryId,
-                       Title= x.SubProductCategory.Title,
-                       Url= x.SubProductCategory.Url,
+                        Id = x.SubProductCategoryId,
+                        Title = x.SubProductCategory.Title,
+                        Url = x.SubProductCategory.Url,
                     }
-                    
+
                 })
-                .OrderBy(x=>x.Title.StartsWith(name))
+                .OrderBy(x => x.Title.StartsWith(name))
                 .ToListAsync();
 
             return new ListResultViewModel<object>

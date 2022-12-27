@@ -11,16 +11,18 @@ namespace Ghaleb.Web.Pages
     {
         private readonly ServiceContext _context;
         private readonly IWebHostEnvironment _env;
-        public StartHangfireModel(ServiceContext context, IWebHostEnvironment env)
+        private readonly IConfiguration configuration;
+        public StartHangfireModel(ServiceContext context, IWebHostEnvironment env, IConfiguration configuration)
         {
             _context = context;
             _env = env;
+            this.configuration = configuration;
         }
 
         public async Task OnGetAsync()
         {
             RecurringJob.AddOrUpdate(
-           "myrecurringjob",
+           "SiteMap",
            () =>Start(),
            Cron.Daily);
         }
@@ -30,7 +32,7 @@ namespace Ghaleb.Web.Pages
             var list = new List<SitemapNode>();
             foreach (var item in products)
             {
-                list.Add(new SitemapNode { LastModified = DateTime.UtcNow, Priority = 0.8, Url = "https://amirprinter.ir/product/" + item.Id + "/" + item.Url, Frequency = SitemapFrequency.Daily });
+                list.Add(new SitemapNode { LastModified = DateTime.UtcNow, Priority = 0.8, Url = configuration["SiteSetting:Url"] + "product/" + item.Id + "/" + item.Url, Frequency = SitemapFrequency.Daily });
 
             }
 
