@@ -1,0 +1,237 @@
+﻿@page "{id?}/{url?}"
+@model Ghaleb.Web.Pages.ProductModel
+@{
+    ViewData["Seo"] = Model.Product;
+
+}
+<div class="row bg-white p-5">
+    <div class="col-12 col-lg-5 justify-content-center d-flex">
+        <div class="row">
+            <div class="col-12">
+                <img style="width: 400px;" class="img-fluid mx-auto d-block"
+                     src="@Model.Product.Image" alt="@Model.Product.Title">
+            </div>
+            <div class="col-12 justify-content-center d-flex">
+                @foreach (var item in Model.Product.Images)
+                {
+                    <img [src]="@item.Url"
+                     style="margin-left: 5px; width: 85px;border-radius:
+                    5px;border:1px solid rgb(201, 201, 201) ;">
+                }
+
+            </div>
+        </div>
+
+
+    </div>
+    <div class="col-12 col-lg-4 mt-5">
+        <div class="row">
+            <div class="col-12">
+                <a href="/Product/@Model.Product.Id/@Model.Product.Url"><h1 class="h4">@Model.Product.Title</h1></a>
+                <h6 style="color: rgb(189, 189, 189);">@Model.Product.EnTitle</h6>
+            </div>
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-6">
+                        <span style="font-size: 13px;">
+                            برند : <a href="/Search/Brand/@Model.Product.Brand.Id/@Model.Product.Brand.Name"
+                                      [routerLink]="['/brand/'+data?.brand?.id+'/'+data?.brand?.name]"
+                                      style="font-size: 13px; color: #19bfd3;">
+                                @Model.Product.Brand.Name
+                            </a>
+                        </span>
+
+                    </div>
+                    <div class="col-6">
+                        <span style="font-size: 13px;">
+                            دسته بندی : <a href=""
+                                           [routerLink]="['/search/category/'+data?.category.id+'/'+data?.category.url]"
+                                           style="font-size: 13px;color: #19bfd3;">
+                                @Model.Product.Category.Name
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mt-5 d-flex align-items-center" style="font-size: 13px;">
+                رنگ :
+                @foreach (var item in Model.Product.Colors)
+                {
+                    <a asp-route-color="@item.Id" class="color d-flex justify-content-center align-items-center" style="border-radius: 50px;border: 2px
+                    solid gray;margin-right:15px; width: 35px;height: 35px;background-color:@item.Hex"
+                   data-bs-toggle="tooltip" data-bs-placement="top" title="@item.Name">
+                        @if (item.Id == Model.Color)
+                        {
+                            <i class="fa-regular fa-check"></i>
+                        }
+                    </a>
+                }
+
+            </div>
+            <div class="col-12 col-lg-10 mt-5">
+
+                <h6 style="font-weight:bold ;">ویژگی ها</h6>
+                @foreach (var item in Model.Product.Values)
+                {
+                    <div class="row mt-3 d-flex align-items-center">
+                        <div class="col-5" style="color: #9f9e9e;">
+                            @item.Name :
+                        </div>
+                        <div class="col-6 text-right">
+                            @item.Value
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-3 mt-3 mt-lg-0">
+        <div class="row d-flex justify-content-center">
+            <div class="col-12 col-lg-10">
+                <div class="row p-4 d-flex justify-content-between
+                    align-items-center" style="border-radius:
+                    10px;background:
+                    #ededed;" id="price">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
+                data-bs-target="#nav-home" type="button" role="tab"
+                aria-controls="nav-home" aria-selected="false">
+            معرفی
+        </button>
+        <button class="nav-link" id="nav-description-tab" data-bs-toggle="tab"
+                data-bs-target="#nav-description" type="button" role="tab"
+                aria-controls="nav-description" aria-selected="false">
+            توضیحات
+        </button>
+        <button class="nav-link" id="nav-attr-tab" data-bs-toggle="tab"
+                data-bs-target="#nav-attr" type="button" role="tab"
+                aria-controls="nav-attr" aria-selected="false">
+            مشخصات فنی
+        </button>
+        <button class="nav-link " id="nav-comment-tab"
+                data-bs-toggle="tab" data-bs-target="#nav-comment" type="button"
+                role="tab" aria-controls="nav-comment" aria-selected="true">
+            نظرات
+        </button>
+    </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade active show p-3" id="nav-home" role="tabpanel"
+         aria-labelledby="nav-home-tab" tabindex="0">
+
+        <p class="mt-3">@Model.Product.Abstract</p>
+    </div>
+    <div class="tab-pane fade p-3" id="nav-description" role="tabpanel"
+         aria-labelledby="nav-description-tab" tabindex="0">
+        <p class="mt-3">@Html.Raw(Model.Product.Description)</p>
+    </div>
+    <div class="tab-pane fade p-3 " id="nav-attr" role="tabpanel"
+         aria-labelledby="nav-contact-tab" tabindex="0">
+        @foreach (var item in Model.Product.Values)
+        {
+            <div class="col-12 col-lg-12 border-bottom">
+
+                <div class="row d-flex align-items-center">
+                    <div class="col-6 p-3 " style="background-color: #ebebeb;color:
+                    #8b8b8b">
+                        @item.Name
+                    </div>
+                    <div class="col-6">
+                        @item.Value
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+    <div class="tab-pane fade p-3 " id="nav-comment" role="tabpanel"
+         aria-labelledby="nav-comment-tab" tabindex="0">
+        <div class="row">
+            <div class="col-12 col-lg-3">
+            </div>
+            <div class="col-12 col-lg-7">
+                @if (Model.Product.Comments.Any())
+                {
+                    foreach (var item in Model.Product.Comments)
+                    {
+                        <div class="col-12  border-bottom">
+                            <div style="border-bottom:1px solid #f5f5f5;" class="p-3 mb-3">
+                                <h1 class="h5">@item.FullName</h1>
+                                <span style="font-size: 10px;
+                        color: #a3a3a3;">@item.Date</span>
+
+                            </div>
+                            <p style="font-size: 15px;">@item.Body</p>
+
+                        </div>
+                    }
+                }
+                else
+                {
+                    <h6>تاکنون نظری  برای محصول @Model.Product.Title ثبت نشده</h6>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>
+<partial name="~/Components/Product/ProductRow/Row.cshtml" model="Model.RelatedProducts" view-data='@new ViewDataDictionary(ViewData) { {"HeaderTitle", "محصولات مشابه " }}' />
+<!-- <div class="row box bg-white mt-5 p-3">
+
+</div>
+<div class="row box bg-white mt-5 p-3">
+
+</div>
+<div class="row box bg-white mt-5 p-3">
+
+</div>
+
+<div class="row box bg-white mt-5 p-3">
+
+</div> -->
+@section Scripts{
+    <script>
+        $(document).ready(function() {
+            LoadPrice();
+        });
+        function LoadPrice() {
+            $("#price").load("/_LoadProductPrice?id=@Model.Product.Id&colorId=@Model.Color");
+        }
+    </script>
+
+    <script type="application/ld+json">
+        {
+          "@@context": "https://schema.org/",
+          "@@type": "Recipe",
+          "name": "@Model.Product.Title",
+          "author": "امیر حسین حنیفه",
+          "image": "@Model.Product.Image",
+          "description": "A classic apple pie.",
+          "aggregateRating": {
+            "@@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "reviewCount": "7462",
+            "bestRating": "5",
+            "worstRating": "1"
+          },
+          "prepTime": "PT30M",
+          "totalTime": "PT1H30M",
+          "recipeYield": "8",
+          "nutrition": {
+            "@@type": "NutritionInformation",
+            "calories": "512 calories"
+          },
+          "recipeIngredient": [
+            "1 box refrigerated pie crusts, softened as directed on box",
+            "6 cups thinly sliced, peeled apples (6 medium)"
+          ]
+        }
+    </script>
+        }

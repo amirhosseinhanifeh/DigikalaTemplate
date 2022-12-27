@@ -14,7 +14,7 @@ namespace ALO.Service.Interface.Product
 {
     public interface IProductService
     {
-        Task<ListResultViewModel<IEnumerable<ProductListForHomeDto>>> GetProductList(
+        ListResultViewModel<IQueryable<ProductListForHomeDto>> GetProductList(
             long? maincategoryId = null,
             long[] categoryIds = null,
             long? subcategoryId = null,
@@ -24,7 +24,8 @@ namespace ALO.Service.Interface.Product
             string order = null,
             int page = 1,
             int pageSize = 10,
-            long? ownerId = null);
+            long? ownerId = null,
+            bool? isExists=null);
         Task<ListResultViewModel<IEnumerable<ProductListForHomeDto>>> GetLastVisitProductList(long userId);
         Task<ListResultViewModel<IEnumerable<object>>> GetLastVisitCategoryList(long userId);
         Task<ListResultViewModel<IEnumerable<CategoryListForHomeDTO>>> GetHomeProductsByCategoryList();

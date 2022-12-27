@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\sitemap.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ALO.Common\ALO.Common.csproj" />
+    <ProjectReference Include="..\ALO.DataAccessLayer\ALO.DataAccessLayer.csproj" />
+    <ProjectReference Include="..\ALO.DomainClasses\ALO.DomainClasses.csproj" />
+    <ProjectReference Include="..\ALO.MappingProfile\ALO.MappingProfile.csproj" />
+    <ProjectReference Include="..\ALO.Service\ALO.Service.csproj" />
+    <ProjectReference Include="..\ALO.ViewModels\ALO.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.SEOHelper" Version="1.0.1" />
+    <PackageReference Include="Hangfire" Version="1.7.32" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Zarinpal" Version="3.0.1" />
+  </ItemGroup>
+
+</Project>

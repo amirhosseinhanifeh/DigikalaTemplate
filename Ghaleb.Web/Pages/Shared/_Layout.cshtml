@@ -1,0 +1,306 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
+    <partial name="_SeoPartial" model="@ViewData["Seo"]" />
+    @await Component.InvokeAsync("Tools" ,new {type="meta"})
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.amirprinter.ir/font-awesome/css/all.css" />
+    <link rel="stylesheet" href="https://cdn.amirprinter.ir/font.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.5/swiper-bundle.css" integrity="sha512-jxGmKjC/OykrTklkNK2NgnhNtKtUAADFY+rvSi3nA7dbaPRfjrSXYxHqX8iq5N6WTOntqEQZrEwW3L84sirfKQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Ghaleb.Web.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row justify-content-center align-items-center h-100 bg-white">
+            <div class="col-12 col-lg-11 mx-auto">
+                <div class="row mt-2 d-flex justify-content-center align-items-center">
+                    <div class="col-lg-2 col-12 d-flex justify-content-between align-items-center">
+                        <a href="/">
+                            <img class="img-fluid" src="~/images/logo.png"
+                                 style="width:99px ;" alt="امیرپرینتر">
+                        </a>
+                        <button class="btn btn-menu d-lg-none d-md-flex">
+                            <i class="fas fa-bars icon" style="font-size:24px ;"></i>
+                        </button>
+                    </div>
+                    <form method="get" asp-page="Search" class="col-lg-6 col-12 mt-3 mt-md-0 top-search-input" style="position:relative ; border-radius:15px;height:47px">
+                        <input class="form-control "
+                               placeholder="کالای مورد نظر را جستجو کنید..." name="q" id="search-input">
+
+                        <ul id="search-items" style="position: absolute;
+    width: 100%;
+    right: 0;
+    max-height: 300px;
+    z-index: 99;
+    top: 36px;
+    overflow-y: scroll;
+    border-radius: 0px 0px 10px 10px;
+    background: #f3f3f3;">
+                            <li></li>
+                        </ul>
+                    </form>
+                    <div class="col-12 col-lg-4 mt-3">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-12 col-lg-12 col-xl-6">
+                                <div class="row">
+
+                                    <div class="col-6 col-lg-8">
+                                        @if (User.Identity.IsAuthenticated)
+                                        {
+                                            <a href="" [routerLink]="['dashboard']" style="border-radius: 25px;
+border-radius: 25px;
+border: 1px solid #e3e3e3;
+padding-top: 17px;
+padding-bottom: 17px;
+text-align: center;
+color: #8f8f8f;
+align-items: center;
+display: flex;
+justify-content: center;
+" *ngIf="isLogin">
+                                                <i class="fa-regular fa-user" style="font-size:18px
+;margin-left:5px ;"></i>
+                                                @User.Identity.Name
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a href="/account/login" style="border-radius: 25px;
+border-radius: 25px;
+border: 1px solid #e3e3e3;
+padding-top: 17px;
+padding-bottom: 17px;
+text-align: center;
+color: #8f8f8f;
+align-items: center;
+display: flex;
+justify-content: center;
+" *ngIf="!isLogin">
+                                                <i class="fa-regular fa-user" style="font-size:18px
+  ;margin-left:5px ;"></i>
+                                                ورود به حساب کاربری
+                                            </a>
+                                        }
+
+
+                                    </div>
+                                    <div style="color: #8f8f8f;" class="col-6 col-lg-2 d-flex align-items-center
+              justify-content-center">
+                                        @await Component.InvokeAsync("TopBasket")
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-12 mx-auto">
+                        <div class="row align-items-center">
+                            @await Component.InvokeAsync("TopMenu",new{routeName="top-menu"})
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row border-bottom bg-white">
+        </div>
+        <div class="row">
+
+            <nav class="navbar navbar-expand-lg navbar-light p-0
+      border-bottom" style="background-color: #ffff;">
+                <div class="container-fluid">
+                    <div class="collapse navbar-collapse row" id="navbarSupportedContent">
+                        <div class="col-12">
+
+
+                            @await Component.InvokeAsync("TopCategory")
+                        </div>
+                        @*<app-top-catrgory class="col-12"></app-top-catrgory>*@
+
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <main class="main row">
+
+            @RenderBody()
+        </main>
+
+        <footer class="row mt-5 bg-white" style="padding: 20px 0;border-top: 1px solid #ebebeb;">
+            <div class="col-12 col-xl-4">
+
+                @await Component.InvokeAsync("FooterAbout",new {routeName="footer-about"})
+
+                <div class="col-12 mt-4 d-flex justify-content-center">
+                    <a referrerpolicy="origin" target="_blank"
+                       href="https://trustseal.enamad.ir/?id=313465&amp;Code=EWG11XOUtyAW81zxS2GI">
+                        <img referrerpolicy="origin"
+                             src="https://Trustseal.eNamad.ir/logo.aspx?id=313465&amp;Code=EWG11XOUtyAW81zxS2GI"
+                             alt="اینماد" style="cursor:pointer;
+    width: 89px;
+    border: 1px solid #e3e3e3;
+    padding: 10px;
+    border-radius: 5px;" id="EWG11XOUtyAW81zxS2GI">
+                    </a>
+                    <img referrerpolicy='origin' id='rgvjnbqejxlzjxlzfukzfukz' style='cursor: pointer;
+    width: 89px;
+    border: 1px solid #e3e3e3;
+    padding: 10px;
+    border-radius: 5px;'
+                         onclick='window.open("https://logo.samandehi.ir/Verify.aspx?id=321166&p=xlaouiwkrfthrfthgvkagvka",
+              "Popup"," toolbar=no, scrollbars=no, location=no,statusbar=no,menubar=no, resizable=0, width=450, height=630,top=30")'
+                         alt='logo-samandehi' src='https://logo.samandehi.ir/logo.aspx?id=321166&p=qftiodrfnbpdnbpdwlbqwlbq' />
+                </div>
+            </div>
+            <div class="col-12 col-xl-4">
+                <h6 class="h6" style="font-weight: bold;">
+                    لینک های مرتبط
+                </h6>
+                <a style="display: block;">شرایط استفاده</a>
+                <a style="display: block;">حریم خصوصی</a>
+                <a style="display: block;">گزارش باگ</a>
+                <a style="display: block;">شیوه های پرداخت</a>
+            </div>
+
+            <div class="col-12">
+                <div class="row">
+
+                    @await Component.InvokeAsync("SocialNetworks")
+                    <div class="col-8 text-center mb-5 mt-3">
+                        همه روزه حتی ایام تعطیل 24 ساعته با شما
+                    </div>
+
+                    <div class="col-12 middlefooter text-white"
+                         style="background-color:#0046bf ;">
+                        <div class="row">
+                            <div class="col-10 mx-auto">
+                                @await Component.InvokeAsync("FooterMenu",new {routeName="footer-menu"})
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 bottomfooter">
+                        <div class="row">
+                            <div class="col-8 text-center mt-3 mx-auto">
+                                © 2022 All Right Reserved
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <div class="mobile-menu" [ngClass]="{'show':isOpen}">
+        <div class="row">
+            <div class="col-12 mt-2 d-flex justify-content-center">
+                <img class="img-fluid" alt="امیر پرینتر" src="/images/logo.png"
+                     style="width:115px ;">
+            </div>
+            <div>
+            </div>
+            <div class="col-8 mx-auto mt-5">
+                <div class="row border-bottom">
+                    <a class="top-menu-items" href="/index">
+                       صفحه اصلی
+                    </a>
+                    <a class="top-menu-items" href="/repair">
+                        درخواست تعمیرات
+                    </a>
+                    <a class="top-menu-items" href="/files">
+                        فایل ها
+                    </a>
+                    <a class="top-menu-items" href="/faq">
+                        سوالی دارید ؟
+                    </a>
+                    <a class="top-menu-items" href="/page/printer-repair">تعمیر پرینتر</a>
+                    <a class="top-menu-items" href="/contactus">تماس با ما</a>
+                    <a class="top-menu-items" href="/page/about-us">درباره ما</a>
+                    <a class="top-menu-items" href="/page/rules">قوانین و مقررات</a>
+                    <a class="top-menu-items" href="/page/help">راهنمای خرید</a>
+                    <a class="top-menu-items" href="/faq">سوالات متداول</a>
+
+                </div>
+                <div class="row mt-4">
+                    <h6>دسته بندی کالا</h6>
+                    <ul class="sub-category bg-white col-10 mx-auto">
+                        <li>
+                            <a href="/Search/1/printer/1/printer-laserjet">پرینتر های لیزری</a>
+                        </li>
+                        <li>
+                            <a href="/Search/1/printer/2/printer-color">پرینتر های جوهر افشان</a>
+                        </li>
+                        <li>
+                            <a href="/Search/1/printer/4/multifunction-printer-laserjet">پرینتر چند کاره (لیزری)</a>
+                        </li>
+                        <li>
+                            <a href="/Search/1/printer/6/multifunction-printer-color">پرینتر چند کاره (جوهر افشان)</a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js" integrity="sha512-2rNj2KJ+D8s1ceNasTIex6z4HWyOnEYLVC3FigGOmyQCZc2eBXKgOxQmo3oKLHyfcj53uz4QMsRCWNbLd32Q1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.5/swiper-bundle.min.js" integrity="sha512-wdUM0BxMyMC/Yem1RWDiIiXA6ssXMoxypihVEwxDc+ftznGeRu4s9Fmxl8PthpxOh5CQ0eqjqw1Q8ScgNA1moQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await Component.InvokeAsync("Tools" ,new {type="script"})
+
+    @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        $("#search-input").keyup(function() {
+            $("#search-items").children().remove();
+            $.ajax({
+                url: "@(Configuration.GetSection("SiteSetting:ApiUrl").Value)/api/Product/Search?name=" + $(this).val(),
+                method: "GET"
+            }).done(function(res) {
+                console.log(res);
+                res.model.map(x => {
+                    $("#search-items").append("<li style='padding:20px'><a href=/Product/" + x.id + "/" + x.url + "><img style='width:75px;margin-left:5px' src=" + x.image + ">" + x.title + "</a></li>");
+                });
+            });
+        });
+        $(".btn-menu").click(function(event) {
+            event.stopPropagation();
+            if ($(".mobile-menu").hasClass("show")) {
+
+                $(".mobile-menu").removeClass("show");
+                document.body.classList.remove('overlay');
+
+            }
+            else {
+                $(".mobile-menu").addClass("show");
+                document.body.classList.add('overlay');
+            }
+        })
+        document.body.addEventListener('click', (e) => {
+            if (document.getElementsByClassName('btn-menu')[0].isSameNode(e.target) || document.getElementsByClassName('icon')[0].isSameNode(e.target) || document.getElementsByClassName('mobile-menu')[0].isSameNode(e.target)) {
+                // Event triggered from within the #menutop div element
+                // Do nothing and return
+                return;
+            }
+            else {
+                $(".mobile-menu").removeClass("show");
+                document.body.classList.remove('overlay');
+            }
+        });
+    </script>
+</body>
+</html>

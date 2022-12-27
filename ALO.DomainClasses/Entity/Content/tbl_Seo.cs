@@ -36,7 +36,6 @@ namespace ALO.DomainClasses.Entity.Content
         public long? OgImageId { get; set; }
         public tbl_Image OgImage { get; set; }
         #endregion
-
         public long? LanguageId { get; set; }
         public tbl_Language Language { get; set; }
     }

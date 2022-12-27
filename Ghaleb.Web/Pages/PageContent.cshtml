@@ -1,0 +1,36 @@
+﻿@page "/page/{url}"
+@model Ghaleb.Web.Pages.PageContentModel
+@{
+        ViewData["Seo"] = Model.Data;
+}
+<style>
+    .bgcover {
+        position: relative;
+        height: 250px;
+        background: url(https://thumbs.dreamstime.com/b/businessman-bend-down-to-remove-paper-stuck-printer-businessman-bend-down-to-remove-paper-stuck-printer-office-256063156.jpg);
+        background-repeat: no-repeat;
+        background-size: 100%;
+        background-position: center;
+        color: #fff;
+    }
+
+        .bgcover * {
+            display: block;
+            z-index: 99999;
+                display: inline;
+        }
+
+        .bgcover:before {
+            position: absolute;
+            content: '';
+            top: 0;
+            left: 0;
+            width: 100%;
+            bottom: 0;
+            background-color: #000000a6;
+        }
+</style>
+@await Component.InvokeAsync("BreadCrumps",Model.Data)
+<div>
+    @Html.Raw(Model.Data.Description)
+</div>

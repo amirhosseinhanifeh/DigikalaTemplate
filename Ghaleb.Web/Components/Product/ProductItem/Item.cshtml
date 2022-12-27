@@ -1,0 +1,36 @@
+﻿@model ALO.ViewModels.Product.ProductListForHomeDto
+@{
+}
+<a target="_blank" href="@Url.Page("product",new{id=Model.Id,url=Model.Url})">
+    <img class="card-img-top mx-auto"
+         src="@Model.Image"
+         alt="Card image
+        cap" style="width:150px;min-height:150px ;">
+    <div class="card-body border-bottom">
+        <span class="card-text" style="color:#9f9f9f ;">@Model.Title</span>
+    </div>
+    @if (Model.Discount != null)
+    {
+        <div class="text-center mt-3">
+            <s style="color: rgb(182, 182, 182);"> @Model.Cost تومان </s>
+            <br>
+            @Model.Discount تومان
+
+        </div>
+    }
+    else
+    {
+
+        <div class="text-center mt-3">
+            @if (!Model.Call)
+            {
+                <span *ngIf="!product?.call"> @Model.Cost تومان </span>
+            }
+            else
+            {
+                <span *ngIf="product?.call"> تماس بگیرید</span>
+            }
+        </div>
+    }
+
+</a>

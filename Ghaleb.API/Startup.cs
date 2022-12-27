@@ -31,6 +31,7 @@ using AspNetCore.SEOHelper;
 using AutoMapper;
 using AyandeNama.Web.Helpers;
 using Ghaleb.API.Helpers;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -64,7 +65,7 @@ namespace Ghaleb.API
         public void ConfigureServices(IServiceCollection services)
         {
 
-               
+
             services.AddScoped<CookieHelper>();
             services.AddScoped<WebsiteBase>();
             services.AddControllersWithViews();
@@ -82,6 +83,8 @@ namespace Ghaleb.API
                 cfg.AddProfile(new FinancialProfile());
                 cfg.CreateMap(typeof(BaseSeo), typeof(BaseEntity));
             });
+            services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddHangfireServer();
             services.AddHttpContextAccessor();
             services.AddAutoMapper();
             services.AddSingleton(config);
@@ -175,6 +178,7 @@ namespace Ghaleb.API
                   pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
                 );
             });
+            app.UseHangfireDashboard();
             app.UseStaticFiles();
         }
     }

@@ -1,0 +1,41 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<ALO.ViewModels.Product.ProductListForHomeDto>
+@{
+}
+
+@if (Model.Any())
+{
+    <div class="row bg-white p-3 mt-5 box">
+        <div class="col-6">
+            <h6 class="border-bottom p-2">@ViewData["HeaderTitle"]</h6>
+        </div>
+        <div class="col-6 justify-content-end d-flex" *ngIf="showheaderButton">
+            <a class="p-2 text-left" href="Search/Category/1"
+            [routerLink]="['search/category/'+header.id+'/'+header.url]">
+                نمایش
+                همه
+            </a>
+        </div>
+        <div class="swiper products">
+            <!-- Additional required wrapper -->
+            <div class="swiper-wrapper">
+                <!-- Slides -->
+                @foreach (var item2 in Model)
+                {
+                    <div class="swiper-slide">
+                        @await Html.PartialAsync("~/Components/Product/ProductItem/Item.cshtml", item2)
+
+                    </div>
+
+
+                }
+            </div>
+
+            <!-- If we need navigation buttons -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+
+            <!-- If we need scrollbar -->
+        </div>
+    </div>
+}

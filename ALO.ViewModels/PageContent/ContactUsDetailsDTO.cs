@@ -14,5 +14,7 @@ namespace ALO.ViewModels.PageContent
         public string Address { get; set; }
         public string Lat { get; set; }
         public string Lng { get; set; }
+        public string Email { get; set; }
+        public string Google { get; set; }
     }
 }

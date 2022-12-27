@@ -1,0 +1,13 @@
+﻿@model IEnumerable<ALO.DomainClasses.Entity.Content.tbl_SocialNetworks>
+@{
+}
+
+<div class="col-8 mt-3 text-center">
+    @foreach (var item in Model)
+    {
+        <a href="@Url.Content(item.Url)" >
+            <i style="font-size:20px ; margin-left: 5px;" class="@item.Icon"></i>
+        </a>
+    }
+
+</div>

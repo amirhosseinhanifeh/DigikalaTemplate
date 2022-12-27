@@ -1,0 +1,65 @@
+﻿@page
+@model Ghaleb.Web.Pages.ContactUsModel
+@{
+    ViewData["Seo"] = Model.Seo;
+}
+<style>
+    .contactus {
+        font-size: 14px;
+    }
+</style>
+@await Component.InvokeAsync("BreadCrumps",Model.Seo)
+<div class="row bg-white p-5 table-responsive contactus">
+    <h4 class="text-center mb-5">تماس با شرکت</h4>
+    <div class="col-6 mt-2">
+        <span>تلفن بخش فروش : @Model.ContactUs.Phone</span>
+    </div>
+    <div class="col-6 mt-2">
+        <span>   تلفن دیگر : @Model.ContactUs.Tel.toPersianNumber()</span>
+    </div>
+    <div class="col-6 mt-2">
+        <span>  شماره همراه : @Model.ContactUs.Mobile</span>
+    </div>
+
+    <div class="col-6 mt-2">
+        <span>   ایمیل شرکت : @Model.ContactUs.Email</span>
+    </div>
+    <div class="col-12 mt-2">
+        <span>   آدرس ما : @Model.ContactUs.Address</span>
+    </div>
+    <div class="col-12 col-xl-6 mt-5">
+        <h5 class="text-center">پیام خود را برای ما ارسال کنید</h5>
+
+        <form method="post" class="row mt-5" (submit)="SendData($event)">
+
+            <div class="col-12 form-group mt-2">
+                <input name="email" class="form-control" value=""
+                       placeholder="ایمیل خود را وارد نمایید">
+            </div>
+
+            <div class="col-12 form-group mt-4">
+                <input name="fullName" class="form-control" type="text"
+                       value="" placeholder="نام و نام خانوادگی">
+            </div>
+            <div class="col-12 form-group mt-4">
+                <input name="mobile" class="form-control" type="text"
+                       value="" placeholder="موبایل">
+            </div>
+            <div class="col-12 form-group mt-4">
+                <textarea name="body" class="form-control" rows="8" type="text"
+                          value="" placeholder="متن پیام"></textarea>
+            </div>
+            <div class="col-12 form-group mt-4">
+                <button type="submit" class="btn btn-danger col-12" style="padding:
+                    11px;
+                    border-radius: 25px;">
+                    ارسال پیام
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="col-12 col-xl-6 mt-5">
+        @Html.Raw(Model.ContactUs.Google)
+       
+    </div>
+</div>

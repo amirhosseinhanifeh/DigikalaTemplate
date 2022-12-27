@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30907.101
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32602.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ghaleb.API", "Ghaleb.API\Ghaleb.API.csproj", "{53CF022D-33C4-490F-96D9-86EF075403A9}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ALO.Service", "ALO.Service\ALO.Service.csproj", "{8D2E2517-655A-4F58-9DE7-2902F63A6ECE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ALO.ViewModels", "ALO.ViewModels\ALO.ViewModels.csproj", "{6F377A19-B79C-43EB-8DDC-90AC73B6DF1F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ghaleb.Web", "Ghaleb.Web\Ghaleb.Web.csproj", "{AD8B62D2-A32D-4EED-A090-F7293C938934}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{6F377A19-B79C-43EB-8DDC-90AC73B6DF1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F377A19-B79C-43EB-8DDC-90AC73B6DF1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F377A19-B79C-43EB-8DDC-90AC73B6DF1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD8B62D2-A32D-4EED-A090-F7293C938934}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD8B62D2-A32D-4EED-A090-F7293C938934}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD8B62D2-A32D-4EED-A090-F7293C938934}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD8B62D2-A32D-4EED-A090-F7293C938934}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

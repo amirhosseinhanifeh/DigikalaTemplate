@@ -28,9 +28,11 @@
                             <th>نام محصول</th>
                             <th>دسته</th>
                             <th>تعداد سفارش</th>
-                            <th>تعداد بازدید</th>
+                            <th>تعداد بازدید اعضا</th>
+                            <th>تعداد کل بازدید(حتی بدون اعضا)</th>
                             <th>قیمت</th>
                             <th>وضعیت</th>
+                            <th>آخرین بروزرسانی</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -40,12 +42,14 @@
                             <tr>
                                 <td>@item.Row</td>
                                 <td><img style="width:75px;height:75px" class="img-fluid" src="@item.Image" /></td>
-                                <td>@item.Title</td>
+                                <td><a href="https://amirprinter.ir/product/@item.Id/@item.Url">@item.Title</a></td>
                                 <td>@item.SubCategory</td>
                                 <td>@item.OrderCount</td>
                                 <td>@item.Visit</td>
+                                <td>@item.AllVisit</td>
                                 <td>@item.Cost</td>
                                 <td>@item.Status</td>
+                                <td>@item.LastModified</td>
                                 <td>
                                     <a class="btn btn-warning" asp-route-productId="@item.Id" asp-controller="ProductComment" asp-action="Index">نظرات(@item.CommentCount)</a>|
                                     <a class="btn btn-primary" asp-route-productId="@item.Id" asp-controller="ProductPriceHistory" asp-action="Index">قیمت گذاری</a>|

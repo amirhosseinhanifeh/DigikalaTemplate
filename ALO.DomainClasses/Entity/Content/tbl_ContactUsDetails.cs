@@ -30,7 +30,7 @@ namespace ALO.DomainClasses.Entity.Content
         [Display(Name = "پست الکترونیکی")]
 
         public string Email { get; set; }
-
+        public string GoogleMapFrame { get; set; }
         public long? LanguageId { get; set; }
         public tbl_Language Language { get; set; }
     }

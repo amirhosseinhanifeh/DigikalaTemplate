@@ -1,10 +1,10 @@
 ﻿using ALO.DataAccessLayer.UnitOfWork;
 using ALO.DomainClasses;
-using ALO.DomainClasses.Configuration.Account;
-using ALO.DomainClasses.Configuration.City;
-using ALO.DomainClasses.Configuration.Country;
-using ALO.DomainClasses.Configuration.Financial;
-using ALO.DomainClasses.Configuration.Profile;
+using ALO.DomainClasses.Config.Account;
+using ALO.DomainClasses.Config.City;
+using ALO.DomainClasses.Config.Country;
+using ALO.DomainClasses.Config.Financial;
+using ALO.DomainClasses.Config.Profile;
 using ALO.DomainClasses.Entity.Account;
 using ALO.DomainClasses.Entity.Basket;
 using ALO.DomainClasses.Entity.Blog;
@@ -32,7 +32,7 @@ using System.Threading.Tasks;
 
 namespace ALO.DataAccessLayer.DataContext
 {
-    public class ServiceContext : DbContext, IUnitOfWork
+    public class ServiceContext : DbContext, IUnitOfWork,IDisposable
     {
         public ServiceContext(DbContextOptions<ServiceContext> options) : base(options)
         {
@@ -100,6 +100,7 @@ namespace ALO.DataAccessLayer.DataContext
         public DbSet<tbl_Blocks> tbl_Blocks { get; set; }
         public DbSet<tbl_LinkManagement> tbl_LinkManagements { get; set; }
         public DbSet<tbl_GroupLinkManagement> tbl_GroupLinkManagements { get; set; }
+        public DbSet<tbl_Tools> tbl_Tools { get; set; }
 
         #endregion
 
@@ -339,6 +340,9 @@ namespace ALO.DataAccessLayer.DataContext
         {
             throw new NotImplementedException();
         }
-
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
     }
 }

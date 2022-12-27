@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Http.Extensions;
+@model dynamic
+@{
+}
+<style>
+        .bgcover {
+        position: relative;
+        height: 250px;
+        background: url('/images/bg.jpg');
+        background-repeat: no-repeat;
+        background-size: 100%;
+        background-position: center;
+        color: #fff;
+    }
+
+        .bgcover * {
+            display: block;
+            z-index: 99999;
+            display: inline;
+        }
+
+        .bgcover:before {
+            position: absolute;
+            content: '';
+            top: 0;
+            left: 0;
+            width: 100%;
+            bottom: 0;
+            background-color: #000000a6;
+        }
+
+</style>
+@if (Model != null)
+{
+    <div class="col-12 bgcover d-flex justify-content-center align-items-center flex-column">
+        <a href="@Context.Request.GetDisplayUrl()"><h1>@Model.Title</h1></a>
+        <br />
+        <div class="breadcramps"><a href="@Url.Page("index")">خانه </a> > <a href="@Context.Request.GetDisplayUrl()"> @Model.PageTitle</a></div>
+    </div>
+}

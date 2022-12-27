@@ -1,0 +1,199 @@
+﻿@page
+@model Ghaleb.Web.Pages.SearchModel
+@{
+}
+<style>
+    .page-item:first-child .page-link {
+        border-top-right-radius: 0.25rem;
+        border-bottom-right-radius: 0.25rem;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+
+    .page-item:last-child .page-link {
+        border-top-left-radius: 0.25rem;
+        border-bottom-left-radius: 0.25rem;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+</style>
+<div class="row d-flex justify-content-between">
+    @if (Model.Brand != null)
+    {
+        ViewData["Seo"] = Model.Brand;
+        <div class="col-12 bg-white  p-2 mb-3">
+            <img src="@Model.Brand.Logo.BindImage()" style="width:250px">
+            @Model.Brand.Name
+            <br>
+            @Model.Brand.Description
+        </div>
+    }
+    @if (Model.ProductCategory != null)
+    {
+        ViewData["Seo"] = Model.ProductCategory;
+    }
+    @if (Model.SubProductCategory != null)
+    {
+        ViewData["Seo"] = Model.SubProductCategory;
+    }
+    <div class="col-12 col-sm-2">
+        <form method="get" class="row">
+            @if (Model.Brand != null)
+            {
+                <div class="col-12 bg-white  p-2" *ngIf="brand!=null">
+                    <label class="border-bottom p-2 d-block">دسته بندی</label>
+                    <ul>
+                        @foreach (var item in Model.ProductCategories)
+                        {
+                            <li style="display: flex;justify-content: space-between;">
+                                @item.Title
+                                <label>
+                                    <input type="checkbox" name="categoryIds" @(Model.CategoryIds.Any(h=>h==item.Id)?"checked":"") value="@item.Id" /><span class="label-text"></span>
+                                </label>
+                            </li>
+                        }
+
+                    </ul>
+                </div>
+            }
+            else
+            {
+                <div class="col-12 bg-white p-2" *ngIf="brand==null">
+                    <label class="border-bottom p-2 d-block">برند</label>
+                    <ul>
+                        @foreach (var item in Model.Brands)
+                        {
+
+                            <li style="display: flex;justify-content: space-between;">
+                                @item.Name
+
+                                <label>
+                                    <input type="checkbox" name="brandIds" @(Model.BrandIds.Any(h=>h==item.Id)?"checked":"") value="@item.Id" /><span class="label-text"></span>
+                                </label>
+                            </li>
+
+                        }
+                    </ul>
+                </div>
+            }
+            @if (Model.ProductCustomFields.Any())
+            {
+                <div class="col-12 bg-white p-2"
+                 *ngIf="fields?.length>0">
+                    @foreach (var item in Model.ProductCustomFields)
+                    {
+
+                        <div>
+                            <label class="border-bottom p-2 d-block">@item.Name</label>
+                            @foreach (var item2 in item.ProductCustomFieldsOptionValues)
+                            {
+
+                                <div style="display: flex;justify-content: space-between;"
+                         *ngFor="let item2 of item.options">
+                                    @item2.Value
+                                    <label>
+                                        <input type="checkbox" name="optionIds" @(Model.OptionIds.Any(h=>h==item2.Id)?"checked":"") value="@item2.Id" /><span class="label-text"></span>
+                                    </label>
+                                </div>
+
+                            }
+                        </div>
+
+                    }
+                </div>
+            }
+            <div class="col-12 bg-white p-2">
+                <div>
+                    <div style="display: flex;justify-content: space-between;">
+                        فقط کالاهای موجود
+                        <label>
+                            <input type="checkbox" asp-for="IsExists" /><span class="label-text"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-danger"> اعمال فیلتر</button>
+        </form>
+    </div>
+    <div class="col-12 col-sm-10">
+        <div class="row">
+            <div class="col-12  bg-white ">
+
+                @if (Model.Products.Any())
+                {
+                    <div class="row" *ngIf="products.length>0">
+                        @foreach (var item in Model.Products)
+                        {
+                            <a class="col-6 col-sm-3 p-2 ml-1 d-flex justify-content-center align-items-center " style="flex-direction:column ;" *ngFor="let item of products" target="_blank"
+                       href="/Product/@item.Id/@item.Url">
+                                <img class="card-img-top mx-auto"
+                             src="@item.Image"
+                             alt="@item.Title" style="width:200px;min-height:150px ;">
+                                <div class="card-body border-bottom">
+                                    <span class="card-text" style="color:#9f9f9f ;">@item.Title</span>
+                                </div>
+                                @if (item.Discount != null)
+                                {
+                                    <div class="text-center mt-3">
+                                        <s style="color: rgb(182, 182, 182);"> @item.Cost تومان </s>
+                                        <br>
+                                        @item.Discount تومان
+
+                                    </div>
+                                }
+                                else
+                                {
+
+                                    <div class="text-center mt-3">
+                                        @if (!item.Call)
+                                        {
+                                            <span *ngIf="!product?.call"> @item.Cost تومان </span>
+                                        }
+                                        else
+                                        {
+                                            <span *ngIf="product?.call"> تماس بگیرید</span>
+                                        }
+                                    </div>
+                                }
+                            </a>
+                        }
+
+
+                    </div>
+                }
+                else
+                {
+                    <div *ngIf="products.length==0">
+                        محصولی یافت نشد
+                    </div>
+                }
+
+            </div>
+            <div class="row">
+                @{
+                    double pageCount = (double)((decimal)Model.TotalCount / Convert.ToDecimal(Model.PageSize));
+
+                }
+                <nav aria-label="Page navigation example ">
+                    <ul class="pagination justify-content-center">
+                        @for (int i = 1; i <= (int)Math.Ceiling(pageCount); i++)
+                        {
+                            <li class="page-item">
+                                <a  asp-route-pagenumber="@i" class="page-link">@i</a>
+                            </li>
+                        }
+
+                    </ul>
+                </nav>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+@section Scripts{
+    <script>
+
+    </script>
+}
