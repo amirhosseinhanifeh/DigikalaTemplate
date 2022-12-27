@@ -68,6 +68,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
                 if (brand == null)
                     return RedirectToAction(nameof(Index));
 
+
                 _context.SoftDeletedBaseEntity<tbl_Brands>(brand);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
