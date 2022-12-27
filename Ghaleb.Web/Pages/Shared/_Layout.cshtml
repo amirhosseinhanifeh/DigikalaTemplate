@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="https://cdn.amirprinter.ir/font-awesome/css/all.css" />
     <link rel="stylesheet" href="https://cdn.amirprinter.ir/font.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.5/swiper-bundle.css" integrity="sha512-jxGmKjC/OykrTklkNK2NgnhNtKtUAADFY+rvSi3nA7dbaPRfjrSXYxHqX8iq5N6WTOntqEQZrEwW3L84sirfKQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Ghaleb.Web.styles.css" asp-append-version="true" />
 </head>
@@ -260,11 +259,13 @@ justify-content: center;
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.5/swiper-bundle.min.js" integrity="sha512-wdUM0BxMyMC/Yem1RWDiIiXA6ssXMoxypihVEwxDc+ftznGeRu4s9Fmxl8PthpxOh5CQ0eqjqw1Q8ScgNA1moQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+<script src="https://cdn.jsdelivr.net/gh/igorlino/elevatezoom-plus@1.1.6/src/jquery.ez-plus.js"></script>
 
     @await Component.InvokeAsync("Tools" ,new {type="script"})
 
     @await RenderSectionAsync("Scripts", required: false)
     <script>
+$("#zoom_04").ezPlus();
         $("#search-input").keyup(function() {
             $("#search-items").children().remove();
             $.ajax({
@@ -302,5 +303,6 @@ justify-content: center;
             }
         });
     </script>
+    @await RenderSectionAsync("Modal", required: false) 
 </body>
 </html>

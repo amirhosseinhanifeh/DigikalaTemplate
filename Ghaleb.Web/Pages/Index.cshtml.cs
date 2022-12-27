@@ -7,7 +7,7 @@ using ALO.Service.Interface.PageContent;
 using ALO.Service.Interface.Product;
 using ALO.ViewModels.PageContent;
 using ALO.ViewModels.Product;
-using Ghaleb.API.Helpers;
+using Ghaleb.Web.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;

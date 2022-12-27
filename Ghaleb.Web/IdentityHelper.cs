@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Security.Principal;
 
-namespace Ghaleb.API.Helpers
+namespace Ghaleb.Web.Helpers
 {
     public static class IdentityHelper
     {

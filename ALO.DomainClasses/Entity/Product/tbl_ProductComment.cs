@@ -16,7 +16,6 @@ namespace ALO.DomainClasses.Entity.Product
         public string Response { get; set; }
         public string IP { get; set; }
 
-
         public long ProductId { get; set; }
         public tbl_Product Product { get; set; }
 

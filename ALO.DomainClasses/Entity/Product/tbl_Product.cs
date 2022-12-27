@@ -161,6 +161,7 @@ namespace ALO.DomainClasses.Entity.Product
         public tbl_Product Product { get; set; }
         public long UserId { get; set; }
         public tbl_Users User { get; set; }
+        public int Count { get; set; }
     }
     public class tbl_ProductTags : BaseEntity
     {

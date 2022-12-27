@@ -4,12 +4,23 @@
     ViewData["Seo"] = Model.Product;
 
 }
+<style>
+    .zoomWindow {
+        right: 400px;
+        border: 1px solid rgb(183, 183, 183) !important;
+    }
+
+    .zoomLens {
+        width: 100px !important;
+        height: 100px !important;
+    }
+</style>
 <div class="row bg-white p-5">
     <div class="col-12 col-lg-5 justify-content-center d-flex">
         <div class="row">
             <div class="col-12">
-                <img style="width: 400px;" class="img-fluid mx-auto d-block"
-                     src="@Model.Product.Image" alt="@Model.Product.Title">
+                <img style="width: 400px;" id="zoom_04" class="img-fluid mx-auto d-block"
+                     src="@Model.Product.Image" alt="@Model.Product.Title" data-zoom-image="@Model.Product.Image">
             </div>
             <div class="col-12 justify-content-center d-flex">
                 @foreach (var item in Model.Product.Images)
@@ -155,6 +166,10 @@
          aria-labelledby="nav-comment-tab" tabindex="0">
         <div class="row">
             <div class="col-12 col-lg-3">
+                <div class="row mt-3">
+                    <span class="col-12">شما هم درباره این کالا دیدگاه ثبت کنید</span>
+                    <button type="button" class="btn btn-outline-danger col-6 mt-1" data-bs-toggle="modal" data-bs-target="#exampleModal">ثبت نظر</button>
+                </div>
             </div>
             <div class="col-12 col-lg-7">
                 @if (Model.Product.Comments.Any())
@@ -234,4 +249,19 @@
           ]
         }
     </script>
+        }
+    @section Modal{
+    <div class="modal  fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">ثبت نظر</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @await Component.InvokeAsync("Comment",new {prId=Model.Product.Id})
+                </div>
+            </div>
+        </div>
+    </div>
         }

@@ -1,11 +1,12 @@
 
 using ALO.Common.Utilities.ConvertTo;
 using ALO.DataAccessLayer.DataContext;
+using ALO.DomainClasses.Entity.Product;
 using ALO.DomainClasses.EntityHelpers;
 using ALO.Service.Interface.Product;
 using ALO.ViewModels.Product;
 using ALO.ViewModels.Result;
-using Ghaleb.API.Helpers;
+using Ghaleb.Web.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -42,7 +43,7 @@ namespace Ghaleb.Web.Pages
             {
                 Product = (await _product.GetProductDetails(id.GetValueOrDefault())).model;
             }
-            if(Product==null)
+            if (Product == null)
                 return RedirectToPage("Error");
 
             if (color == null)
@@ -67,6 +68,18 @@ namespace Ghaleb.Web.Pages
             }).ToListAsync();
 
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostAsync(tbl_ProductComment model)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                model.UserId = User.UserId();
+                model.IsActive = false;
+                _context.tbl_ProductComments.Add(model);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToPage("Product", new { id = model.ProductId });
         }
     }
 }

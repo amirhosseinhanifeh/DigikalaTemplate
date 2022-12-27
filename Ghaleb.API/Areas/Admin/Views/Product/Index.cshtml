@@ -9,14 +9,13 @@
 <script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
 <div class="row align-items-center">
     <div class="col text-right">
-        <a type="button" asp-action="Create" asp-area="Admin" asp-controller="Product"  class="btn btn-primary">افزودن</a>
+        <a type="button" asp-action="Create" asp-area="Admin" asp-controller="Product" class="btn btn-primary">افزودن</a>
     </div>
 </div>
 <div class="row">
     <div class="col-xl-12">
         <div class="">
             <div class="card-header border-0">
-
             </div>
 
             <div class="table-responsive">
@@ -48,13 +47,19 @@
                                 <td>@item.Visit</td>
                                 <td>@item.AllVisit</td>
                                 <td>@item.Cost</td>
-                                <td>@item.Status</td>
+                                <td>
+                                    <div class="custom-control custom-switch" style="direction:ltr;padding:0">
+                                        <input type="checkbox" class="custom-control-input" id="customSwitch@(item.Id)" onchange="ChangeStatus(@item.Id)" @(item.Status=="فعال"?"checked":"")>
+                                        <label class="custom-control-label" for="customSwitch@(item.Id)"></label>
+                                    </div>
+                                </td>
                                 <td>@item.LastModified</td>
                                 <td>
-                                    <a class="btn btn-warning" asp-route-productId="@item.Id" asp-controller="ProductComment" asp-action="Index">نظرات(@item.CommentCount)</a>|
-                                    <a class="btn btn-primary" asp-route-productId="@item.Id" asp-controller="ProductPriceHistory" asp-action="Index">قیمت گذاری</a>|
-                                    <a class="btn btn-dark" asp-route-id="@item.Id" asp-action="Edit">ویرایش</a>|
-                                    <a class="btn btn-danger" asp-action="Delete" asp-area="Admin" asp-controller="Product" asp-route-id="@item.Id">حذف</a>
+                                    <a class="btn btn-warning" asp-route-productId="@item.Id" asp-controller="ProductComment" asp-action="Index" data-toggle="tooltip" data-placement="top" title="نظرات"><i class="fa-regular fa-comment"></i> (@item.CommentCount)</a>|
+                                    <a class="btn btn-success" asp-route-productId="@item.Id" asp-controller="ProductTag" asp-action="Index" data-toggle="tooltip" data-placement="top" title="برچسب ها"><i class="fa-regular fa-tag"></i></a>|
+                                    <a class="btn btn-primary" asp-route-productId="@item.Id" asp-controller="ProductPriceHistory" asp-action="Index" data-toggle="tooltip" data-placement="top" title="قیمت گذاری"><i class="fa-regular fa-square-dollar"></i></a>|
+                                    <a class="btn btn-dark" asp-route-id="@item.Id" asp-action="Edit" data-toggle="tooltip" data-placement="top" title="ویرایش"><i class="fa-regular fa-pen-to-square"></i></a>|
+                                    <a class="btn btn-danger" asp-action="Delete" asp-area="Admin" asp-controller="Product" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="حذف"><i class="fa-regular fa-trash"></i></a>
                                 </td>
                             </tr>
                         }
@@ -64,3 +69,21 @@
         </div>
     </div>
 </div>
+@section scripts{
+
+    <script>
+        function ChangeStatus(id) {
+            $.ajax({
+                url:"@Url.Action("ChangeStatus")?id="+id,
+                method:"GET",
+            }).done(function(data) {
+                                    Swal.fire(
+                        'تبریک !',
+                        data.message,
+                        'success'
+                    )
+
+            });
+        }
+    </script>
+}

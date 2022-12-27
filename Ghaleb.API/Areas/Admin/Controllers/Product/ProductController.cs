@@ -222,6 +222,13 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
 
             return View();
         }
-
+        [HttpGet]
+        public async Task<IActionResult> ChangeStatus(long id)
+        {
+            var data =await _context.tbl_Products.FindAsync(id);
+            data.IsActive = !data.IsActive;
+            await _context.SaveChangesAsync();
+            return Json(new { message = SuccessfullMessage, Status = Status.Success, NotificationType.success });
+        }
     }
 }

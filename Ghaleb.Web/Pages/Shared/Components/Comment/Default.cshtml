@@ -1,0 +1,24 @@
+﻿@{
+}
+<div class="container-fluid">
+    <div class="row">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <form method="post">
+                <input name="Id" value="" hidden />
+                <input name="ProductId" hidden value="@ViewBag.ProductID" />
+                <div class="col-12">
+                    <label>متن نظر</label>
+                    <textarea name="Body" class="form-control" rows="8" placeholder="متن نظر خود را وارد نمایید"></textarea>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-danger">ثبت نظر</button>
+                </div>
+            </form>
+        }
+        else
+        {
+            <h6>شما اول باید وارد حساب کاربری خود شوید</h6>
+        }
+    </div>
+</div>

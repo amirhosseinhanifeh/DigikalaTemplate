@@ -324,7 +324,7 @@ namespace ALO.Service.Service.Product
                     Date = query.CreatedDate.RelativeDate().toPersianNumber(),
                     //IsBuy = UserId == null ? null : query.OrderDetails.Any(x => x.Order.UserId == UserId),
                     Images = query.Images.Select(y => new ProductGalleryDTO { Url = y.BindImage() }).ToList(),
-                    Comments = query.ProductComments.Select(y => new ProductCommentForWebsiteDto
+                    Comments = query.ProductComments.Where(x=>x.IsActive && x.IsDelete !=true).Select(y => new ProductCommentForWebsiteDto
                     {
                         Body = y.Body,
                         FullName = y.User.Profile.FirstName + " " + y.User.Profile.LastName,
@@ -723,16 +723,21 @@ namespace ALO.Service.Service.Product
 
         public async Task<bool> AddProductVisit(long id, long userId)
         {
-            if (!_db.tbl_ProductVisits.Any(x => x.ProductId == id && x.UserId == userId))
+            var data =await _db.tbl_ProductVisits.FirstOrDefaultAsync(x => x.ProductId == id && x.UserId == userId);
+            if (data==null)
             {
                 await _db.tbl_ProductVisits.AddAsync(new tbl_ProductVisits
                 {
                     ProductId = id,
-                    UserId = userId
+                    UserId = userId,
+                    Count=1
+                    
                 });
                 await _db.SaveChangesAsync();
                 return true;
             }
+            data.Count = data.Count + 1;
+            await _db.SaveChangesAsync();
             return false;
         }
 
