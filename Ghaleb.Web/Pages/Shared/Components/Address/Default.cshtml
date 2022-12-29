@@ -1,0 +1,63 @@
+﻿
+
+<style>
+    #map {
+    height: 500px;
+  }
+</style>
+<div class="row">
+    <div >
+
+        <form class="row" asp-page-handler="CreateAddress" method="post">
+
+            <div class="col-12 col-lg-6">
+                <div class="row">
+
+
+                    <div class="col-12 col-lg-6 form-group mt-2">
+                        <label>نام گیرنده</label>
+                        <input name="fullname" class="form-control" value=""
+                               placeholder="نام گیرنده">
+                    </div>
+
+                    <div class="col-12 col-lg-6 form-group mt-2">
+                        <label>تلفن گیرنده</label>
+                        <input name="phone" class="form-control" value=""
+                               placeholder="تلفن گیرنده">
+                    </div>
+
+                    <div class="col-12 col-lg-6 form-group mt-2">
+                        <label>موبایل گیرنده</label>
+                        <input name="mobile" class="form-control" value=""
+                               placeholder="موبایل گیرنده">
+                    </div>
+                    <div class="col-12 form-group mt-2">
+                        <label>آدرس گیرنده</label>
+                        <input type="text" name="address" required class="form-control" [value]="addr">
+                    </div>
+                    <div class="col-12 col-lg-6 form-group mt-2">
+                        <label>پلاک</label>
+                        <input name="pelak" class="form-control" value=""
+                               placeholder="پلاک" required>
+                    </div>
+                    <div class="col-12 col-lg-6 form-group mt-2">
+                        <label>واحد</label>
+                        <input name="vahed" class="form-control" value=""
+                               placeholder="واحد" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-6 mt-2 mt-lg-0">
+
+                <div class="map match-parent" id="map"></div>
+            </div>
+            <input name="Lat" value="" hidden />
+            <input name="Lng" value="" hidden />
+            <div class="col-12 form-group mt-2">
+                <button type="submit" class="btn btn-primary col-12">ثبت اطلاعات</button>
+            </div>
+        </form>
+
+    </div>
+</div>

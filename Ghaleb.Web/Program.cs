@@ -39,6 +39,7 @@ builder.Services.AddRazorPages().AddRazorPagesOptions(options =>
 {
     options.Conventions.AddPageRoute("/Search", "Search/Category/{subCategoryId?}/{subCategoryUrl?}");
     options.Conventions.AddPageRoute("/Search", "Search/Brand/{brandId?}/{brandName?}");
+    options.Conventions.AddPageRoute("/Search", "Search/Tag/{tagId}/{tagName}");
     options.Conventions.AddPageRoute("/Search", "Search/{categoryId?}/{categoryUrl?}/{subCategoryId?}/{subCategoryUrl?}");
 }); ;
 builder.Services.AddDbContext<ServiceContext>

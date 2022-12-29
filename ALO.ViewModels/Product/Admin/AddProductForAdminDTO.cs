@@ -22,6 +22,8 @@ namespace ALO.ViewModels.Product.Admin
         public string Abstract { get; set; }
         [Display(Name = "تگ محصول")]
         public bool IsSpecial { get; set; }
+        [Display(Name = "توسط گوگل ایندکس شود؟")]
+        public bool DoIndex { get; set; }
         [Display(Name = "عکس محصول")]
         public long? ImageId { get; set; }
         [Display(Name = "فایل دانلود محصول")]

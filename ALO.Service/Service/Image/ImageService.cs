@@ -112,7 +112,7 @@ namespace ALO.Service.Service.ImageService
        i => i.Resize(image.Width/2, image.Height/2));
                                 var encoder = new WebpEncoder()
                                 {
-                                    Quality = 0,
+                                    Quality = 30,
                                     
                                     
                                 };

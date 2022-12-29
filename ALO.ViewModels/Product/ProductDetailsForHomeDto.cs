@@ -22,12 +22,13 @@ namespace ALO.ViewModels.Product
         public string SubCategory { get; set; }
         public ProductBrandDto Category { get; set; }
         public List<ProductBrandDto> Colors { get; set; }
+        public List<ProductBrandDto> Tags { get; set; }
         public bool? IsBuy { get; set; }
         public string Date { get; set; }
         public ProductBrandDto Brand { get; set; }
         public List<ProductCustomFields> Values { get; set; }
 
-        
+        public bool DoIndex { get; set; }
         #region Seo
         public string Url { get; set; }
         public string PageTitle { get; set; }

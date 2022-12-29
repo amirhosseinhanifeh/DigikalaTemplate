@@ -59,6 +59,7 @@ namespace ALO.Service.Service.Product
                         State = ProductState.ACTIVED,
                         EnTitle = model.EnTitle,
                         FileId = model.FileId,
+                        DoIndex= model.DoIndex,
 
 
                     };
@@ -138,7 +139,7 @@ namespace ALO.Service.Service.Product
                 MainProductCategoryId = category.ProductCategory.MainProuctCategoryId,
                 ProductCategoryId = category.ProductCategoryId,
                 Url = RandomString(8),
-                OwnerId = userId
+                OwnerId = userId,
 
             };
             if (model.Values != null && model.Values.Any())
@@ -262,6 +263,7 @@ namespace ALO.Service.Service.Product
             {
                 var query = await _db.tbl_Products
                     .Include(x => x.Brand)
+                    .Include(x=>x.ProductTags)
                     .Include(x => x.SubProductCategory)
                     .ThenInclude(x => x.ProductCategory)
                     .Include(x => x.Users)
@@ -303,11 +305,13 @@ namespace ALO.Service.Service.Product
                         Hex = h.Hex,
 
                     }).ToList(),
+                    Tags = query.ProductTags.Select(x => new ProductBrandDto { Id = x.Id, Name = x.Name }).ToList(),
                     CostDisplay = query.GetLastPrice().ToString("n0").toPersianNumber(),
                     Cost = query.GetLastPrice(),
                     Description = query.Description,
                     Image = query.Image.BindImage(),
                     Title = query.Title,
+                    DoIndex= query.DoIndex,
                     IsSpecial = query.IsSpecial,
                     State = query.State.ToString(),
                     SubCategory = query.SubProductCategory.Title,
@@ -324,7 +328,7 @@ namespace ALO.Service.Service.Product
                     Date = query.CreatedDate.RelativeDate().toPersianNumber(),
                     //IsBuy = UserId == null ? null : query.OrderDetails.Any(x => x.Order.UserId == UserId),
                     Images = query.Images.Select(y => new ProductGalleryDTO { Url = y.BindImage() }).ToList(),
-                    Comments = query.ProductComments.Where(x=>x.IsActive && x.IsDelete !=true).Select(y => new ProductCommentForWebsiteDto
+                    Comments = query.ProductComments.Where(x => x.IsActive && x.IsDelete != true).Select(y => new ProductCommentForWebsiteDto
                     {
                         Body = y.Body,
                         FullName = y.User.Profile.FirstName + " " + y.User.Profile.LastName,
@@ -382,6 +386,7 @@ namespace ALO.Service.Service.Product
                     BrandId = result.BrandId,
                     EnTitle = result.EnTitle,
                     MainProuctCategoryId = result.MainProductCategoryId,
+                    DoIndex = result.DoIndex,
 
                 };
 
@@ -438,6 +443,7 @@ namespace ALO.Service.Service.Product
             long[] categoryIds = null,
             long? subcategoryId = null,
             long[] brandIds = null,
+            long? tagId=null,
             long[] optionIds = null,
             string title = null,
             string order = null,
@@ -489,6 +495,10 @@ namespace ALO.Service.Service.Product
 
                 }
                 strQuery = strQuery.And(m);
+            }
+            if(tagId !=null)
+            {
+                strQuery = strQuery.And(y => y.ProductTags.Any(h=>h.Id==tagId));
             }
             if (!string.IsNullOrEmpty(title))
             {
@@ -632,7 +642,7 @@ namespace ALO.Service.Service.Product
                     pr.MainProductCategoryId = model.MainProuctCategoryId;
                     pr.ProductCategoryId = model.ProductCategoryId;
                     pr.State = ProductState.ACTIVED;
-
+                    pr.DoIndex = model.DoIndex;
                     if (model.Values != null)
                     {
                         model.Values.ForEach(h =>
@@ -723,15 +733,15 @@ namespace ALO.Service.Service.Product
 
         public async Task<bool> AddProductVisit(long id, long userId)
         {
-            var data =await _db.tbl_ProductVisits.FirstOrDefaultAsync(x => x.ProductId == id && x.UserId == userId);
-            if (data==null)
+            var data = await _db.tbl_ProductVisits.FirstOrDefaultAsync(x => x.ProductId == id && x.UserId == userId);
+            if (data == null)
             {
                 await _db.tbl_ProductVisits.AddAsync(new tbl_ProductVisits
                 {
                     ProductId = id,
                     UserId = userId,
-                    Count=1
-                    
+                    Count = 1
+
                 });
                 await _db.SaveChangesAsync();
                 return true;

@@ -9,6 +9,8 @@
 
 
     <partial name="_SeoPartial" model="@ViewData["Seo"]" />
+
+    @ViewData["Robots"]
     @await Component.InvokeAsync("Tools" ,new {type="meta"})
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.amirprinter.ir/font-awesome/css/all.css" />
@@ -16,6 +18,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.5/swiper-bundle.css" integrity="sha512-jxGmKjC/OykrTklkNK2NgnhNtKtUAADFY+rvSi3nA7dbaPRfjrSXYxHqX8iq5N6WTOntqEQZrEwW3L84sirfKQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Ghaleb.Web.styles.css" asp-append-version="true" />
+
+
 </head>
 <body>
     <div class="container-fluid">
@@ -210,7 +214,7 @@ justify-content: center;
             <div class="col-8 mx-auto mt-5">
                 <div class="row border-bottom">
                     <a class="top-menu-items" href="/index">
-                       صفحه اصلی
+                        صفحه اصلی
                     </a>
                     <a class="top-menu-items" href="/repair">
                         درخواست تعمیرات
@@ -259,13 +263,13 @@ justify-content: center;
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.5/swiper-bundle.min.js" integrity="sha512-wdUM0BxMyMC/Yem1RWDiIiXA6ssXMoxypihVEwxDc+ftznGeRu4s9Fmxl8PthpxOh5CQ0eqjqw1Q8ScgNA1moQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-<script src="https://cdn.jsdelivr.net/gh/igorlino/elevatezoom-plus@1.1.6/src/jquery.ez-plus.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/igorlino/elevatezoom-plus@1.1.6/src/jquery.ez-plus.js"></script>
 
     @await Component.InvokeAsync("Tools" ,new {type="script"})
 
     @await RenderSectionAsync("Scripts", required: false)
     <script>
-$("#zoom_04").ezPlus();
+        $("#zoom_04").ezPlus();
         $("#search-input").keyup(function() {
             $("#search-items").children().remove();
             $.ajax({
@@ -303,6 +307,61 @@ $("#zoom_04").ezPlus();
             }
         });
     </script>
-    @await RenderSectionAsync("Modal", required: false) 
+    @await RenderSectionAsync("Modal", required: false)
+
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.js"></script>
+    <script>
+        var marker;
+        var lat = 35.697862;
+        var lng = 51.429254;
+        mapboxgl.accessToken = 'pk.eyJ1IjoiYW1pcmhvc3NlaW5oYW5pZmVoIiwiYSI6ImNqcmY5YWhzdzFieno0M21sZWVtYXFsdmQifQ.Wki3rC9UTgR5Rce3W_CmVQ';
+        var map = new mapboxgl.Map({
+            container: 'map', // HTML container id
+            style: 'mapbox://styles/amirhosseinhanifeh/clb96th6m004u14p596q8m9rz', // style URL
+            center: [lng, lat], // starting position as [lng, lat]
+            zoom: 16
+        }).on('click', (ev) => {
+            addmarker(ev.lngLat.lat, ev.lngLat.lng);
+            //this.lat = ev.lngLat.lat;
+            //this.lng = ev.lngLat.lng;
+
+        });
+findAddress(lat, lng);
+        mapboxgl.setRTLTextPlugin(
+            'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.2.3/mapbox-gl-rtl-text.js',
+            () => { }
+        );
+        marker = new mapboxgl.Marker()
+            .setLngLat([lng, lat])
+            .addTo(map);
+
+        function addmarker(lat, lng) {
+            marker.remove();
+            // Add markers to the map.
+            marker = new mapboxgl.Marker()
+                .remove()
+                .setLngLat({ lat: lat, lng: lng })
+                .addTo(this.map);
+
+            updateLngLat(lat, lng);
+            //this.findAddress(lat, lng);
+        }
+        function updateLngLat(lat, lng) {
+            $("input[name=Lat]").val(lat);
+            $("input[name=Lng]").val(lng);
+            findAddress(lat, lng);
+        }
+        function findAddress(lat, lng) {
+            $.ajax({
+                url:'https://map.ir/reverse?lat=' + lat + '&lon=' + lng,
+                headers: {
+                    'x-api-key':'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImYzMzU4ZTFjMDhmZGFmZWVkNGZmMjAzOGFhYjVhNDIxYmRmYzczMTk4OWEwMThmN2Y0NjAzYzU5NTU4YmRiNjY5NzE5YzFkM2I4NGQ5ZGM5In0.eyJhdWQiOiIyMDIyMSIsImp0aSI6ImYzMzU4ZTFjMDhmZGFmZWVkNGZmMjAzOGFhYjVhNDIxYmRmYzczMTk4OWEwMThmN2Y0NjAzYzU5NTU4YmRiNjY5NzE5YzFkM2I4NGQ5ZGM5IiwiaWF0IjoxNjcwMTU1MzAwLCJuYmYiOjE2NzAxNTUzMDAsImV4cCI6MTY3MjY2MDkwMCwic3ViIjoiIiwic2NvcGVzIjpbImJhc2ljIl19.e7-29fB3nFA3jijsALnOAWlfLP7c5WcIdUsLi-XePN7IDsi4KGpluGURGFV9Q1ZnbOToCxuG0H9FZNZc4cjuBsMnDDBGQCJWqDmwGDP2iLGGNiVBEI4MLAhOVUZp7DGD4BvKPZ0-hzoYs5WUstorRlRQvwyOwBWkmUIdZtC8fMozdjioAHfuRwsL2o7Phw4nfmbHx_ZGxNKe8GE8dCHB_tO1RgamJ0tNzF6tTdNZ8x4NFOpnoYiUFRDm9FwgZpbhQzI7Ng0eqm_N6vWhxJvHd3T3F4lzAgd3TIeHkiz-re4EjQlcAYxOmVAo5rb8hIh31ROeoQSDnTUdqbQRt2nCKw'
+                }
+            }).done((res) => {
+                $("input[name=address]").val(res.address_compact);
+            })
+        }
+    </script>
 </body>
 </html>

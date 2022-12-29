@@ -68,6 +68,10 @@
                     <input type="checkbox" asp-for="IsSpecial" />
                 </div>
                 <div class="form-group col-6">
+                    <label asp-for="DoIndex"></label>
+                    <input type="checkbox" asp-for="DoIndex" />
+                </div>
+                <div class="form-group col-6">
                     <label asp-for="ImageId"></label>
                     <image-upload Id="img" For="ImageId"></image-upload>
                 </div>
@@ -124,9 +128,11 @@
 
 </form>
 @section Scripts{
-    <script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/4.16.1/full-all/ckeditor.js"></script>
     <script>
-        CKEDITOR.replace('editor1');
+        CKEDITOR.replace('editor1', {
+            filebrowserUploadUrl: '/Admin/Upload/UploadImageFromCk'
+        });
     </script>
     <script>
 
@@ -192,10 +198,10 @@
         $("#SubProductCategoryId").change(function(e) {
             loadFields()
         });
-        function loadFields(){
+        function loadFields() {
             var subProductCategoryId = $("#SubProductCategoryId").val();
             var ProductCategoryId = $("#ProductCategoryId").val();
-            $("#fields").load("/Admin/Product/GetFields?categoryId=" +ProductCategoryId+'&subCategoryId='+subProductCategoryId );
+            $("#fields").load("/Admin/Product/GetFields?categoryId=" + ProductCategoryId + '&subCategoryId=' + subProductCategoryId);
         }
     </script>
 }

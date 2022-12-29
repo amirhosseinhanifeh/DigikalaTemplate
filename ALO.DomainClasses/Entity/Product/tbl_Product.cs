@@ -20,6 +20,10 @@ namespace ALO.DomainClasses.Entity.Product
         public string Description { get; set; }
         public string Abstract { get; set; }
         public bool IsSpecial { get; set; }
+        /// <summary>
+        /// ایندکس شود توسط گوگل؟
+        /// </summary>
+        public bool DoIndex { get; set; } = false;
         public long Visit { get; set; }
         public ProductState State { get; set; }
         public long? ImageId { get; set; }

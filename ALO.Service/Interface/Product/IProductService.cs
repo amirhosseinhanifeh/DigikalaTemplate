@@ -19,6 +19,7 @@ namespace ALO.Service.Interface.Product
             long[] categoryIds = null,
             long? subcategoryId = null,
             long[]? brandIds = null,
+            long? tagId=null,
             long[] optionIds = null,
             string title = null,
             string order = null,

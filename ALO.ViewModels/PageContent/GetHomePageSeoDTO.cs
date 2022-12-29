@@ -13,6 +13,7 @@ namespace ALO.ViewModels.PageContent
         public string MetaDescription { get; set; }
         public string Lat { get; set; }
         public string Lng { get; set; }
+        public bool? DoIndex { get; set; } = null;
         public string Address { get; set; }
         public string PostalCode { get; set; }
         public string Phone { get; set; }

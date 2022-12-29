@@ -22,10 +22,11 @@ namespace Ghaleb.Web.Pages
         public IEnumerable<ProductListForHomeDto> Products { get; set; }
         public tbl_Brands Brand { get; set; }
         public tbl_ProductCategory ProductCategory { get; set; }
-        public List<tbl_ProductCategory> ProductCategories { get; set; }
-        public List<tbl_Brands> Brands { get; set; }
+        public List<tbl_ProductCategory> ProductCategories { get; set; }=new List<tbl_ProductCategory>();
+        public List<tbl_Brands> Brands { get; set; } = new List<tbl_Brands>();
         public List<tbl_ProductCustomFields> ProductCustomFields { get; set; } = new List<tbl_ProductCustomFields>();
         public tbl_SubProductCategory SubProductCategory { get; set; }
+        public tbl_ProductTags ProductTag { get; set; }
         public long[] CategoryIds { get; set; }
         public long[] BrandIds { get; set; }
         public long[] OptionIds { get; set; }
@@ -37,6 +38,7 @@ namespace Ghaleb.Web.Pages
         public async Task OnGetAsync(
             long? mainCategoryId = null,
             long? brandId = null,
+            long? tagId=null,
             long? categoryId = null,
         long[] categoryIds = null,
         long? subcategoryId = null,
@@ -44,10 +46,11 @@ namespace Ghaleb.Web.Pages
         long[] optionIds = null,
             bool? myposts = null,
             string q = null,
-            string order = null,
+            string order = "NEW",
             bool? isExists=null,
             int pageNumber = 1,
             int pageSize = 16
+            
             )
         {
             if (brandId != null)
@@ -67,16 +70,20 @@ namespace Ghaleb.Web.Pages
                 ProductCustomFields = await _context.tbl_ProductCustomFields.Where(x => x.SubProductCategoryId == subcategoryId && x.FieldType == FieldType.DROPDOWN && x.ProductCustomFieldsOptionValues.Any()).Include(x => x.ProductCustomFieldsOptionValues).ToListAsync();
                 Brands = await _context.tbl_Brands.Where(x => x.IsActive && x.IsDelete != true).ToListAsync();
             }
+            if(tagId !=null)
+            {
+                ProductTag = await _context.tbl_ProductTags.FindAsync(tagId);
+            }
             CategoryIds = categoryIds;
             BrandIds = brandIds;
             OptionIds = optionIds;
             IsExists = isExists==true?true:false;
             var userId = myposts == true ? User.Identity.Name.Tolong() : null;
-            var res = _product.GetProductList(mainCategoryId, categoryIds, subcategoryId, brandIds, optionIds, q, order, pageNumber, pageSize, userId,isExists).model;
+            var res = _product.GetProductList(mainCategoryId, categoryIds, subcategoryId, brandIds,tagId, optionIds, q, order, pageNumber, pageSize, userId,isExists).model;
             TotalCount = await res.CountAsync();
             PageSize = pageSize;
             PageNumber = pageNumber;
-            Products = await _product.GetProductList(mainCategoryId, categoryIds, subcategoryId, brandIds, optionIds, q, order, pageNumber, pageSize, userId,isExists).model.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            Products = await _product.GetProductList(mainCategoryId, categoryIds, subcategoryId, brandIds,tagId, optionIds, q, order, pageNumber, pageSize, userId,isExists).model.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
         }
     }
 }

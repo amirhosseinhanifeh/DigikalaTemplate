@@ -73,7 +73,7 @@ namespace Ghaleb.API.Controllers
             {
                 options = JsonConvert.DeserializeObject<long[]>(optionIds);
             }
-            var result = (_product.GetProductList(mainCategoryId, categoryies, subcategoryId, brands, options, title, order, page, pageSize, userId));
+            var result = (_product.GetProductList(mainCategoryId, categoryies, subcategoryId, brands,null, options, title, order, page, pageSize, userId));
             return Ok(new { Data =await result.model.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync(), message = result.Message, Status = result.Status, result.NotificationType });
         }
         [HttpGet]

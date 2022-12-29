@@ -2,7 +2,6 @@
 @model Ghaleb.Web.Pages.ProductModel
 @{
     ViewData["Seo"] = Model.Product;
-
 }
 <style>
     .zoomWindow {
@@ -13,6 +12,9 @@
     .zoomLens {
         width: 100px !important;
         height: 100px !important;
+    }
+    p{
+        font-size:15px
     }
 </style>
 <div class="row bg-white p-5">
@@ -92,6 +94,20 @@
                             @item.Value
                         </div>
                     </div>
+                }
+
+            </div>
+            <div class="col-12 col-lg-10 mt-5">
+
+                <h6 style="font-weight:bold ;">برچسب ها</h6>
+                @foreach (var item in Model.Product.Tags)
+                {
+                   <a href="/Search/Tag/@item.Id/@item.Name"> <span class="ms-1" style="background: #f1f1f1;
+    padding-left: 9px;
+    border-radius: 44px;
+    padding-right: 9px;
+    padding-top: 2px;
+    padding-bottom: 2px;">@item.Name</span></a>
                 }
 
             </div>
