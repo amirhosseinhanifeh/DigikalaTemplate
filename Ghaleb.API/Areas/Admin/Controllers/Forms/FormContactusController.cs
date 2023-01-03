@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 namespace Ghaleb.API.Areas.Admin.Controllers.Forms
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
 
     public class FormContactusController : Controller
     {

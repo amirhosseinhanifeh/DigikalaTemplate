@@ -1,8 +1,6 @@
-﻿using ALO.Common.Utilities.ConvertTo;
-using ALO.DomainClasses.Entity.Account;
+﻿using ALO.DomainClasses.Entity.Account;
 using ALO.DomainClasses.Entity.City;
 using ALO.DomainClasses.Entity.IMG;
-using ALO.DomainClasses.Entity.Order;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -55,6 +53,7 @@ namespace ALO.DomainClasses.Entity.Product
         public ICollection<tbl_ProductRating> Ratings { get; set; }
 
         public ICollection<tbl_ProductCustomFieldValues> ProductCustomFieldValues { get; set; }
+        public ICollection<tbl_ProductPriceOptionValue> ProductPriceOptionValues { get; set; }
         public ICollection<tbl_Users> Users { get; set; }
         public ICollection<tbl_ProductTags> ProductTags { get; set; }
         public ICollection<tbl_ProductVisits> ProductVisits { get; set; }
@@ -125,53 +124,6 @@ namespace ALO.DomainClasses.Entity.Product
         ACTIVED,
         PENDING,
         DELETED,
-
-    }
-    public class tbl_ProductPriceHistory : BaseEntity
-    {
-        public long ColorId { get; set; }
-        public tbl_Color Color { get; set; }
-        public decimal Price { get; set; }
-        public int Inventory { get; set; }
-        public decimal? DiscountPrice { get; set; }
-        public long ProductId { get; set; }
-        public tbl_Product Product { get; set; }
-        public ICollection<tbl_OrderDetails> OrderDetails { get; set; }
-        public decimal GetPrice()
-        {
-            if (DiscountPrice != null)
-            {
-                return DiscountPrice.Value;
-            }
-            return Price;
-        }
-        public bool HasDiscount()
-        {
-            return DiscountPrice != null;
-        }
-        public string GetPriceValue()
-        {
-            if (DiscountPrice != null)
-            {
-                return DiscountPrice.Value.ToString("n0").toPersianNumber();
-            }
-            return (Price).ToString("n0").toPersianNumber();
-        }
-
-    }
-    public class tbl_ProductVisits : BaseEntity
-    {
-        public long ProductId { get; set; }
-        public tbl_Product Product { get; set; }
-        public long UserId { get; set; }
-        public tbl_Users User { get; set; }
-        public int Count { get; set; }
-    }
-    public class tbl_ProductTags : BaseEntity
-    {
-        public string Name { get; set; }
-        public long ProductId { get; set; }
-        public tbl_Product Product { get; set; }
 
     }
 }

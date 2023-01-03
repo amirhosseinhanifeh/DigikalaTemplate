@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace Ghaleb.API.Areas.Admin.Controllers.Users
 {
+    [Authorize(Roles = "Admin")]
+
     public class PermissionController : Controller
     {
 

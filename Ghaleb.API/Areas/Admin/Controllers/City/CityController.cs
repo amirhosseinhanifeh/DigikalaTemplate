@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 namespace Ghaleb.API.Areas.Admin.Controllers.City
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
 
     public class CityController : Controller
     {

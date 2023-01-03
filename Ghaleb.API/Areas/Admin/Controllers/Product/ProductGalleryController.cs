@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Ghaleb.API.Areas.Admin.Controllers.Product
 {
+    [Authorize(Roles = "Admin")]
 
     public class ProductGalleryController : Controller
     {

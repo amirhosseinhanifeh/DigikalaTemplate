@@ -17,6 +17,8 @@ using static ALO.Common.Messages.Message;
 
 namespace Ghaleb.API.Areas.Admin.Controllers.Blog
 {
+    [Authorize(Roles = "Admin")]
+
     [Area("Admin")]
 
     public class BlogController : Controller
@@ -76,7 +78,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Blog
                 Id = result.Id,
                 ImageId = result.ImageId.GetValueOrDefault(),
                 MetaDescription = result.MetaDescription,
-                MetaKeyword = result.MetaKeyword,
+                MetaKeyword = result.MetaKeyword.Split(","),
                 PageTitle = result.PageTitle,
                 ShowInHome = result.ShowInHome,
                 Title = result.Title,

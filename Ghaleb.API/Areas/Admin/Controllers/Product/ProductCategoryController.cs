@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 namespace Ghaleb.API.Areas.Admin.Controllers.Product
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
 
     public class ProductCategoryController : Controller
     {

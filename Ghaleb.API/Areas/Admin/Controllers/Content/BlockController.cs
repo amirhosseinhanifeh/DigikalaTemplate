@@ -12,9 +12,11 @@ using System.Threading.Tasks;
 
 namespace AyandeNama.Web.Areas.Admin.Controllers.Content
 {
+    [Authorize(Roles = "Admin")]
+
     [Area("Admin")]
 
-    public class BlockController : Controller
+    public class BlockController : Microsoft.AspNetCore.Mvc.Controller
     {
         private readonly ServiceContext _context;
         private WebsiteBase _websitebase;

@@ -2020,6 +2020,42 @@ namespace ALO.DataAccessLayer.Migrations
                     b.ToTable("tbl_ProductCustomFieldsOptionValues");
                 });
 
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_ProductGuarantee", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Createdby")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modifiedby")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_ProductGuarantees");
+                });
+
             modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_ProductPriceHistory", b =>
                 {
                     b.Property<long>("Id")
@@ -2027,7 +2063,7 @@ namespace ALO.DataAccessLayer.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("ColorId")
+                    b.Property<long?>("ColorId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedDate")
@@ -2057,6 +2093,9 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<long?>("ProductGuaranteeId")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("ProductId")
                         .HasColumnType("bigint");
 
@@ -2064,9 +2103,97 @@ namespace ALO.DataAccessLayer.Migrations
 
                     b.HasIndex("ColorId");
 
+                    b.HasIndex("ProductGuaranteeId");
+
                     b.HasIndex("ProductId");
 
                     b.ToTable("tbl_ProductPriceHistory");
+                });
+
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_ProductPriceOption", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Createdby")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modifiedby")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("ProductCategoryId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("SubProductCategoryId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductCategoryId");
+
+                    b.HasIndex("SubProductCategoryId");
+
+                    b.ToTable("tbl_ProductPriceOptions");
+                });
+
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_ProductPriceOptionValue", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Createdby")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modifiedby")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("ProductId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ProductPriceOptionId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("ProductPriceOptionId");
+
+                    b.ToTable("tbl_ProductPriceOptionValues");
                 });
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_ProductRating", b =>
@@ -2341,6 +2468,21 @@ namespace ALO.DataAccessLayer.Migrations
                     b.HasIndex("ProductImagesId");
 
                     b.ToTable("ProductImages");
+                });
+
+            modelBuilder.Entity("tbl_ProductPriceHistorytbl_ProductPriceOptionValue", b =>
+                {
+                    b.Property<long>("ProductPriceHistoriesId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ProductPriceOptionValuesId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("ProductPriceHistoriesId", "ProductPriceOptionValuesId");
+
+                    b.HasIndex("ProductPriceOptionValuesId");
+
+                    b.ToTable("tbl_ProductPriceHistoryOptionValues");
                 });
 
             modelBuilder.Entity("tbl_Producttbl_Users", b =>
@@ -2875,10 +3017,12 @@ namespace ALO.DataAccessLayer.Migrations
             modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_ProductPriceHistory", b =>
                 {
                     b.HasOne("ALO.DomainClasses.Entity.Product.tbl_Color", "Color")
-                        .WithMany()
-                        .HasForeignKey("ColorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("ProductPriceHistories")
+                        .HasForeignKey("ColorId");
+
+                    b.HasOne("ALO.DomainClasses.Entity.Product.tbl_ProductGuarantee", "ProductGuarantee")
+                        .WithMany("ProductPriceHistories")
+                        .HasForeignKey("ProductGuaranteeId");
 
                     b.HasOne("ALO.DomainClasses.Entity.Product.tbl_Product", "Product")
                         .WithMany("ProductPriceHistories")
@@ -2889,6 +3033,40 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Navigation("Color");
 
                     b.Navigation("Product");
+
+                    b.Navigation("ProductGuarantee");
+                });
+
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_ProductPriceOption", b =>
+                {
+                    b.HasOne("ALO.DomainClasses.Entity.Product.tbl_ProductCategory", "ProductCategory")
+                        .WithMany()
+                        .HasForeignKey("ProductCategoryId");
+
+                    b.HasOne("ALO.DomainClasses.Entity.Product.tbl_ProductCategory", "SubProductCategory")
+                        .WithMany()
+                        .HasForeignKey("SubProductCategoryId");
+
+                    b.Navigation("ProductCategory");
+
+                    b.Navigation("SubProductCategory");
+                });
+
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_ProductPriceOptionValue", b =>
+                {
+                    b.HasOne("ALO.DomainClasses.Entity.Product.tbl_Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
+
+                    b.HasOne("ALO.DomainClasses.Entity.Product.tbl_ProductPriceOption", "ProductPriceOption")
+                        .WithMany("OptionValues")
+                        .HasForeignKey("ProductPriceOptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("ProductPriceOption");
                 });
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_ProductRating", b =>
@@ -2981,6 +3159,21 @@ namespace ALO.DataAccessLayer.Migrations
                     b.HasOne("ALO.DomainClasses.Entity.Product.tbl_Product", null)
                         .WithMany()
                         .HasForeignKey("ProductImagesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("tbl_ProductPriceHistorytbl_ProductPriceOptionValue", b =>
+                {
+                    b.HasOne("ALO.DomainClasses.Entity.Product.tbl_ProductPriceHistory", null)
+                        .WithMany()
+                        .HasForeignKey("ProductPriceHistoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ALO.DomainClasses.Entity.Product.tbl_ProductPriceOptionValue", null)
+                        .WithMany()
+                        .HasForeignKey("ProductPriceOptionValuesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -3082,6 +3275,11 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Navigation("Products");
                 });
 
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_Color", b =>
+                {
+                    b.Navigation("ProductPriceHistories");
+                });
+
             modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_MainProductCategory", b =>
                 {
                     b.Navigation("ProductCategories");
@@ -3123,9 +3321,19 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Navigation("ProductCustomFieldValues");
                 });
 
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_ProductGuarantee", b =>
+                {
+                    b.Navigation("ProductPriceHistories");
+                });
+
             modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_ProductPriceHistory", b =>
                 {
                     b.Navigation("OrderDetails");
+                });
+
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_ProductPriceOption", b =>
+                {
+                    b.Navigation("OptionValues");
                 });
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_SubProductCategory", b =>

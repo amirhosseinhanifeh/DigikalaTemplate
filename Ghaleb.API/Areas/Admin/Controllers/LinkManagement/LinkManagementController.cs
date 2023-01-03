@@ -13,8 +13,9 @@ using static ALO.Common.Messages.Message;
 namespace AyandeNama.Web.Areas.Admin.Controllers.LinkManagement
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
 
-    public class LinkManagementController : Controller
+    public class LinkManagementController : Microsoft.AspNetCore.Mvc.Controller
     {
         private readonly ServiceContext _context;
         public LinkManagementController(ServiceContext context)

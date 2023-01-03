@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 
 namespace Ghaleb.API.Areas.Admin.Controllers.Content
 {
+    [Authorize(Roles = "Admin")]
+
     [Area("Admin")]
 
     public class PageContentController : Controller

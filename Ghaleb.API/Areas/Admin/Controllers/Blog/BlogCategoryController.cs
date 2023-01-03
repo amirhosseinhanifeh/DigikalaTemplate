@@ -16,6 +16,7 @@ using static ALO.Common.Messages.Message;
 
 namespace Ghaleb.API.Areas.Admin.Controllers.Blog
 {
+    [Authorize(Roles = "Admin")]
     [Area("Admin")]
     public class BlogCategoryController : Controller
     {

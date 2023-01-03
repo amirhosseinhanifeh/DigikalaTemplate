@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\sitemap.xml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ALO.Common\ALO.Common.csproj" />
     <ProjectReference Include="..\ALO.DataAccessLayer\ALO.DataAccessLayer.csproj" />
     <ProjectReference Include="..\ALO.DomainClasses\ALO.DomainClasses.csproj" />
@@ -21,6 +17,7 @@
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.SEOHelper" Version="1.0.1" />
+    <PackageReference Include="FusionCharts.Visualization" Version="1.0.9" />
     <PackageReference Include="Hangfire" Version="1.7.32" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.5">

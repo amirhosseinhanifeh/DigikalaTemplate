@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Ghaleb.Web.styles.css" asp-append-version="true" />
 
+    @await Component.InvokeAsync("FavIcon")
 
 </head>
 <body>
@@ -249,7 +250,7 @@ justify-content: center;
                             <a href="/Search/1/printer/6/multifunction-printer-color">پرینتر چند کاره (جوهر افشان)</a>
                         </li>
 
-                    </ul>
+                    </ul> 
                 </div>
             </div>
         </div>
@@ -262,6 +263,7 @@ justify-content: center;
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js" integrity="sha512-2rNj2KJ+D8s1ceNasTIex6z4HWyOnEYLVC3FigGOmyQCZc2eBXKgOxQmo3oKLHyfcj53uz4QMsRCWNbLd32Q1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.5/swiper-bundle.min.js" integrity="sha512-wdUM0BxMyMC/Yem1RWDiIiXA6ssXMoxypihVEwxDc+ftznGeRu4s9Fmxl8PthpxOh5CQ0eqjqw1Q8ScgNA1moQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+   
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdn.jsdelivr.net/gh/igorlino/elevatezoom-plus@1.1.6/src/jquery.ez-plus.js"></script>
 

@@ -36,7 +36,7 @@ namespace Ghaleb.Web.Pages
 
             }
 
-            new SitemapDocument().CreateSitemapXML(list, _env.ContentRootPath);
+            new SitemapDocument().CreateSitemapXML(list, _env.WebRootPath);
         }
     }
 }

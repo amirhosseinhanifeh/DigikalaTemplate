@@ -12,8 +12,9 @@ using System.Threading.Tasks;
 namespace AyandeNama.Web.Areas.Admin.Controllers.Language
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
 
-    public class LanguageController : Controller
+    public class LanguageController : Microsoft.AspNetCore.Mvc.Controller
     {
         private readonly ServiceContext _context;
         private readonly CookieHelper _cookie;

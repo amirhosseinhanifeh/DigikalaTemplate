@@ -23,7 +23,7 @@
         });
 
     });
-    $("[type=file][file-type=image]").change(function () {
+    $("[type=file][file-type=image][multiple!=multiple]").change(function () {
         debugger;
         var input = $(this);
         var name = input.attr("data-id");
@@ -63,8 +63,11 @@
 
         for (var i = 0; i != files.length; i++) {
             formData.append("files", input.get(0).files[i]);
+            var file = input.get(0).files[i];
+            if (file) {
+                $("[data-id=" + name + "]").after("<img src=" + URL.createObjectURL(file) +" style='width:100px;height:100px' />");
+            }
         }
-
         $.ajax(
             {
                 url: "/Admin/Upload/UploadImages",
@@ -74,16 +77,17 @@
                 type: "POST",
                 success: function (data) {
                     console.log(data);
+                    debugger;
                     //$("#ImageId").attr("src", data);
-                    for (var i = 0; i < data; i++) {
-                        $("#images").append($("input[name=" + name + "]").val(data));
+                    for (var i = 0; i < data.length; i++) {
+                        $("input[data-id=" + name + "]").after("<input hidden name=" + name + " value=" + data[i] +" />");
                     }
                  
                 }
             }
         );
     });
-    $("[type=file][file-type=file]").change(function () {
+    $("[type=file][file-type=file]").change(function (e) {
         debugger;
         var input = $(this);
         var name = input.attr("name");

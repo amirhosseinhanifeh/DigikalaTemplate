@@ -12,8 +12,10 @@ using System.Threading.Tasks;
 
 namespace AyandeNama.Web.Areas.Admin.Controllers.Content
 {
+    [Authorize(Roles = "Admin")]
+
     [Area("Admin")]
-    public class SlideShowController : Controller
+    public class SlideShowController : Microsoft.AspNetCore.Mvc.Controller
     {
         private readonly ServiceContext _context;
         private WebsiteBase _websitebase;

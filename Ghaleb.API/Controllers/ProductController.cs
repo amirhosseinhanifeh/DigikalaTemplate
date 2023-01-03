@@ -56,25 +56,7 @@ namespace Ghaleb.API.Controllers
             int pageSize = 100
             )
         {
-
-            var userId = myposts == true ? User.Identity.Name.Tolong() : null;
-            var brands = new long[] { };
-            var categoryies = new long[] { };
-            var options = new long[] { };
-            if (brandIds != null)
-            {
-                brands = JsonConvert.DeserializeObject<long[]>(brandIds);
-            }
-            if (categoryIds != null)
-            {
-                categoryies = JsonConvert.DeserializeObject<long[]>(categoryIds);
-            }
-            if (optionIds != null)
-            {
-                options = JsonConvert.DeserializeObject<long[]>(optionIds);
-            }
-            var result = (_product.GetProductList(mainCategoryId, categoryies, subcategoryId, brands,null, options, title, order, page, pageSize, userId));
-            return Ok(new { Data =await result.model.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync(), message = result.Message, Status = result.Status, result.NotificationType });
+            return Ok();
         }
         [HttpGet]
         public async Task<ActionResult<List<CategoryListForHomeDTO>>> GetAllByCategoryAsync()

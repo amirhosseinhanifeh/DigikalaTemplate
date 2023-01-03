@@ -19,13 +19,13 @@
     }
 </style>
 <div class="row d-flex justify-content-between">
-    @if(Model.ProductTag !=null)
+    @if (Model.ProductTag != null)
     {
-        ViewData["Seo"] =new
+        ViewData["Seo"] = new
         {
-            PageTitle=Model.ProductTag.Name,
-            MetaKeyword=Model.ProductTag.Name,
-            MetaDescription=Model.ProductTag.Name
+            PageTitle = Model.ProductTag.Name,
+            MetaKeyword = Model.ProductTag.Name,
+            MetaDescription = Model.ProductTag.Name
         };
     }
     @if (Model.Brand != null)
@@ -41,8 +41,10 @@
 
     <div class="col-12 col-sm-2">
         <form method="get" class="row">
+            <input asp-for="BrandId" hidden />
             @if (Model.Brand != null)
             {
+                int c = 0;
                 <div class="col-12 bg-white  p-2" *ngIf="brand!=null">
                     <label class="border-bottom p-2 d-block">دسته بندی</label>
                     <ul>
@@ -61,7 +63,7 @@
             }
             else
             {
-                
+
                 <div class="col-12 bg-white p-2" *ngIf="brand==null">
                     <label class="border-bottom p-2 d-block">برند</label>
                     <ul>
@@ -82,8 +84,7 @@
             }
             @if (Model.ProductCustomFields.Any())
             {
-                <div class="col-12 bg-white p-2"
-                 *ngIf="fields?.length>0">
+                <div class="col-12 bg-white p-2">
                     @foreach (var item in Model.ProductCustomFields)
                     {
 
@@ -99,7 +100,6 @@
                                         <input type="checkbox" name="optionIds" @(Model.OptionIds.Any(h=>h==item2.Id)?"checked":"") value="@item2.Id" /><span class="label-text"></span>
                                     </label>
                                 </div>
-
                             }
                         </div>
 
@@ -183,7 +183,7 @@
                         @for (int i = 1; i <= (int)Math.Ceiling(pageCount); i++)
                         {
                             <li class="page-item">
-                                <a asp-route-pagenumber="@i" class="page-link">@i</a>
+                                <a asp-all-route-data="@Model.Routes" asp-route-pagenumber="@i" class="page-link">@i</a>
                             </li>
                         }
 

@@ -12,6 +12,7 @@ using static ALO.Common.Messages.Message;
 namespace Ghaleb.API.Areas.Admin.Controllers.Product
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
 
     public class ProductCommentController : Controller
     {

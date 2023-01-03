@@ -1,4 +1,5 @@
 ﻿using ALO.DataAccessLayer.DataContext;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -7,6 +8,8 @@ using System.Threading.Tasks;
 namespace Ghaleb.API.Areas.Admin.Controllers.Users
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
+
     public class RolesController : Controller
     {
         private readonly ServiceContext _context;

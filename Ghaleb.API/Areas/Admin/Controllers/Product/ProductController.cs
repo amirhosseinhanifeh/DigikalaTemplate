@@ -37,11 +37,18 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
             _context = context;
         }
 
-        public async Task<IActionResult> Index(long? brandId)
-
+        public async Task<IActionResult> Index(long? brandId,long? subcategoryId, int page=1,int pageSize=6)
         {
-            var Result = await _productService.GetProductListForAdmin(brandId);
-            return View(Result.model);
+            var res =  _productService.GetProductListForAdmin(brandId,subcategoryId);
+
+            ViewBag.TotalCount = await res.model.CountAsync();
+            ViewBag.PageSize = pageSize;
+            ViewBag.PageNumber = page;
+            ViewBag.Routes = new Dictionary<string, string> {
+                { "brandId", brandId.ToString()},
+                { "subcategoryId", subcategoryId.ToString()},
+            };
+            return View(await res.model.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync());
         }
         public async Task<IActionResult> Create()
         {

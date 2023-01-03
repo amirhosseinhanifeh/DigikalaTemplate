@@ -6,7 +6,7 @@
         {
             <form method="post">
                 <input name="Id" value="" hidden />
-                <input name="ProductId" hidden value="@ViewBag.ProductID" />
+                <input name="ProductId" hidden value="@ViewData["ProductID"]" />
                 <div class="col-12">
                     <label>متن نظر</label>
                     <textarea name="Body" class="form-control" rows="8" placeholder="متن نظر خود را وارد نمایید"></textarea>

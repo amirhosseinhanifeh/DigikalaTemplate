@@ -1,0 +1,51 @@
+﻿body {
+    background: #EFF3F6;
+}
+
+.app-sidebar {
+    background: #232c3d;
+}
+.main-sidebar-header{
+    background:inherit;
+}
+.desktop-logo{
+    display:flex;
+    align-items:center;
+}
+.side-menu__item.active .side-menu__label{
+    color:#fff !important;
+}
+.side-menu__item.active, .side-menu__item:focus, .side-menu__item:hover{
+    color:#fff !important;
+}
+.slide:hover .angle, .slide:hover .side-menu__icon, .slide:hover .side-menu__label{
+    color:#fff !important;
+    fill:#fff !important;
+}
+.slide.is-expanded .angle, .slide.is-expanded .side-menu__icon, .slide.is-expanded .side-menu__label{
+    color:#fff !important;
+}
+.main-sidebar-header {
+    border-bottom: 1px solid #2c3648;
+}
+.slide.is-expanded .slide-menu, .sub-slide {
+    background: #232c3d;
+}
+.slide-item {
+    font-size: 12px;
+    padding: 8px 28px 8px 0;
+    color: #6d7790;
+    border-bottom: 1px solid #2c3648;
+}
+.slide.is-expanded a {
+    color: #6d7790;
+}
+.slide-item.active, .slide-item:focus, .slide-item:hover{
+    color:#fff !important;
+}
+.side-menu__item i{
+    color:#fff;
+}
+.select2-container{
+    width:100% !important;
+}

@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 
 namespace Ghaleb.API.Areas.Admin.Controllers.Blog
 {
+    [Authorize(Roles = "Admin")]
     [Area("Admin")]
-
     public class BlogCommentController : Controller
     {
         private readonly ServiceContext _context;

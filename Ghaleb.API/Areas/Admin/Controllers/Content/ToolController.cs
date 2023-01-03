@@ -1,6 +1,7 @@
 ﻿using ALO.Common.Enums;
 using ALO.DataAccessLayer.DataContext;
 using ALO.DomainClasses.Entity.Content;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace Ghaleb.API.Areas.Admin.Controllers.Content
 {
+    [Authorize(Roles = "Admin")]
+
     [Area("admin")]
     public class ToolController : Controller
     {

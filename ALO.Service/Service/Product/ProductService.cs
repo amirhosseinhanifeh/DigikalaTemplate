@@ -20,6 +20,7 @@ using Microsoft.EntityFrameworkCore;
 using ALO.Common.Utilities.ConvertTo;
 using ALO.Common.Utilities.ConvertDt;
 using ALO.Service.Interface.Image;
+using ALO.DomainClasses.Entity.IMG;
 
 namespace ALO.Service.Service.Product
 {
@@ -50,7 +51,7 @@ namespace ALO.Service.Service.Product
                         Title = model.Title,
                         SubProductCategoryId = model.SubProductCategoryId,
                         PageTitle = model.PageTitle,
-                        MetaKeyword = model.MetaKeyword,
+                        MetaKeyword = string.Join(",", model.MetaKeyword),
                         ImageId = model.ImageId,
                         MetaDescription = model.MetaDescription,
                         MainProductCategoryId = model.MainProuctCategoryId,
@@ -59,7 +60,7 @@ namespace ALO.Service.Service.Product
                         State = ProductState.ACTIVED,
                         EnTitle = model.EnTitle,
                         FileId = model.FileId,
-                        DoIndex= model.DoIndex,
+                        DoIndex = model.DoIndex,
 
 
                     };
@@ -263,7 +264,7 @@ namespace ALO.Service.Service.Product
             {
                 var query = await _db.tbl_Products
                     .Include(x => x.Brand)
-                    .Include(x=>x.ProductTags)
+                    .Include(x => x.ProductTags)
                     .Include(x => x.SubProductCategory)
                     .ThenInclude(x => x.ProductCategory)
                     .Include(x => x.Users)
@@ -298,7 +299,7 @@ namespace ALO.Service.Service.Product
                         Name = query.SubProductCategory.Title,
                         Url = query.SubProductCategory.Url
                     } : null,
-                    Colors = query.ProductPriceHistories.Select(x => x.Color).Select(h => new ProductBrandDto
+                    Colors = query.ProductPriceHistories.Where(x=>x.Color!=null).Select(x => x.Color).Select(h => new ProductBrandDto
                     {
                         Id = h.Id,
                         Name = h.Name,
@@ -311,7 +312,7 @@ namespace ALO.Service.Service.Product
                     Description = query.Description,
                     Image = query.Image.BindImage(),
                     Title = query.Title,
-                    DoIndex= query.DoIndex,
+                    DoIndex = query.DoIndex,
                     IsSpecial = query.IsSpecial,
                     State = query.State.ToString(),
                     SubCategory = query.SubProductCategory.Title,
@@ -340,6 +341,18 @@ namespace ALO.Service.Service.Product
                         Name = x.ProductCustomField.Name,
                         Value = x.ProductCustomFieldsOptionValueId == null ? x.Value.toPersianNumber() : x.ProductCustomFieldsOptionValue?.Value
                     }).ToList(),
+                    Options = await _db.tbl_ProductPriceOptions.Where(x => x.ProductCategoryId == query.ProductCategoryId).Select(x => new ProductCustomFields
+                    {
+                        Id = x.Id,
+                        Key = x.Name,
+                        Name = x.Name,
+                        Value = x.Name,
+                        Options = x.OptionValues.Select(h => new ProductCustomFields
+                        {
+                            Id = h.Id,
+                            Name = h.Value,
+                        }).ToList(),
+                    }).ToListAsync(),
                     IsFavorite = query.Users.Any(x => x.Id == UserId)
 
                 };
@@ -368,7 +381,7 @@ namespace ALO.Service.Service.Product
             try
             {
 
-                var result = (await _db.GetAsync<tbl_Product>(x => x.Id == Id, includes: new string[] { "ProductPriceHistories" }));
+                var result = (await _db.GetAsync<tbl_Product>(x => x.Id == Id, includes: new string[] { "ProductPriceHistories", "Images" }));
                 var data = new AddProductForAdminDTO
                 {
                     Abstract = result.Abstract,
@@ -376,7 +389,7 @@ namespace ALO.Service.Service.Product
                     IsSpecial = result.IsSpecial,
                     ImageId = result.ImageId,
                     PageTitle = result.PageTitle,
-                    MetaKeyword = result.MetaKeyword,
+                    MetaKeyword = result.MetaKeyword.Split(","),
                     Id = result.Id,
                     MetaDescription = result.MetaDescription,
                     ProductCategoryId = result.ProductCategoryId,
@@ -387,6 +400,7 @@ namespace ALO.Service.Service.Product
                     EnTitle = result.EnTitle,
                     MainProuctCategoryId = result.MainProductCategoryId,
                     DoIndex = result.DoIndex,
+                    ImageIds = result.Images.Select(x => x.Id).ToArray()
 
                 };
 
@@ -440,10 +454,11 @@ namespace ALO.Service.Service.Product
         }
         public ListResultViewModel<IQueryable<ProductListForHomeDto>> GetProductList(
             long? maincategoryId = null,
+                        long? categoryId = null,
+                        long? subcategoryId = null,
             long[] categoryIds = null,
-            long? subcategoryId = null,
-            long[] brandIds = null,
-            long? tagId=null,
+            long[]? brandIds = null,
+            long? tagId = null,
             long[] optionIds = null,
             string title = null,
             string order = null,
@@ -458,6 +473,14 @@ namespace ALO.Service.Service.Product
             if (maincategoryId != null)
             {
                 strQuery = strQuery.And(y => y.MainProductCategoryId == maincategoryId);
+            }
+            if (subcategoryId != null)
+            {
+                strQuery = strQuery.And(y => y.SubProductCategoryId == subcategoryId);
+            }
+            if (categoryId != null)
+            {
+                strQuery = strQuery.And(y => y.ProductCategoryId == categoryId);
             }
             if (categoryIds != null && categoryIds.Any())
             {
@@ -481,10 +504,7 @@ namespace ALO.Service.Service.Product
                 }
                 strQuery = strQuery.And(m);
             }
-            if (subcategoryId != null)
-            {
-                strQuery = strQuery.And(y => y.SubProductCategoryId == subcategoryId);
-            }
+
             if (brandIds != null && brandIds.Any())
             {
                 var m = PredicateBuilder.False<tbl_Product>();
@@ -496,9 +516,9 @@ namespace ALO.Service.Service.Product
                 }
                 strQuery = strQuery.And(m);
             }
-            if(tagId !=null)
+            if (tagId != null)
             {
-                strQuery = strQuery.And(y => y.ProductTags.Any(h=>h.Id==tagId));
+                strQuery = strQuery.And(y => y.ProductTags.Any(h => h.Id == tagId));
             }
             if (!string.IsNullOrEmpty(title))
             {
@@ -513,6 +533,7 @@ namespace ALO.Service.Service.Product
                 strQuery = strQuery.And(x => !x.ProductPriceHistories.Any(h => h.IsActive && h.OrderDetails.Count() == h.Inventory));
             }
             var result = _db.GetAllAsync<tbl_Product>(strQuery, new string[] { "Image", "ProductPriceHistories" })
+                .Where(x => x.IsActive && x.IsDelete != true)
                 .Select(x => new ProductListForHomeDto
                 {
                     Id = x.Id,
@@ -558,12 +579,12 @@ namespace ALO.Service.Service.Product
 
         }
 
-        public async Task<ListResultViewModel<IEnumerable<GetProductListForAdminDto>>> GetProductListForAdmin(long? brandId)
+        public ListResultViewModel<IQueryable<GetProductListForAdminDto>> GetProductListForAdmin(long? brandId, long? subcategoryId, int page = 1, int pageSize = 6)
         {
             try
             {
 
-                var result = (await _db.tbl_Products.Include(x => x.Image)
+                var result = _db.tbl_Products.Include(x => x.Image)
                     .Include(x => x.ProductVisits)
                     .Include(x => x.ProductComments)
                     .Include(x => x.ProductPriceHistories)
@@ -572,10 +593,10 @@ namespace ALO.Service.Service.Product
                     .Include(x => x.SubProductCategory)
                     .OrderByDescending(x => x.CreatedDate)
                     .Where(x => brandId != null ? x.BrandId == brandId : true)
-                    .ToListAsync())
-                    .Select((x, i) => new GetProductListForAdminDto
+                    .Where(x => subcategoryId != null ? x.SubProductCategoryId == subcategoryId : true)
+                    .Select((x) => new GetProductListForAdminDto
                     {
-                        Row = i + 1,
+                        Row = 1,
                         Id = x.Id,
                         Title = x.Title,
                         Image = x.Image.BindImage(),
@@ -587,10 +608,10 @@ namespace ALO.Service.Service.Product
                         Visit = x.ProductVisits.Count(),
                         AllVisit = x.Visit,
                         Url = x.Url,
-                        LastModified = x.ModifiedDate?.ConvertToPesainDate().toPersianNumber()
-                    });
+                        LastModified = x.ModifiedDate != null ? x.ModifiedDate.GetValueOrDefault().ConvertToPesainDate().toPersianNumber() : ""
+                    }).AsQueryable();
 
-                return new ListResultViewModel<IEnumerable<GetProductListForAdminDto>>
+                return new ListResultViewModel<IQueryable<GetProductListForAdminDto>>
                 {
                     model = result,
                     Message = SuccessfullMessage,
@@ -600,7 +621,7 @@ namespace ALO.Service.Service.Product
             }
             catch (Exception e)
             {
-                return new ListResultViewModel<IEnumerable<GetProductListForAdminDto>>
+                return new ListResultViewModel<IQueryable<GetProductListForAdminDto>>
                 {
                     Message = FailMessage,
                     model = null,
@@ -623,7 +644,7 @@ namespace ALO.Service.Service.Product
             {
                 if (!_db.tbl_Products.Any(y => y.Url == model.Url && y.IsDelete != true && y.Id != model.Id))
                 {
-                    var pr = await _db.tbl_Products.Include(x => x.ProductCustomFieldValues).FirstOrDefaultAsync(h => h.Id == model.Id);
+                    var pr = await _db.tbl_Products.Include(x => x.ProductCustomFieldValues).Include(x => x.Images).FirstOrDefaultAsync(h => h.Id == model.Id);
 
 
                     pr.Id = model.Id;
@@ -634,7 +655,7 @@ namespace ALO.Service.Service.Product
                     pr.Title = model.Title;
                     pr.SubProductCategoryId = model.SubProductCategoryId;
                     pr.PageTitle = model.PageTitle;
-                    pr.MetaKeyword = model.MetaKeyword;
+                    pr.MetaKeyword = string.Join(",", model.MetaKeyword);
                     pr.ImageId = model.ImageId;
                     pr.MetaDescription = model.MetaDescription;
                     pr.BrandId = model.BrandId;
@@ -643,6 +664,17 @@ namespace ALO.Service.Service.Product
                     pr.ProductCategoryId = model.ProductCategoryId;
                     pr.State = ProductState.ACTIVED;
                     pr.DoIndex = model.DoIndex;
+                    if (model.ImageIds != null)
+                    {
+                        pr.Images.Clear();
+                        pr.Images = new List<tbl_Image>();
+                        var imgs = await _db.tbl_Image.Where(x => model.ImageIds.Contains(x.Id)).ToListAsync();
+                        foreach (var item in imgs)
+                        {
+                            pr.Images.Add(item);
+                        }
+
+                    }
                     if (model.Values != null)
                     {
                         model.Values.ForEach(h =>

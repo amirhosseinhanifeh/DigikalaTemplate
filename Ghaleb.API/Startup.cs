@@ -32,6 +32,7 @@ using AutoMapper;
 using AyandeNama.Web.Helpers;
 using Ghaleb.API.Helpers;
 using Hangfire;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -74,7 +75,10 @@ namespace Ghaleb.API
             services.AddRazorPages()
         .AddRazorRuntimeCompilation();
             services.AddDbContext<ServiceContext>
-                (options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), opts => opts.UseNetTopologySuite()));
+                (options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), opts => {
+                    opts.UseNetTopologySuite();
+                    opts.EnableRetryOnFailure();
+                    }));
 
             var config = new MapperConfiguration(cfg =>
             {
@@ -110,36 +114,44 @@ namespace Ghaleb.API
             services.AddScoped<ISeoService, SeoService>();
             services.AddOptions<CaptchaSettings>().BindConfiguration("Captcha");
             services.AddTransient<CaptchaVerificationService>();
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = Configuration["Jwt:Issuer"],
-                    ValidAudience = Configuration["Jwt:Issuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
-                };
-                options.Events = new JwtBearerEvents
-                {
-                    OnMessageReceived = context =>
-                    {
-                        var accessToken = context.Request.Query["access_token"];
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+        options.SlidingExpiration = true;
+        options.AccessDeniedPath = "/Forbidden/";
+        options.LoginPath = "/admin/login";
+    });
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //.AddJwtBearer(options =>
+            //{
+            //    options.TokenValidationParameters = new TokenValidationParameters
+            //    {
+            //        ValidateIssuer = true,
+            //        ValidateAudience = true,
+            //        ValidateLifetime = true,
+            //        ValidateIssuerSigningKey = true,
+            //        ValidIssuer = Configuration["Jwt:Issuer"],
+            //        ValidAudience = Configuration["Jwt:Issuer"],
+            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+            //    };
+            //    options.Events = new JwtBearerEvents
+            //    {
+            //        OnMessageReceived = context =>
+            //        {
+            //            var accessToken = context.Request.Query["access_token"];
 
-                        // If the request is for our hub...
-                        var path = context.HttpContext.Request.Path;
-                        if (!string.IsNullOrEmpty(accessToken))
-                        {
-                            // Read the token out of the query string
-                            context.Token = accessToken;
-                        }
-                        return Task.CompletedTask;
-                    }
-                };
-            });
+            //            // If the request is for our hub...
+            //            var path = context.HttpContext.Request.Path;
+            //            if (!string.IsNullOrEmpty(accessToken))
+            //            {
+            //                // Read the token out of the query string
+            //                context.Token = accessToken;
+            //            }
+            //            return Task.CompletedTask;
+            //        }
+            //    };
+            //});
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",

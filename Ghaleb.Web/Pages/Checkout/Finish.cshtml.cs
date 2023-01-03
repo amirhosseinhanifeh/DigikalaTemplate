@@ -12,21 +12,20 @@ namespace Ghaleb.Web.Pages.Checkout
     {
         private readonly ServiceContext _context;
         private readonly Payment _payment;
-        public FinishModel(ServiceContext context)
+        private readonly IConfiguration _configuration;
+        public FinishModel(ServiceContext context, IConfiguration configuration)
         {
             _context = context;
             var expose = new Expose();
             _payment = expose.CreatePayment();
+            _configuration = configuration;
         }
+        public bool Status { get; set; } = false;
         public string Message { get; set; }
         public string OrderCode { get; set; }
         public async Task OnGetAsync(long id, string authority,string Status)
         {
-            if(Status!="OK")
-            {
-                Message = "پرداخت انجام نشد";
-                return;
-            }
+            var isSandbox = Convert.ToBoolean(_configuration["PaymentSetting:IsSandbox"]);
             var order = await _context.tbl_Orders.Include(x => x.OrderDetails).ThenInclude(x => x.ProductPriceHistory).FirstOrDefaultAsync(x => x.Id == id);
             var price = (int)order.OrderDetails.Sum(x => x.Count * x.ProductPriceHistory.GetPrice());
             var verification = await _payment.Verification(new DtoVerification
@@ -34,19 +33,37 @@ namespace Ghaleb.Web.Pages.Checkout
                 MerchantId = "37b2d480-b4c0-44d6-921c-26e588592f32",
                 Authority = authority,
                 Amount = price,
-            }, Payment.Mode.zarinpal);
+            },isSandbox==true? Payment.Mode.sandbox: Payment.Mode.zarinpal);
             if (verification.Status == 100)
             {
 
                 order.OrderState = OrderState.PAYED;
                 await _context.SaveChangesAsync();
+                this.Status = true;
+                Message = "پرداخت انجام شد";
+                OrderCode = order.OrderCode;
+                Response.Cookies.Delete("basket", new CookieOptions
+                {
+                    Expires = DateTime.Now.AddDays(-1)
+                });
             }
-            Message = "پرداخت انجام شد";
-            OrderCode = order.OrderCode;
-            Response.Cookies.Delete("basket", new CookieOptions
+            else if(verification.Status==-21)
             {
-                Expires=DateTime.Now.AddDays(-1)
-            });
+                Message = "لغو پرداخت";
+            }
+            else if(verification.Status==101)
+            {
+                Message = "شما قبلا این فاکتور را پرداخت کردید";
+            }
+            else if(verification.Status==-11)
+            {
+                Message = "خطا در پرداخت";
+            }
+            else
+            {
+
+            }
+
 
         }
     }

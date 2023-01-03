@@ -1,4 +1,5 @@
-﻿using ALO.ViewModels.ProductComment;
+﻿using ALO.DomainClasses.Entity.Product;
+using ALO.ViewModels.ProductComment;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,7 @@ namespace ALO.ViewModels.Product
         public string Date { get; set; }
         public ProductBrandDto Brand { get; set; }
         public List<ProductCustomFields> Values { get; set; }
+        public List<ProductCustomFields> Options { get; set; }
 
         public bool DoIndex { get; set; }
         #region Seo

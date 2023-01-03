@@ -1,6 +1,7 @@
 ﻿using ALO.Common.Enums;
 using ALO.DataAccessLayer.DataContext;
 using ALO.DomainClasses.Entity.Product;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -9,6 +10,8 @@ using System.Threading.Tasks;
 namespace Ghaleb.API.Areas.Admin.Controllers.Product
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
+
     public class ProductCustomFieldOptionController : Controller
     {
         private readonly ServiceContext _context;

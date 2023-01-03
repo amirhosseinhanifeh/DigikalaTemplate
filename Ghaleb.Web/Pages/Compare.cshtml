@@ -1,0 +1,75 @@
+﻿@page
+@inject IConfiguration Configuration
+@model Ghaleb.Web.Pages.CompareModel
+@{
+    ViewData["Seo"] = new
+    {
+        PageTitle = "مقایسه " + Model.Title,
+        MetaKeyword="مقایسه " + Model.Title,
+        MetaDescription="مقایسه " + Model.Title
+
+    };
+}
+<div class="col-12">
+    <div class="row">
+        <div class="col-2">
+        </div>
+        @foreach (var item in Model.Products)
+        {
+            <div class="col-2 ">
+                <img class="img-fluid d-block mx-auto" src="@item.Image.BindImage()" style="width:150px">
+                <h6 class="text-center"> @item.Title</h6>
+            </div>
+
+
+        }
+        @if (Model.Products.Count() < 4)
+        {
+            <div class="col-12 col-lg-2 d-flex justify-content-center align-items-center">
+                <h4 class="text-dark">افزودن محصول</h4>
+            </div>
+        }
+    </div>
+    <div class="row">
+        @if (Model.Products.Any())
+        {
+
+            <div class="col-2">
+                <div class="row">
+                    @foreach (var item2 in Model.CustomFields)
+                    {
+                        <div class="col-12 border-bottom " style="background: #f1f1f1;padding: 16px;text-align: center;min-height:75px;    display: flex;
+    vertical-align: initial;
+    justify-content: center;
+    align-items: center;">
+                            @item2.Name
+                        </div>
+                    }
+                </div>
+            </div>
+            @foreach (var item in Model.Products)
+            {
+                <div class="col-2">
+                    <div class="row">
+                        @foreach (var item2 in Model.CustomFields)
+                        {
+                            var value = item.ProductCustomFieldValues.FirstOrDefault(h => h.ProductCustomFieldId == item2.Id);
+                            <div class="col-12 border-bottom " style="padding: 16px;text-align: center;min-height:75px;display: flex;
+    vertical-align: initial;
+    justify-content: center;
+    align-items: center;">
+                                @if (value != null)
+                                {
+                                    <span>  @value.Value</span>
+                                }
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            }
+        }
+
+    </div>
+</div>
+

@@ -1,0 +1,8 @@
+﻿@page "{id?}"
+@model Ghaleb.Web.Pages.ChartModel
+@{
+}
+        <script src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
+
+    <script src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
+@Html.Raw(Model.ChartJson)

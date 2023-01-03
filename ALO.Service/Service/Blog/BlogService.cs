@@ -40,7 +40,7 @@ namespace ALO.Service.Service.Blog
                         Title = x.Title,
                         Image = x.Image.BindImage(),
                         MetaDescription = x.MetaDescription,
-                        MetaKeyword = x.MetaKeyword,
+                        MetaKeyword = x.MetaKeyword.Split(","),
                         PageTitle = x.PageTitle,
                         Url = x.Url,
                         Date = x.CreatedDate.ConvertToPesainDate().toPersianNumber()
@@ -161,7 +161,7 @@ namespace ALO.Service.Service.Blog
 
                             Id = model.Id.GetValueOrDefault(),
                             MetaDescription = model.MetaDescription,
-                            MetaKeyword = model.MetaKeyword,
+                            MetaKeyword = string.Join(",",model.MetaKeyword),
                             PageTitle = model.PageTitle,
                             Title = model.Title,
                             Url = model.Url,
@@ -183,7 +183,7 @@ namespace ALO.Service.Service.Blog
                             Url = model.Url,
                             Title = model.Title,
                             PageTitle = model.PageTitle,
-                            MetaKeyword = model.MetaKeyword,
+                            MetaKeyword = string.Join(",", model.MetaKeyword),
                             ImageId = model.ImageId,
                             MetaDescription = model.MetaDescription,
                             BlogCategoryId = model.BlogCategoryId,

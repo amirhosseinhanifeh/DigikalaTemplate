@@ -27,7 +27,7 @@ namespace Ghaleb.Web.Pages.Checkout
             foreach (var item in list)
             {
 
-                var pr = await _context.tbl_ProductPriceHistory.Include(x => x.Product).ThenInclude(x => x.Image).FirstOrDefaultAsync(x => x.Id == item.Id);
+                var pr = await _context.tbl_ProductPriceHistory.Include(x=>x.Color).Include(x => x.Product).ThenInclude(x => x.Image).FirstOrDefaultAsync(x => x.Id == item.Id);
 
                 List.Add(new ResponseGetBasketItems
                 {
@@ -35,7 +35,7 @@ namespace Ghaleb.Web.Pages.Checkout
                     Price = pr.GetPrice(),
                     Id = item.Id,
                     Image = pr.Product.Image.BindImage(),
-                    Name = pr.Product.Title,
+                    Name = pr.Product.Title + "("+pr.Color.Name+")",
                     TotalPrice = pr.GetPrice() * item.Count
                 });
             }

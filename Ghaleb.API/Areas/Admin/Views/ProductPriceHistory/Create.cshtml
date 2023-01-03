@@ -39,7 +39,23 @@
                     <label asp-for="Inventory"></label>
                     <input class="form-control" type="text" asp-for="Inventory" />
                 </div>
-
+                @{
+                    int i = 0;
+                }
+                @foreach (var item in ViewBag.Fields)
+                {
+                    <div class="form-group col-6">
+                        <label>@item.Name</label>
+                        <select class="form-control" type="text" name="optionIds[@i]" >
+                            <option value="">انتخاب نمایید</option>
+                            @foreach (var item2 in item.OptionValues)
+                            {
+                                <option value="@item2.Id">@item2.Value</option>
+                            }
+                        </select>
+                    </div>
+                    i = i + 1;
+                }
             </div>
         </div>
 
@@ -53,18 +69,10 @@
 
 </form>
 @section Scripts{
-    <script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
-    <script>
-        CKEDITOR.replace('editor1');
-    </script>
     <script>
 
         $("#btnSave").click(function(e) {
 
-            e.preventDefault();
-            for (instance in CKEDITOR.instances) {
-                CKEDITOR.instances[instance].updateElement();
-            }
             $.ajax({
                 url: "@Url.Action("Create")",
                 method: "POST",

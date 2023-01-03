@@ -20,7 +20,7 @@ namespace Ghaleb.Web.Pages.ViewComponents.Comment
 
         public async Task<IViewComponentResult> InvokeAsync(long prId)
         {
-            ViewBag.ProductID = prId;
+            ViewData["ProductID"]= prId;
             return View();
         }
 

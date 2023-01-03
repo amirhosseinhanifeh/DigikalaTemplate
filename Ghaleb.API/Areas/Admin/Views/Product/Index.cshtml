@@ -4,9 +4,10 @@
 @{
     ViewData["Title"] = "لیست محصولات";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    int row = 1;
 }
 
-<script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
+
 <div class="row align-items-center">
     <div class="col text-right">
         <a type="button" asp-action="Create" asp-area="Admin" asp-controller="Product" class="btn btn-primary">افزودن</a>
@@ -39,7 +40,7 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td>@item.Row</td>
+                                <td>@row</td>
                                 <td><img style="width:75px;height:75px" class="img-fluid" src="@item.Image" /></td>
                                 <td><a href="https://amirprinter.ir/product/@item.Id/@item.Url">@item.Title</a></td>
                                 <td>@item.SubCategory</td>
@@ -62,9 +63,28 @@
                                     <a class="btn btn-danger" asp-action="Delete" asp-area="Admin" asp-controller="Product" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="حذف"><i class="fa-regular fa-trash"></i></a>
                                 </td>
                             </tr>
+                            row = row + 1;
                         }
                     </tbody>
                 </table>
+            </div>
+            <div class="row">
+                @{
+                    double pageCount = (double)((decimal)ViewBag.TotalCount / Convert.ToDecimal(ViewBag.PageSize));
+
+                }
+                <nav aria-label="Page navigation example ">
+                    <ul class="pagination justify-content-center">
+                        @for (int i = 1; i <= (int)Math.Ceiling(pageCount); i++)
+                        {
+                            <li class="page-item @(i==ViewBag.PageNumber?"active":"")">
+                                <a asp-all-route-data="@ViewBag.Routes" asp-route-page="@i" class="page-link">@i</a>
+                            </li>
+                        }
+
+                    </ul>
+                </nav>
+
             </div>
         </div>
     </div>
@@ -74,14 +94,14 @@
     <script>
         function ChangeStatus(id) {
             $.ajax({
-                url:"@Url.Action("ChangeStatus")?id="+id,
-                method:"GET",
+                url: "@Url.Action("ChangeStatus")?id=" + id,
+                method: "GET",
             }).done(function(data) {
-                                    Swal.fire(
-                        'تبریک !',
-                        data.message,
-                        'success'
-                    )
+                Swal.fire(
+                    'تبریک !',
+                    data.message,
+                    'success'
+                )
 
             });
         }

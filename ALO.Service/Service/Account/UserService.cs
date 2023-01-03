@@ -28,7 +28,7 @@ namespace ALO.Service.Service.Account
         {
             try
             {
-                var data = await _db.GetAsync<tbl_Users>(x => x.Email == username && x.Password == password, new[] { "Profile" });
+                var data = await _db.GetAsync<tbl_Users>(x => x.Email == username && x.Password == password, new[] { "Profile","Roles" });
                 if (data != null)
                 {
                     return new ListResultViewModel<tbl_Users>

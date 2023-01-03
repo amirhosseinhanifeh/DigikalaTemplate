@@ -42,7 +42,7 @@ namespace ALO.Service.Service.Blog
                         {
                             Id=model.Id.Value,
                             MetaDescription=model.MetaDescription,
-                            MetaKeyword=model.MetaKeyword,
+                            MetaKeyword=string.Join(",",model.MetaKeyword),
                             PageTitle=model.PageTitle,
                             Title=model.Title,
                             Url=model.Url,
@@ -56,7 +56,7 @@ namespace ALO.Service.Service.Blog
                             Url = model.Url,
                             Title = model.Title,
                             PageTitle = model.PageTitle,
-                            MetaKeyword = model.MetaKeyword,
+                            MetaKeyword = string.Join(",", model.MetaKeyword),
                             MetaDescription = model.MetaDescription,
                         });
                     }
@@ -102,7 +102,7 @@ namespace ALO.Service.Service.Blog
                     {
                         Id=x.Id,
                         MetaDescription=x.MetaDescription,
-                        MetaKeyword=x.MetaKeyword,
+                        MetaKeyword=x.MetaKeyword.Split(","),
                         PageTitle=x.PageTitle,
                         Title=x.Title,
                         Url=x.Url

@@ -45,8 +45,8 @@ builder.Services.AddRazorPages().AddRazorPagesOptions(options =>
 builder.Services.AddDbContext<ServiceContext>
     (options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddHangfire(x => x.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddHangfireServer();
+//builder.Services.AddHangfire(x => x.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.AddHangfireServer();
 builder.Services.AddSingleton<HtmlEncoder>(
   HtmlEncoder.Create(allowedRanges: new[] { UnicodeRanges.BasicLatin,
                                             UnicodeRanges.Arabic}));
@@ -114,6 +114,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
-app.UseHangfireDashboard();
+//app.UseHangfireDashboard();
 
 app.Run();

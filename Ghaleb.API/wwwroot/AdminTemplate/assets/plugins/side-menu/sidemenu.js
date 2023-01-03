@@ -146,10 +146,5 @@
 	
 	
 	
-	//P-scrolling
-	const ps = new PerfectScrollbar('.app-sidebar', {
-	  useBothWheelAxes:true,
-	  suppressScrollX:true,
-	});
 
 })();

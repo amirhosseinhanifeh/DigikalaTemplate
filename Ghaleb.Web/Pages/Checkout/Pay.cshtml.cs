@@ -11,14 +11,17 @@ namespace Ghaleb.Web.Pages.Checkout
     {
         private readonly ServiceContext _context;
         private readonly Payment _payment;
-        public PayModel(ServiceContext context)
+        private readonly IConfiguration configuration;
+        public PayModel(ServiceContext context, IConfiguration configuration)
         {
             _context = context;
             var expose = new Expose();
             _payment = expose.CreatePayment();
+            this.configuration = configuration;
         }
         public async Task<IActionResult> OnGetAsync(long orderId)
         {
+            var isSandbox =Convert.ToBoolean(configuration["PaymentSetting:IsSandbox"]);
             var o = await _context.tbl_Orders.Include(x=>x.User).Include(x => x.UserAddress).Include(x => x.OrderDetails).ThenInclude(x => x.ProductPriceHistory).FirstOrDefaultAsync(x => x.Id == orderId);
 
             var result = await _payment.Request(new DtoRequest
@@ -29,11 +32,11 @@ namespace Ghaleb.Web.Pages.Checkout
                 Description = "خرید",
                 Email = "hosseinhanifeh@gmail.com",
                 Amount = (int)o.OrderDetails.Sum(x => x.Count * x.ProductPriceHistory.GetPrice()),
-                MerchantId = "37b2d480-b4c0-44d6-921c-26e588592f32",
-            }, ZarinPal.Class.Payment.Mode.zarinpal);
+                MerchantId = configuration["PaymentSetting:MerchantId"] ,
+            },isSandbox==true? ZarinPal.Class.Payment.Mode.sandbox :ZarinPal.Class.Payment.Mode.zarinpal);
             if (result.Status == 100)
             {
-                return Redirect($"https://zarinpal.com/pg/StartPay/{result.Authority}");
+                return Redirect((isSandbox == true ? configuration["PaymentSetting:SandboxUrl"] : configuration["PaymentSetting:PaymentUrl"]) +result.Authority);
             }
             return RedirectToPage("Error");
         }

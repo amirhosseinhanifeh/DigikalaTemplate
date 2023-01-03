@@ -17,7 +17,7 @@ html {
 body {
     direction: rtl;
     transition: 0.7s all;
-    font-family: "iranyekan";
+    font-family: "iranyekan" !important;
     font-size: 12px;
 }
 

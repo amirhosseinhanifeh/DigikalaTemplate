@@ -79,6 +79,9 @@ namespace ALO.DataAccessLayer.DataContext
         public DbSet<tbl_ProductVisits> tbl_ProductVisits { get; set; }
         public DbSet<tbl_ProductTags> tbl_ProductTags { get; set; }
         public DbSet<tbl_ProductPriceHistory> tbl_ProductPriceHistory{ get; set; }
+        public DbSet<tbl_ProductPriceOption> tbl_ProductPriceOptions{ get; set; }
+        public DbSet<tbl_ProductPriceOptionValue> tbl_ProductPriceOptionValues{ get; set; }
+        public DbSet<tbl_ProductGuarantee> tbl_ProductGuarantees { get; set; }
 
 
         #endregion
@@ -238,7 +241,7 @@ namespace ALO.DataAccessLayer.DataContext
             {
                 data= data.Where(expression);
             }
-            return  data.AsQueryable();
+            return  data.Where(x=> EF.Property<bool>(x, "IsDelete") == false).AsQueryable();
 
         }
 
@@ -299,6 +302,9 @@ namespace ALO.DataAccessLayer.DataContext
             modelBuilder.Entity<tbl_Product>().HasOne(x => x.Owner)
 .WithMany(x => x.UserProducts)
 .HasForeignKey(x => x.OwnerId);
+
+            modelBuilder.Entity<tbl_ProductPriceHistory>().HasMany(x => x.ProductPriceOptionValues)
+                .WithMany(x => x.ProductPriceHistories).UsingEntity(x => x.ToTable("tbl_ProductPriceHistoryOptionValues"));
             //foreach (var entityType in modelBuilder.Model.GetEntityTypes()
             //    .SelectMany(x => x.GetProperties())
             //    .Where(x => x.Name == "Id"))

@@ -22,68 +22,86 @@ namespace Ghaleb.Web.Pages
         public IEnumerable<ProductListForHomeDto> Products { get; set; }
         public tbl_Brands Brand { get; set; }
         public tbl_ProductCategory ProductCategory { get; set; }
-        public List<tbl_ProductCategory> ProductCategories { get; set; }=new List<tbl_ProductCategory>();
+        public List<tbl_ProductCategory> ProductCategories { get; set; } = new List<tbl_ProductCategory>();
         public List<tbl_Brands> Brands { get; set; } = new List<tbl_Brands>();
         public List<tbl_ProductCustomFields> ProductCustomFields { get; set; } = new List<tbl_ProductCustomFields>();
         public tbl_SubProductCategory SubProductCategory { get; set; }
         public tbl_ProductTags ProductTag { get; set; }
+
+
+        [BindProperty(SupportsGet = true)]
         public long[] CategoryIds { get; set; }
+        [BindProperty(SupportsGet = true)]
         public long[] BrandIds { get; set; }
+        [BindProperty(SupportsGet = true)]
         public long[] OptionIds { get; set; }
-        public bool IsExists { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public bool IsExists { get; set; } = false;
         public int TotalCount { get; set; }
-        public int PageSize { get; set; }
-        public int PageNumber { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public long? BrandId { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int PageNumber { get; set; } = 1;
+        public int PageSize { get; set; } = 16;
+        public Dictionary<string, string> Routes{ get; set; }
 
         public async Task OnGetAsync(
             long? mainCategoryId = null,
-            long? brandId = null,
-            long? tagId=null,
             long? categoryId = null,
-        long[] categoryIds = null,
-        long? subcategoryId = null,
-        long[] brandIds = null,
-        long[] optionIds = null,
+            long? subcategoryId = null,
+            long? tagId = null,
             bool? myposts = null,
-            string q = null,
-            string order = "NEW",
-            bool? isExists=null,
-            int pageNumber = 1,
-            int pageSize = 16
-            
+            string? q = null,
+            string order = "NEW"
             )
         {
-            if (brandId != null)
+            if (BrandId != null)
             {
-                Brand = await _context.tbl_Brands.Include(x => x.Logo).FirstOrDefaultAsync(x => x.Id == brandId);
+                Brand = await _context.tbl_Brands.Include(x => x.Logo).FirstOrDefaultAsync(x => x.Id == BrandId);
                 ProductCategories = await _context.tbl_ProductCategories.ToListAsync();
             }
             if (categoryId != null)
             {
                 ProductCategory = await _context.tbl_ProductCategories.FirstOrDefaultAsync(x => x.Id == categoryId);
                 ProductCustomFields = await _context.tbl_ProductCustomFields.Where(x => x.ProductCategoryId == categoryId && x.FieldType == FieldType.DROPDOWN && x.ProductCustomFieldsOptionValues.Any()).Include(x => x.ProductCustomFieldsOptionValues).ToListAsync();
-                Brands = await _context.tbl_Brands.Where(x=>x.IsActive && x.IsDelete !=true).ToListAsync();
+                Brands = await _context.tbl_Brands.Where(x => x.IsActive && x.IsDelete != true).ToListAsync();
             }
             if (subcategoryId != null)
             {
                 SubProductCategory = await _context.tbl_SubProductCategories.FirstOrDefaultAsync(x => x.Id == subcategoryId);
-                ProductCustomFields = await _context.tbl_ProductCustomFields.Where(x => x.SubProductCategoryId == subcategoryId && x.FieldType == FieldType.DROPDOWN && x.ProductCustomFieldsOptionValues.Any()).Include(x => x.ProductCustomFieldsOptionValues).ToListAsync();
+                var s = await _context.tbl_ProductCustomFields.Where(x => x.SubProductCategoryId == subcategoryId && x.FieldType == FieldType.DROPDOWN && x.ProductCustomFieldsOptionValues.Any()).Include(x => x.ProductCustomFieldsOptionValues).ToListAsync();
+                ProductCustomFields.AddRange(s);
                 Brands = await _context.tbl_Brands.Where(x => x.IsActive && x.IsDelete != true).ToListAsync();
             }
-            if(tagId !=null)
+            if (tagId != null)
             {
                 ProductTag = await _context.tbl_ProductTags.FindAsync(tagId);
             }
-            CategoryIds = categoryIds;
-            BrandIds = brandIds;
-            OptionIds = optionIds;
-            IsExists = isExists==true?true:false;
-            var userId = myposts == true ? User.Identity.Name.Tolong() : null;
-            var res = _product.GetProductList(mainCategoryId, categoryIds, subcategoryId, brandIds,tagId, optionIds, q, order, pageNumber, pageSize, userId,isExists).model;
+            var res = _product.GetProductList(mainCategoryId, categoryId, subcategoryId, CategoryIds, BrandIds, tagId, OptionIds, q, order, PageNumber, PageSize, null, IsExists).model;
             TotalCount = await res.CountAsync();
-            PageSize = pageSize;
-            PageNumber = pageNumber;
-            Products = await _product.GetProductList(mainCategoryId, categoryIds, subcategoryId, brandIds,tagId, optionIds, q, order, pageNumber, pageSize, userId,isExists).model.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            Routes = RouteBuiler(BrandId, categoryId,subcategoryId, BrandIds, CategoryIds, OptionIds, IsExists);
+            Products = await _product.GetProductList(mainCategoryId, categoryId, subcategoryId, CategoryIds, BrandIds, tagId, OptionIds, q, order, PageNumber, PageSize, null, IsExists).model.Skip((PageNumber - 1) * PageSize).Take(PageSize).ToListAsync();
+        }
+        public Dictionary<string, string> RouteBuiler(long? brandId,long? categoryId,long? subcategoryId, long[] brandIds, long[] categoryIds, long[] optionIds, bool isExists)
+        {
+            var routes = new Dictionary<string, string>();
+            routes.Add("brandId", brandId.ToString());
+            routes.Add("categoryId", categoryId.ToString());
+            routes.Add("subcategoryId", subcategoryId.ToString());
+            routes.Add("isExists", isExists.ToString());
+            for (int i = 0; i < brandIds.Length; i++)
+            {
+                routes.Add("brandIds[" + i + "]", brandIds[i].ToString());
+            }
+            for (int i = 0; i < categoryIds.Length; i++)
+            {
+                routes.Add("categoryIds[" + i + "]", categoryIds[i].ToString());
+            }
+            for (int i = 0; i < optionIds.Length; i++)
+            {
+                routes.Add("optionIds[" + i + "]", optionIds[i].ToString());
+            }
+            return routes;
         }
     }
 }

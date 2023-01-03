@@ -1,4 +1,5 @@
 ﻿@using System.Reflection
+@inject IConfiguration Configuration
 @model object
 
 @{
@@ -9,7 +10,7 @@
 }
 @if (Model != null)
 {
-    <title>@title</title>
+    <title>@Configuration["SiteSetting:SiteName"] | @title</title>
     <meta name="keywords" content="@keyword" />
     <meta name="description" content="@description" />
     <meta name="abstract" content="@description" />
