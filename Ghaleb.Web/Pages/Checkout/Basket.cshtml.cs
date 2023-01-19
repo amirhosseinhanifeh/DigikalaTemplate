@@ -10,10 +10,11 @@ namespace Ghaleb.Web.Pages.Checkout
     public class BasketModel : PageModel
     {
         private readonly ServiceContext _context;
-
-        public BasketModel(ServiceContext context)
+        private readonly IConfiguration _configuration;
+        public BasketModel(ServiceContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         public List<ResponseGetBasketItems> List { get; set; } = new List<ResponseGetBasketItems>();
@@ -34,7 +35,7 @@ namespace Ghaleb.Web.Pages.Checkout
                     Count = item.Count,
                     Price = pr.GetPrice(),
                     Id = item.Id,
-                    Image = pr.Product.Image.BindImage(),
+                    Image = pr.Product.Image.BindImage(_configuration),
                     Name = pr.Product.Title + "("+pr.Color.Name+")",
                     TotalPrice = pr.GetPrice() * item.Count
                 });

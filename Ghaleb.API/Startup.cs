@@ -117,7 +117,7 @@ namespace Ghaleb.API
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+        options.ExpireTimeSpan = TimeSpan.FromDays(20);
         options.SlidingExpiration = true;
         options.AccessDeniedPath = "/Forbidden/";
         options.LoginPath = "/admin/login";

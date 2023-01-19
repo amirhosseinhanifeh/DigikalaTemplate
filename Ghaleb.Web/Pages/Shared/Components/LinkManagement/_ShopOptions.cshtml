@@ -1,0 +1,12 @@
+﻿@model IEnumerable<ALO.DomainClasses.Entity.LinkManagement.tbl_LinkManagement>
+@{
+}
+<div class="row d-flex justify-content-center">
+    @foreach (var item in Model)
+    {
+        <div class="col-6 col-lg-2 d-flex justify-content-center flex-column align-items-center">
+            <img src="@item.Image.BindImage(Configuration)" class="img-fluid" style="width:75px" alt="@item.Title" />
+            <span class="mt-2">@item.Title</span>
+        </div>
+    }
+</div>

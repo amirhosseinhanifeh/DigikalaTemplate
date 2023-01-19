@@ -9,6 +9,7 @@ using ALO.Service.Interface.Order;
 using ALO.ViewModels.Order;
 using ALO.ViewModels.Result;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,11 +23,14 @@ namespace ALO.Service.Service.Order
     {
         private readonly ServiceContext _context;
         private readonly IBasketOrderService _basketOrderService;
+        private readonly IConfiguration _configuration;
         public OrderService(ServiceContext context,
-            IBasketOrderService basketOrderService)
+            IBasketOrderService basketOrderService,
+            IConfiguration configuration)
         {
             _context = context;
             _basketOrderService = basketOrderService;
+            _configuration = configuration;
         }
         public async Task<ListResultViewModel<bool>> CreateAsync(long BasketId)
         {
@@ -105,7 +109,7 @@ namespace ALO.Service.Service.Order
                                  OrderCode=x.Order.OrderCode,
                                  Count=x.Count,
                                  DownloadFile=x.ProductPriceHistory.Product.File.BindFile(),
-                                 ProductImage=x.ProductPriceHistory.Product.Image.BindImage(),
+                                 ProductImage=x.ProductPriceHistory.Product.Image.BindImage(_configuration),
                                  Title=x.ProductPriceHistory.Product.Title,
                                  UnitPrice=x.ProductPriceHistory.GetPriceValue()
 

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -20,11 +21,13 @@ namespace Ghaleb.API.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IWebHostEnvironment _env;
         private readonly ServiceContext _context;
-        public HomeController(ILogger<HomeController> logger, IWebHostEnvironment env, ServiceContext context)
+        private readonly IConfiguration _configuration;
+        public HomeController(ILogger<HomeController> logger, IWebHostEnvironment env, ServiceContext context, IConfiguration configuration)
         {
             _logger = logger;
             _env = env;
             _context = context;
+            _configuration = configuration;
         }
         [HttpGet]
         public async Task<IActionResult> CreateSitemapInRootDirectory()
@@ -50,7 +53,7 @@ namespace Ghaleb.API.Controllers
                 x.RouteName,
                 links = x.LinkManagements.Where(x=>x.IsActive && x.IsDelete ==false).OrderBy(x=>x.Order).Select(h => new
                 {
-                    Image = h.Image.BindImage(),
+                    Image = h.Image.BindImage(_configuration),
                     h.Description,
                     h.Id,
                     h.Link,
@@ -62,7 +65,7 @@ namespace Ghaleb.API.Controllers
                 x.Id,
                 x.Link,
                 x.Description,
-                Image=x.Image.BindImage(),
+                Image=x.Image.BindImage(_configuration),
                 x.RouteName,
             }).ToListAsync();
             return Ok(new

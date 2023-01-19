@@ -25,14 +25,21 @@
         {
             PageTitle = Model.ProductTag.Name,
             MetaKeyword = Model.ProductTag.Name,
-            MetaDescription = Model.ProductTag.Name
+            MetaDescription = Model.ProductTag.Name,
+            DoIndex = true
         };
     }
     @if (Model.Brand != null)
     {
-        ViewData["Seo"] = Model.Brand;
+            ViewData["Seo"] = new
+            {
+                PageTitle = Model.Brand.Name,
+                MetaKeyword = Model.Brand.MetaKeyword,
+                MetaDescription = Model.Brand.MetaDescription,
+                DoIndex = true
+            };
         <div class="col-12 bg-white  p-2 mb-3">
-            <img src="@Model.Brand.Logo.BindImage()" style="width:250px">
+            <img src="@Model.Brand.Logo.BindImage(Configuration)" style="width:250px">
             @Model.Brand.Name
             <br>
             @Model.Brand.Description
@@ -63,24 +70,26 @@
             }
             else
             {
+                if (Model.Brands.Any())
+                {
+                    <div class="col-12 bg-white p-2" *ngIf="brand==null">
+                        <label class="border-bottom p-2 d-block">برند</label>
+                        <ul>
+                            @foreach (var item in Model.Brands)
+                            {
 
-                <div class="col-12 bg-white p-2" *ngIf="brand==null">
-                    <label class="border-bottom p-2 d-block">برند</label>
-                    <ul>
-                        @foreach (var item in Model.Brands)
-                        {
+                                <li style="display: flex;justify-content: space-between;">
+                                    @item.Name
 
-                            <li style="display: flex;justify-content: space-between;">
-                                @item.Name
+                                    <label>
+                                        <input type="checkbox" name="brandIds" @(Model.BrandIds.Any(h=>h==item.Id)?"checked":"") value="@item.Id" /><span class="label-text"></span>
+                                    </label>
+                                </li>
 
-                                <label>
-                                    <input type="checkbox" name="brandIds" @(Model.BrandIds.Any(h=>h==item.Id)?"checked":"") value="@item.Id" /><span class="label-text"></span>
-                                </label>
-                            </li>
-
-                        }
-                    </ul>
+                            }
+                        </ul>
                 </div>
+                }
             }
             @if (Model.ProductCustomFields.Any())
             {
@@ -194,7 +203,13 @@
         </div>
         @if (Model.ProductCategory != null && Model.SubProductCategory == null)
         {
-            ViewData["Seo"] = Model.ProductCategory;
+            ViewData["Seo"] = new
+            {
+                PageTitle = Model.ProductCategory.Title,
+                MetaKeyword = Model.ProductCategory.MetaKeyword,
+                MetaDescription = Model.ProductCategory.MetaDescription,
+                DoIndex = true
+            };
 
             <hr />
             <div class="row">
@@ -205,7 +220,13 @@
         }
         @if (Model.SubProductCategory != null)
         {
-            ViewData["Seo"] = Model.SubProductCategory;
+            ViewData["Seo"] = new
+            {
+                PageTitle = Model.SubProductCategory.Title,
+                MetaKeyword = Model.SubProductCategory.MetaKeyword,
+                MetaDescription = Model.SubProductCategory.MetaDescription,
+                DoIndex = true
+            };
 
             <hr />
             <div class="row">
@@ -215,8 +236,3 @@
         }
     </div>
 </div>
-@section Scripts{
-    <script>
-
-    </script>
-}

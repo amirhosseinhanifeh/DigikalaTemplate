@@ -9,6 +9,7 @@ namespace ALO.DomainClasses.Entity.Product
     public class tbl_ProductCategory : BaseEntity
     {
         public string Title { get; set; }
+        public bool ShowInHome { get; set; }
         public long MainProuctCategoryId { get; set; }
         public tbl_MainProductCategory MainProuctCategory { get; set; }
         public ICollection<tbl_SubProductCategory> SubProductCategories { get; set; }

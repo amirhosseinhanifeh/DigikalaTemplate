@@ -1,13 +1,14 @@
 ﻿using ALO.DomainClasses.Entity.Language;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ALO.DomainClasses.Entity.Content
 {
-    public class tbl_PageContent:BaseEntity
+    public class tbl_PageContent : BaseEntity
     {
         public string Title { get; set; }
         public string Description { get; set; }
@@ -17,6 +18,9 @@ namespace ALO.DomainClasses.Entity.Content
         public string Url { get; set; }
         public string PageTitle { get; set; }
         public string MetaKeyword { get; set; }
+
+        [NotMapped]
+        public string[] MetaKeywords { get; set; }=new string[0];
         public string MetaDescription { get; set; }
 
         #endregion

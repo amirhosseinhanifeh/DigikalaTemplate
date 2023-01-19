@@ -1183,10 +1183,7 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Property<long?>("Createdby")
                         .HasColumnType("bigint");
 
-                    b.Property<Guid?>("FlagIconId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<long?>("FlagIconId1")
+                    b.Property<long?>("FlagIconId")
                         .HasColumnType("bigint");
 
                     b.Property<bool>("IsActive")
@@ -1210,9 +1207,20 @@ namespace ALO.DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FlagIconId1");
+                    b.HasIndex("FlagIconId");
 
                     b.ToTable("tbl_Languages");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 3L,
+                            CreatedDate = new DateTime(2023, 1, 18, 11, 37, 54, 571, DateTimeKind.Local).AddTicks(7070),
+                            IsActive = true,
+                            IsDelete = false,
+                            LanguageCode = "fa",
+                            Name = "فارسی"
+                        });
                 });
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.LinkManagement.tbl_GroupLinkManagement", b =>
@@ -1811,6 +1819,9 @@ namespace ALO.DataAccessLayer.Migrations
 
                     b.Property<string>("PageTitle")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("ShowInHome")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
@@ -2754,7 +2765,7 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.HasOne("ALO.DomainClasses.Entity.IMG.tbl_Image", "FlagIcon")
                         .WithMany()
-                        .HasForeignKey("FlagIconId1");
+                        .HasForeignKey("FlagIconId");
 
                     b.Navigation("FlagIcon");
                 });
@@ -3055,7 +3066,7 @@ namespace ALO.DataAccessLayer.Migrations
             modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_ProductPriceOptionValue", b =>
                 {
                     b.HasOne("ALO.DomainClasses.Entity.Product.tbl_Product", "Product")
-                        .WithMany()
+                        .WithMany("ProductPriceOptionValues")
                         .HasForeignKey("ProductId");
 
                     b.HasOne("ALO.DomainClasses.Entity.Product.tbl_ProductPriceOption", "ProductPriceOption")
@@ -3292,6 +3303,8 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Navigation("ProductCustomFieldValues");
 
                     b.Navigation("ProductPriceHistories");
+
+                    b.Navigation("ProductPriceOptionValues");
 
                     b.Navigation("ProductTags");
 

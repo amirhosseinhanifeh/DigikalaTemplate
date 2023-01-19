@@ -1,41 +1,60 @@
 ﻿@page
 @model Ghaleb.Web.Pages.RepairModel
 @{
-        ViewData["Seo"] = Model.Seo;
+    ViewData["Seo"] = new
+    {
+        PageTitle = Model.Seo.PageTitle,
+        MetaKeyword = Model.Seo.MetaKeyword,
+        MetaDescription = Model.Seo.MetaDescription,
+        DoIndex = true
+    };
 }
-    @await Component.InvokeAsync("BreadCrumps",Model.Seo)
+@await Component.InvokeAsync("BreadCrumps",Model.Seo)
 <div class="container-fluid bg">
     <div class="row box  p-2 p-sm-5" style="    height: 100vh;
     display: flex;
     align-items: center;">
-
+        <div class="col-12">
+            @Html.Raw(Model.Seo.Description)
+        </div>
         <div class="col-12 bg-white col-sm-12 col-md-12 col-lg-12 col-xl-3 mx-auto p-5" style="    border: 1px solid #e7e7e7;
         border-radius: 5px;">
             <h4 class="text-center">درخواست تعمیرات</h4>
-    <span class="d-block text-center">بعد از ثبت درخواست ، همکاران ما با شما تماس خواهند گرفت </span>
+            <span class="d-block text-center">بعد از ثبت درخواست ، همکاران ما با شما تماس خواهند گرفت </span>
             <form method="post" class="row mt-5">
                 <div class="col-12 form-group mt-2">
-                    <input name="firstName" class="form-control" value=""
-                        placeholder="نام خود را وارد نمایید">
+                    <input asp-for="model.FirstName" class="form-control"
+                           placeholder="نام خود را وارد نمایید">
+                    <span asp-validation-for="model.FirstName" class="text-danger"></span>
                 </div>
                 <div class="col-12 form-group mt-2">
-                    <input name="lastName" class="form-control" value=""
-                        placeholder="نام خانوادگی خود را وارد نمایید">
+                    <input asp-for="model.LastName" class="form-control"
+                           placeholder="نام خانوادگی خود را وارد نمایید">
+                    <span asp-validation-for="model.LastName" class="text-danger"></span>
                 </div>
                 <div class="col-12 form-group mt-2">
-                    <input name="mobile" class="form-control" value=""
-                        placeholder="تلفن همراه خود را وارد نمایید">
+                    <input asp-for="model.Mobile" class="form-control"
+                           placeholder="تلفن همراه خود را وارد نمایید">
+                    <span asp-validation-for="model.Mobile" class="text-danger"></span>
                 </div>
                 <div class="col-12 form-group mt-2">
-                    <textarea name="body" class="form-control" value="" rows="8"
-                        placeholder="توضیحی در مورد اشکال پرینتر خود بنویسید"></textarea>
+                    <textarea asp-for="model.Body" class="form-control" rows="8"
+                              placeholder="توضیحی در مورد اشکال پرینتر خود بنویسید"></textarea>
+                    <span asp-validation-for="model.Body" class="text-danger"></span>
                 </div>
+                <recaptcha />
                 <div class="col-12 form-group mt-4">
                     <button type="submit" class="btn btn-danger col-12" style="padding: 11px;
-                    border-radius: 25px;">ثبت درخواست</button>
+                    border-radius: 25px;">
+                        ثبت درخواست
+                    </button>
                 </div>
+                <span class="text-success mt-2">@Model.Message</span>
             </form>
 
         </div>
     </div>
 </div>
+@section scripts{
+   <partial name="_ValidationScriptsPartial" />
+}

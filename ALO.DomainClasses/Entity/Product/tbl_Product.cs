@@ -55,7 +55,7 @@ namespace ALO.DomainClasses.Entity.Product
         public ICollection<tbl_ProductCustomFieldValues> ProductCustomFieldValues { get; set; }
         public ICollection<tbl_ProductPriceOptionValue> ProductPriceOptionValues { get; set; }
         public ICollection<tbl_Users> Users { get; set; }
-        public ICollection<tbl_ProductTags> ProductTags { get; set; }
+        public List<tbl_ProductTags> ProductTags { get; set; }
         public ICollection<tbl_ProductVisits> ProductVisits { get; set; }
         public ICollection<tbl_ProductPriceHistory> ProductPriceHistories { get; set; }
 

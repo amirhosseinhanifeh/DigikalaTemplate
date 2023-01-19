@@ -1,7 +1,13 @@
 ﻿@page "/page/{url}"
 @model Ghaleb.Web.Pages.PageContentModel
 @{
-        ViewData["Seo"] = Model.Data;
+    ViewData["Seo"] = new
+    {
+        PageTitle = Model.Data.PageTitle,
+        MetaKeyword = Model.Data.MetaKeyword,
+        MetaDescription = Model.Data.MetaDescription,
+        DoIndex = true
+    };
 }
 
 <style>
@@ -18,7 +24,7 @@
         .bgcover * {
             display: block;
             z-index: 99999;
-                display: inline;
+            display: inline;
         }
 
         .bgcover:before {
@@ -32,6 +38,6 @@
         }
 </style>
 @await Component.InvokeAsync("BreadCrumps",Model.Data)
-<div>
+<div class="col-12 col-lg-8 mx-auto">
     @Html.Raw(Model.Data.Description)
 </div>

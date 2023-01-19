@@ -3,45 +3,50 @@
 @{
 }
 <div class="container-fluid">
-    <div class="row box bg p-5" style="height: 100vh;
-    display: flex;
-    align-items: center;">
-        <div class="col-12 col-sm-3 bg-white mx-auto" style="border: 1px solid #e7e7e7;
-        border-radius: 5px;
-        padding: 82px;">
+    <div class="row box p-1 d-flex align-items-center" style="height:100vh">
+        <div class="col-12 bg-white col-lg-5 col-xl-3 mx-auto rounded border p-3">
             <h4 class="text-center">یک حساب کاربری  برای خودت بساز</h4>
 
-            <form class="row mt-5" (submit)="Register($event)">
+            <form class="row mt-5" method="post">
 
                 <div class="col-12 form-group mt-4">
-                    <input name="firstName" class="form-control" value=""
-                        placeholder="نام">
+                    <input asp-for="model.FirstName" class="form-control"
+                           placeholder="نام">
+                    <span asp-validation-for="model.FirstName" class="text-danger"></span>
                 </div>
                 <div class="col-12 form-group mt-4">
-                    <input name="lastName" class="form-control" value=""
-                        placeholder="نام خانوادگی">
+                    <input asp-for="model.LastName" class="form-control"
+                           placeholder="نام خانوادگی">
+                    <span asp-validation-for="model.LastName" class="text-danger"></span>
                 </div>
                 <div class="col-12 form-group mt-4">
-                    <input name="mobile" class="form-control" value=""
-                        placeholder="موبایل">
+                    <input asp-for="model.Mobile" class="form-control"
+                           placeholder="موبایل">
+                    <span asp-validation-for="model.Mobile" class="text-danger"></span>
                 </div>
                 <div class="col-12 form-group mt-4">
-                    <input name="email" class="form-control" value=""
-                        placeholder="ایمیل">
+                    <input asp-for="model.Email" class="form-control"
+                           placeholder="ایمیل">
+                    <span asp-validation-for="model.Email" class="text-danger"></span>
                 </div>
 
                 <div class="col-12 form-group mt-4">
-                    <input name="password" class="form-control" type="password"
-                        value="" placeholder="رمز عبور">
-                        
+                    <input asp-for="model.Password" class="form-control" type="password"
+                           placeholder="رمز عبور">
+                    <span asp-validation-for="model.Password" class="text-danger"></span>
+
                 </div>
                 <div class="col-12 form-group mt-4">
-                    <input name="confirmPassword" class="form-control" type="password"
-                        value="" placeholder="تکرار رمز عبور">
+                    <input asp-for="model.ConfirmPassword" class="form-control" type="password"
+                           placeholder="تکرار رمز عبور">
+                    <span asp-validation-for="model.ConfirmPassword" class="text-danger"></span>
                 </div>
+                                <recaptcha />
                 <div class="col-12 form-group mt-4">
                     <button type="submit" class="btn btn-danger col-12" style="padding: 11px;
-                    border-radius: 25px;">ساخت حساب کاربری</button>
+                    border-radius: 25px;">
+                        ساخت حساب کاربری
+                    </button>
                 </div>
                 <div class="col-12 form-group mt-4 d-flex
                     justify-content-between">
@@ -52,3 +57,6 @@
         </div>
     </div>
 </div>
+@section scripts{
+   <partial name="_ValidationScriptsPartial" />
+}

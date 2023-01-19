@@ -31,7 +31,6 @@ namespace ALO.Service.Service.PageContent
                         Title =result.Title,
                         Description= result.Description,
                         MetaDescription= result.MetaDescription,
-                        MetaKeyword= result.MetaKeyword,
                         PageTitle= result.PageTitle,
                         Url = result.Url
 

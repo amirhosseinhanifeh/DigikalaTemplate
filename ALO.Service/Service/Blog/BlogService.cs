@@ -10,6 +10,7 @@ using ALO.ViewModels.Blog.Admin;
 using ALO.ViewModels.Result;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,9 +23,11 @@ namespace ALO.Service.Service.Blog
     public class BlogService : RepositoryService<tbl_BlogCategory>, IBlogService
     {
         private readonly ServiceContext _db;
-        public BlogService(ServiceContext db, IMapper mapper) : base(db, mapper)
+        private readonly IConfiguration _configuration;
+        public BlogService(ServiceContext db, IMapper mapper, IConfiguration configuration) : base(db, mapper)
         {
             _db = db;
+            _configuration = configuration;
         }
         public async Task<ListResultViewModel<IEnumerable<BlogListForWebsiteDTO>>> GetBlogsForWebsite(string category = null)
         {
@@ -38,7 +41,7 @@ namespace ALO.Service.Service.Blog
                         Abstract = x.Abstract,
                         Category = x.BlogCategory.Title,
                         Title = x.Title,
-                        Image = x.Image.BindImage(),
+                        Image = x.Image.BindImage(_configuration),
                         MetaDescription = x.MetaDescription,
                         MetaKeyword = x.MetaKeyword.Split(","),
                         PageTitle = x.PageTitle,
@@ -76,7 +79,7 @@ namespace ALO.Service.Service.Blog
                     Abstract = query.Abstract,
                     Category = query.BlogCategory.Title,
                     Description = query.Description,
-                    Image = query.Image.BindImage(),
+                    Image = query.Image.BindImage(_configuration),
                     Title = query.Title,
                     MetaDescription = query.MetaDescription,
                     MetaKeyword = query.MetaKeyword,

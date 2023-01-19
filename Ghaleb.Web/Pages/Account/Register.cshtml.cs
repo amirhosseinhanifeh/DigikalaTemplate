@@ -2,6 +2,7 @@ using ALO.Common.Enums;
 using ALO.Service.Interface.Account;
 using ALO.Service.Interface.Profile;
 using ALO.ViewModels.Account;
+using AspNetCore.ReCaptcha;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ using System.Security.Claims;
 
 namespace Ghaleb.Web.Pages.Account
 {
+    [ValidateReCaptcha]
     public class RegisterModel : PageModel
     {
         private readonly IUserService _userService;
@@ -25,14 +27,23 @@ namespace Ghaleb.Web.Pages.Account
         {
         }
         public string Message { get; set; }
-        public async Task<IActionResult> OnPostAsync(RegisterViewModel model)
+        [BindProperty]
+        public RegisterViewModel model { get; set; }
+        public async Task<IActionResult> OnPostAsync()
         {
-            var result = await _userService.RegisterAsync(model);
-            if (result.Status != Status.Failed)
+            if (ModelState.IsValid)
             {
-                await _pro.CreateAsync(result.model.Id, model);
+                var ip = HttpContext.Connection.RemoteIpAddress.ToString();
+                model.IP = ip;
+                model.Registeredby = Device.Web;
+                var result = await _userService.RegisterAsync(model);
+                if (result.Status != Status.Failed)
+                {
+                    await _pro.CreateAsync(result.model.Id, model);
+                }
+                return RedirectToPage("Login");
             }
-            return RedirectToPage("Login");
+            return Page();
         }
     }
 }

@@ -13,7 +13,7 @@ namespace ALO.DomainClasses.Entity.Language
         [Display(Name="نام زبان")]
         [Required(ErrorMessage ="اجباری")]
         public string Name { get; set; }
-        public Guid? FlagIconId { get; set; }
+        public long? FlagIconId { get; set; }
         public tbl_Image FlagIcon { get; set; }
         public string LanguageCode { get; set; }
 

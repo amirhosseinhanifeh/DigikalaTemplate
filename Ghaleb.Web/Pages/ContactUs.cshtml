@@ -1,7 +1,13 @@
 ﻿@page
 @model Ghaleb.Web.Pages.ContactUsModel
 @{
-    ViewData["Seo"] = Model.Seo;
+    ViewData["Seo"] = new
+    {
+        PageTitle = Model.Seo.Title,
+        MetaKeyword = Model.Seo.MetaKeyword,
+        MetaDescription = Model.Seo.MetaDescription,
+        DoIndex = true
+    };
 }
 <style>
     .contactus {
@@ -33,22 +39,27 @@
         <form method="post" class="row mt-5" (submit)="SendData($event)">
 
             <div class="col-12 form-group mt-2">
-                <input name="email" class="form-control" value=""
+                <input  asp-for="model.Email" class="form-control"
                        placeholder="ایمیل خود را وارد نمایید">
+                <span asp-validation-for="model.Email" class="text-danger"></span>
             </div>
 
             <div class="col-12 form-group mt-4">
-                <input name="fullName" class="form-control" type="text"
-                       value="" placeholder="نام و نام خانوادگی">
+                <input asp-for="model.FullName" class="form-control" type="text"
+                        placeholder="نام و نام خانوادگی">
+                <span asp-validation-for="model.FullName" class="text-danger"></span>
             </div>
             <div class="col-12 form-group mt-4">
-                <input name="mobile" class="form-control" type="text"
-                       value="" placeholder="موبایل">
+                <input asp-for="model.Mobile" class="form-control" type="text"
+                       placeholder="موبایل">
+                <span asp-validation-for="model.Mobile" class="text-danger"></span>
             </div>
             <div class="col-12 form-group mt-4">
-                <textarea name="body" class="form-control" rows="8" type="text"
-                          value="" placeholder="متن پیام"></textarea>
+                <textarea asp-for="model.Body" class="form-control" rows="8" 
+                           placeholder="متن پیام"></textarea>
+                <span asp-validation-for="model.Body" class="text-danger"></span>
             </div>
+            <recaptcha error-callback="کپچا نا معتبر" />
             <div class="col-12 form-group mt-4">
                 <button type="submit" class="btn btn-danger col-12" style="padding:
                     11px;
@@ -60,6 +71,9 @@
     </div>
     <div class="col-12 col-xl-6 mt-5">
         @Html.Raw(Model.ContactUs.Google)
-       
+
     </div>
 </div>
+@section scripts{
+   <partial name="_ValidationScriptsPartial" />
+}

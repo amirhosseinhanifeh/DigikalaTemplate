@@ -25,27 +25,32 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
         public async Task<IActionResult> Index(long? productId)
         {
             ViewBag.Id = productId;
-            return View(await _context.GetAllAsync<tbl_ProductTags>(x=>x.ProductId== productId).ToListAsync());
+            return View(await _context.GetAllAsync<tbl_ProductTags>(x=>x.ProductId==productId).ToListAsync());
         }
         public async Task<IActionResult> Create(long productId)
         {
             ViewBag.Id = productId;
-            return View(await _context.tbl_ProductTags.FindAsync(productId));
+            var data = await _context.tbl_Products.Include(x => x.ProductTags).FirstOrDefaultAsync(x => x.Id == productId);
+            return View(data);
         }
         [HttpPost]
-        public async Task<IActionResult> Create(tbl_ProductTags model)
+        public async Task<IActionResult> Create(long productId, string[] tags)
         {
-
-                if (model.Id == 0)
+            var data = await _context.tbl_Products.Include(x => x.ProductTags).FirstOrDefaultAsync(h => h.Id == productId);
+            if (tags != null)
+            {
+                data.ProductTags.Clear();
+                data.ProductTags = new List<tbl_ProductTags>();
+                foreach (var item in tags)
                 {
-                    await _context.tbl_ProductTags.AddAsync(model);
-                }
-                else
-                {
-                    _context.tbl_ProductTags.Update(model);
-
+                    data.ProductTags.Add(new tbl_ProductTags
+                    {
+                        Name = item
+                    });
                 }
                 await _context.SaveChangesAsync();
+            }
+
             return Json(new { message = "با موفقیت ثبت شد", Status = Status.Success, NotificationType = NotificationType.success });
         }
     }

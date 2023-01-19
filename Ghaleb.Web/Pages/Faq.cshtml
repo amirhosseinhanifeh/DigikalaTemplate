@@ -1,7 +1,13 @@
 ﻿@page
 @model Ghaleb.Web.Pages.FaqModel
 @{
-    ViewData["Seo"] = Model.Seo;
+    ViewData["Seo"] = new
+    {
+        PageTitle = Model.Seo.Title,
+        MetaKeyword = Model.Seo.MetaKeyword,
+        MetaDescription = Model.Seo.MetaDescription,
+        DoIndex = true
+    };
 }
 <style>
 

@@ -212,7 +212,7 @@ namespace ALO.Service.Service.Account
                     {
                         Email = model.Email,
                         Mobile = model.Mobile,
-                        IP = "",
+                        IP = model.IP,
                         Password = model.Password,
                         Registeredby = model.Registeredby,
 

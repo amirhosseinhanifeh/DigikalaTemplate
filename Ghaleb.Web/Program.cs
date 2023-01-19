@@ -31,6 +31,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using Hangfire;
+using AspNetCore.ReCaptcha;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -88,7 +90,7 @@ builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IBlogCategoryService, BlogCategoryService>();
 builder.Services.AddScoped<ISeoService, SeoService>();
-
+builder.Services.AddReCaptcha(builder.Configuration.GetSection("ReCaptcha"));
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 //if (!app.Environment.IsDevelopment())
@@ -115,5 +117,8 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 //app.UseHangfireDashboard();
-
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 app.Run();

@@ -1,6 +1,13 @@
 ﻿@page "{id?}"
 @model Ghaleb.Web.Pages.ChartModel
 @{
+    ViewData["Seo"] = new
+    {
+        PageTitle="نمودار قیمت "+Model.Title,
+        MetaKeyword="نمودار قیمت "+Model.Title,
+        MetaDescription="نمودار قیمت "+Model.Title,
+        DoIndex=true
+    };
 }
         <script src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
 

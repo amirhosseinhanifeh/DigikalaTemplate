@@ -1,5 +1,4 @@
-﻿@using Microsoft.Extensions.Configuration
-@inject IConfiguration Configuration
+﻿
 
 <!DOCTYPE html>
 <html lang="fa">
@@ -15,7 +14,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.amirprinter.ir/font-awesome/css/all.css" />
     <link rel="stylesheet" href="https://cdn.amirprinter.ir/font.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.5/swiper-bundle.css" integrity="sha512-jxGmKjC/OykrTklkNK2NgnhNtKtUAADFY+rvSi3nA7dbaPRfjrSXYxHqX8iq5N6WTOntqEQZrEwW3L84sirfKQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/lib/Swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Ghaleb.Web.styles.css" asp-append-version="true" />
 
@@ -23,25 +22,26 @@
 
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row justify-content-center align-items-center h-100 bg-white">
-            <div class="col-12 col-lg-11 mx-auto">
-                <div class="row mt-2 d-flex justify-content-center align-items-center">
-                    <div class="col-lg-2 col-12 d-flex justify-content-between align-items-center">
+    <header class="container-fluid pb-2 pb-xl-0">
+        <div class="row align-items-center h-100 bg-white">
+            <div class="col-12 col-xl-11 mx-auto">
+                <div class="row mt-2 d-flex align-items-center">
+                    <div class="col-lg-2 col-xl-1 col-12 d-flex justify-content-between align-items-center">
                         <a href="/">
                             <img class="img-fluid" src="~/images/logo.png"
-                                 style="width:99px ;" alt="امیرپرینتر">
+                                 style="width:99px ;" alt="@Configuration["SiteSetting:SiteName"]">
                         </a>
                         <button class="btn btn-menu d-lg-none d-md-flex">
                             <i class="fas fa-bars icon" style="font-size:24px ;"></i>
                         </button>
                     </div>
-                    <form method="get" asp-page="Search" class="col-lg-6 col-12 mt-3 mt-md-0 top-search-input" style="position:relative ; border-radius:15px;height:47px">
-                        <input class="form-control "
-                               placeholder="کالای مورد نظر را جستجو کنید..." name="q" id="search-input">
+                    <hr class="d-block d-lg-none mt-2 mb-2 col-11 mx-auto" style="background:#cdcdcd" />
+                    <form method="get" asp-page="/Search" class="col-xl-4 col-7 mt-md-0 top-search-input me-2 me-xl-0 d-flex align-items-center position-relative rounded" style="height:47px;">
+                        <i class="fa-regular fa-magnifying-glass" style="font-size: 16px;color: #9f9f9f;"></i>
+                        <input class="form-control d-inline w-75"
+                               placeholder="کالای مورد نظر را جستجو کنید..." name="q" id="search-input" >
 
-                        <ul id="search-items" style="position: absolute;
-    width: 100%;
+                        <ul id="search-items" class="position-absolute w-100" style="
     right: 0;
     max-height: 300px;
     z-index: 99;
@@ -52,59 +52,40 @@
                             <li></li>
                         </ul>
                     </form>
-                    <div class="col-12 col-lg-4 mt-3">
-                        <div class="row d-flex justify-content-center">
-                            <div class="col-12 col-lg-12 col-xl-6">
-                                <div class="row">
+                    <div class="col-4 col-xl-7 col-lg-2 me-2 me-sm-0">
+                                <div class="row justify-content-end">
 
-                                    <div class="col-6 col-lg-8">
-                                        @if (User.Identity.IsAuthenticated)
-                                        {
-                                            <a href="" [routerLink]="['dashboard']" style="border-radius: 25px;
-border-radius: 25px;
-border: 1px solid #e3e3e3;
-padding-top: 17px;
-padding-bottom: 17px;
-text-align: center;
-color: #8f8f8f;
-align-items: center;
-display: flex;
-justify-content: center;
+
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        <div class="col-6 col-xl-3 col-lg-5 border-start">
+
+                                            <a href=""  [routerLink]="['dashboard']" style="border-radius: 25px;
 " *ngIf="isLogin">
                                                 <i class="fa-regular fa-user" style="font-size:18px
-;margin-left:5px ;"></i>
+  ;margin-left:5px ;"></i>
                                                 @User.Identity.Name
                                             </a>
-                                        }
-                                        else
-                                        {
-                                            <a href="/account/login" style="border-radius: 25px;
-border-radius: 25px;
-border: 1px solid #e3e3e3;
-padding-top: 17px;
-padding-bottom: 17px;
-text-align: center;
-color: #8f8f8f;
-align-items: center;
-display: flex;
-justify-content: center;
-" *ngIf="!isLogin">
-                                                <i class="fa-regular fa-user" style="font-size:18px
-  ;margin-left:5px ;"></i>
-                                                ورود به حساب کاربری
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="col-6 col-xl-3 col-lg-5 border-start">
+                                            <a href="/account/login" class=" rounded border p-2 text-center w-100 d-none d-xl-flex align-items-center justify-content-center" style="color:#080a38;font-weight:700">
+                                                <i class="fa-regular fa-right-to-bracket ms-3" style="font-size:20px"></i>
+                                                ورود | ثبت نام
                                             </a>
-                                        }
-
-
-                                    </div>
-                                    <div style="color: #8f8f8f;" class="col-6 col-lg-2 d-flex align-items-center
-              justify-content-center">
+                                             <a href="/account/login" class="text-center w-100 d-flex d-xl-none justify-content-center" style="color:#080a38;font-weight:700">
+                                                     <i class="fa-regular fa-right-to-bracket ms-1" style="font-size:20px"></i>
+                                                ورود
+                                            </a>
+                                        </div>
+                                    }
+                                    <div class="col-6 col-xl-1 col-lg-4 d-flex align-items-center justify-content-center" style="color:#080a38;font-weight:700">
                                         @await Component.InvokeAsync("TopBasket")
                                     </div>
                                 </div>
-                            </div>
 
-                        </div>
                     </div>
                     <div class="col-12 mx-auto">
                         <div class="row align-items-center">
@@ -116,12 +97,11 @@ justify-content: center;
                 </div>
             </div>
         </div>
-        <div class="row border-bottom bg-white">
+        <div class="row border-bottom bg-white d-none d-xl-block">
         </div>
         <div class="row">
 
-            <nav class="navbar navbar-expand-lg navbar-light p-0
-      border-bottom" style="background-color: #ffff;">
+            <nav class="navbar navbar-expand-lg navbar-light p-0 bg-white">
                 <div class="container-fluid">
                     <div class="collapse navbar-collapse row" id="navbarSupportedContent">
                         <div class="col-12">
@@ -135,39 +115,36 @@ justify-content: center;
                 </div>
             </nav>
         </div>
+    </header>
+    <div class="container-fluid">
         <main class="main row">
 
             @RenderBody()
         </main>
+    </div>
+    <footer class="container-fluid">
+        <div class="row mt-5 bg-white" style="padding: 20px 0;border-top: 1px solid #ebebeb;">
+            <div class="col-12 p-5">
+                <img class="img-fluid mb-3" src="~/images/logo.png"
+                     style="width:70px ;" alt="@Configuration["SiteSetting:SiteName"]">
+                <br />
+                <span class="mt-4">
+                    تلفن پشتیبانی @Configuration["SiteSetting:Phone"].toPersianNumber()
 
-        <footer class="row mt-5 bg-white" style="padding: 20px 0;border-top: 1px solid #ebebeb;">
-            <div class="col-12 col-xl-4">
-
-                @await Component.InvokeAsync("FooterAbout",new {routeName="footer-about"})
-
-                <div class="col-12 mt-4 d-flex justify-content-center">
-                    <a referrerpolicy="origin" target="_blank"
-                       href="https://trustseal.enamad.ir/?id=313465&amp;Code=EWG11XOUtyAW81zxS2GI">
-                        <img referrerpolicy="origin"
-                             src="https://Trustseal.eNamad.ir/logo.aspx?id=313465&amp;Code=EWG11XOUtyAW81zxS2GI"
-                             alt="اینماد" style="cursor:pointer;
-    width: 89px;
-    border: 1px solid #e3e3e3;
-    padding: 10px;
-    border-radius: 5px;" id="EWG11XOUtyAW81zxS2GI">
-                    </a>
-                    <img referrerpolicy='origin' id='rgvjnbqejxlzjxlzfukzfukz' style='cursor: pointer;
-    width: 89px;
-    border: 1px solid #e3e3e3;
-    padding: 10px;
-    border-radius: 5px;'
-                         onclick='window.open("https://logo.samandehi.ir/Verify.aspx?id=321166&p=xlaouiwkrfthrfthgvkagvka",
-              "Popup"," toolbar=no, scrollbars=no, location=no,statusbar=no,menubar=no, resizable=0, width=450, height=630,top=30")'
-                         alt='logo-samandehi' src='https://logo.samandehi.ir/logo.aspx?id=321166&p=qftiodrfnbpdnbpdwlbqwlbq' />
-                </div>
+                    |
+                    ۷ روز هفته، ۲۴ ساعته پاسخگوی شما هستیم
+                </span>
             </div>
-            <div class="col-12 col-xl-4">
-                <h6 class="h6" style="font-weight: bold;">
+        </div>
+        <div class="row">
+
+            <div class="col-12">
+                @await Component.InvokeAsync("LinkManagement",new{routeName="shopOptions",viewName="_ShopOptions"})
+            </div>
+        </div>
+        <div class="row mb-4 border-bottom p-5">
+            <div class="col-12 col-xl-3" style="font-size: 15px;line-height: 3;">
+                <h6 class="h6 fw-bold">
                     لینک های مرتبط
                 </h6>
                 <a style="display: block;">شرایط استفاده</a>
@@ -175,39 +152,76 @@ justify-content: center;
                 <a style="display: block;">گزارش باگ</a>
                 <a style="display: block;">شیوه های پرداخت</a>
             </div>
+            <div class="col-12 col-xl-3" style="font-size: 15px;line-height: 3;">
+                <h6 class="h6 fw-bold">
+                    خدمات مشتریان
+                </h6>
+                <a style="display: block;">شرایط استفاده</a>
+                <a style="display: block;">حریم خصوصی</a>
+                <a style="display: block;">گزارش باگ</a>
+                <a style="display: block;">شیوه های پرداخت</a>
+            </div>
+            <div class="col-12 col-xl-3" style="font-size: 15px;line-height: 3;">
+                <h6 class="h6 fw-bold">
+                    راهنمای خرید
+                </h6>
+                <a style="display: block;">شرایط استفاده</a>
+                <a style="display: block;">حریم خصوصی</a>
+                <a style="display: block;">گزارش باگ</a>
+                <a style="display: block;">شیوه های پرداخت</a>
+            </div>
+            <div class="col-12 col-xl-3">
+                <h6 class="text-center fw-bold">همراه ما باشید</h6>
+                @await Component.InvokeAsync("SocialNetworks")
+                <hr />
+                <h6 class="text-center fw-bold">با ثبت ایمیل، از جدید‌ترین تخفیف‌ها با‌خبر شوید</h6>
+                <form class="form-group row">
+                    <input class="form-control" style="width:80%" placeholder="ایمیل شما" />
+                    <button class="col-2 btn btn-danger">ثبت</button>
+                </form>
+            </div>
+        </div>
+        <div class="row mt-5">
 
-            <div class="col-12">
+            <div class="col-12 col-xl-6 ">
+
+                @await Component.InvokeAsync("FooterAbout",new {routeName="footer-about"})
+            </div>
+            <div class="col-12 col-xl-6">
+                <div class="col-12 d-flex justify-content-center">
+                    @await Component.InvokeAsync("Tools" ,new {type="namad"})
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+
+            <div class="col-12 middlefooter text-white"
+                 style="background-color:#0046bf ;">
                 <div class="row">
-
-                    @await Component.InvokeAsync("SocialNetworks")
-                    <div class="col-8 text-center mb-5 mt-3">
-                        همه روزه حتی ایام تعطیل 24 ساعته با شما
-                    </div>
-
-                    <div class="col-12 middlefooter text-white"
-                         style="background-color:#0046bf ;">
-                        <div class="row">
-                            <div class="col-10 mx-auto">
-                                @await Component.InvokeAsync("FooterMenu",new {routeName="footer-menu"})
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 bottomfooter">
-                        <div class="row">
-                            <div class="col-8 text-center mt-3 mx-auto">
-                                © 2022 All Right Reserved
-                            </div>
-                        </div>
+                    <div class="col-10 mx-auto">
+                        @await Component.InvokeAsync("FooterMenu",new {routeName="footer-menu"})
                     </div>
                 </div>
             </div>
-        </footer>
-    </div>
+
+            <div class="col-12 bottomfooter">
+                <div class="row">
+                    <div class="col-8 text-center mt-3 mx-auto">
+
+                        <span style="line-height:4">
+                            تمامی حقوق برای @Configuration["SiteSetting:SiteName"] | فروشگاه اینترنتی لوازم اداری محفوظ میباشد.
+                            Copyright © @DateTime.Now.Year
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
     <div class="mobile-menu" [ngClass]="{'show':isOpen}">
+
         <div class="row">
             <div class="col-12 mt-2 d-flex justify-content-center">
-                <img class="img-fluid" alt="امیر پرینتر" src="/images/logo.png"
+                <img class="img-fluid" alt="@Configuration["SiteSetting:SiteName"]" src="/images/logo.png"
                      style="width:115px ;">
             </div>
             <div>
@@ -250,7 +264,7 @@ justify-content: center;
                             <a href="/Search/1/printer/6/multifunction-printer-color">پرینتر چند کاره (جوهر افشان)</a>
                         </li>
 
-                    </ul> 
+                    </ul>
                 </div>
             </div>
         </div>
@@ -260,18 +274,17 @@ justify-content: center;
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js" integrity="sha512-2rNj2KJ+D8s1ceNasTIex6z4HWyOnEYLVC3FigGOmyQCZc2eBXKgOxQmo3oKLHyfcj53uz4QMsRCWNbLd32Q1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="~/lib/popper.js/umd/popper.min.js" asp-append-version="true"></script>
+    <script src="~/lib/Swiper/swiper-bundle.min.js" asp-append-version="true"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.5/swiper-bundle.min.js" integrity="sha512-wdUM0BxMyMC/Yem1RWDiIiXA6ssXMoxypihVEwxDc+ftznGeRu4s9Fmxl8PthpxOh5CQ0eqjqw1Q8ScgNA1moQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-   
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="https://cdn.jsdelivr.net/gh/igorlino/elevatezoom-plus@1.1.6/src/jquery.ez-plus.js"></script>
 
     @await Component.InvokeAsync("Tools" ,new {type="script"})
 
     @await RenderSectionAsync("Scripts", required: false)
     <script>
-        $("#zoom_04").ezPlus();
+
+
         $("#search-input").keyup(function() {
             $("#search-items").children().remove();
             $.ajax({
@@ -329,7 +342,7 @@ justify-content: center;
             //this.lng = ev.lngLat.lng;
 
         });
-findAddress(lat, lng);
+        findAddress(lat, lng);
         mapboxgl.setRTLTextPlugin(
             'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.2.3/mapbox-gl-rtl-text.js',
             () => { }
@@ -356,9 +369,9 @@ findAddress(lat, lng);
         }
         function findAddress(lat, lng) {
             $.ajax({
-                url:'https://map.ir/reverse?lat=' + lat + '&lon=' + lng,
+                url: 'https://map.ir/reverse?lat=' + lat + '&lon=' + lng,
                 headers: {
-                    'x-api-key':'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImYzMzU4ZTFjMDhmZGFmZWVkNGZmMjAzOGFhYjVhNDIxYmRmYzczMTk4OWEwMThmN2Y0NjAzYzU5NTU4YmRiNjY5NzE5YzFkM2I4NGQ5ZGM5In0.eyJhdWQiOiIyMDIyMSIsImp0aSI6ImYzMzU4ZTFjMDhmZGFmZWVkNGZmMjAzOGFhYjVhNDIxYmRmYzczMTk4OWEwMThmN2Y0NjAzYzU5NTU4YmRiNjY5NzE5YzFkM2I4NGQ5ZGM5IiwiaWF0IjoxNjcwMTU1MzAwLCJuYmYiOjE2NzAxNTUzMDAsImV4cCI6MTY3MjY2MDkwMCwic3ViIjoiIiwic2NvcGVzIjpbImJhc2ljIl19.e7-29fB3nFA3jijsALnOAWlfLP7c5WcIdUsLi-XePN7IDsi4KGpluGURGFV9Q1ZnbOToCxuG0H9FZNZc4cjuBsMnDDBGQCJWqDmwGDP2iLGGNiVBEI4MLAhOVUZp7DGD4BvKPZ0-hzoYs5WUstorRlRQvwyOwBWkmUIdZtC8fMozdjioAHfuRwsL2o7Phw4nfmbHx_ZGxNKe8GE8dCHB_tO1RgamJ0tNzF6tTdNZ8x4NFOpnoYiUFRDm9FwgZpbhQzI7Ng0eqm_N6vWhxJvHd3T3F4lzAgd3TIeHkiz-re4EjQlcAYxOmVAo5rb8hIh31ROeoQSDnTUdqbQRt2nCKw'
+                    'x-api-key': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImYzMzU4ZTFjMDhmZGFmZWVkNGZmMjAzOGFhYjVhNDIxYmRmYzczMTk4OWEwMThmN2Y0NjAzYzU5NTU4YmRiNjY5NzE5YzFkM2I4NGQ5ZGM5In0.eyJhdWQiOiIyMDIyMSIsImp0aSI6ImYzMzU4ZTFjMDhmZGFmZWVkNGZmMjAzOGFhYjVhNDIxYmRmYzczMTk4OWEwMThmN2Y0NjAzYzU5NTU4YmRiNjY5NzE5YzFkM2I4NGQ5ZGM5IiwiaWF0IjoxNjcwMTU1MzAwLCJuYmYiOjE2NzAxNTUzMDAsImV4cCI6MTY3MjY2MDkwMCwic3ViIjoiIiwic2NvcGVzIjpbImJhc2ljIl19.e7-29fB3nFA3jijsALnOAWlfLP7c5WcIdUsLi-XePN7IDsi4KGpluGURGFV9Q1ZnbOToCxuG0H9FZNZc4cjuBsMnDDBGQCJWqDmwGDP2iLGGNiVBEI4MLAhOVUZp7DGD4BvKPZ0-hzoYs5WUstorRlRQvwyOwBWkmUIdZtC8fMozdjioAHfuRwsL2o7Phw4nfmbHx_ZGxNKe8GE8dCHB_tO1RgamJ0tNzF6tTdNZ8x4NFOpnoYiUFRDm9FwgZpbhQzI7Ng0eqm_N6vWhxJvHd3T3F4lzAgd3TIeHkiz-re4EjQlcAYxOmVAo5rb8hIh31ROeoQSDnTUdqbQRt2nCKw'
                 }
             }).done((res) => {
                 $("input[name=address]").val(res.address_compact);

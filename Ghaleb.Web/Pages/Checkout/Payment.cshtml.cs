@@ -17,11 +17,13 @@ namespace Ghaleb.Web.Pages.Checkout
     {
         private readonly ServiceContext _context;
         private readonly Payment _payment;
-        public PaymentModel(ServiceContext context)
+        private readonly IConfiguration _configuration;
+        public PaymentModel(ServiceContext context, IConfiguration configuration)
         {
             _context = context;
             var expose = new Expose();
             _payment = expose.CreatePayment();
+            _configuration = configuration;
         }
         public List<ResponseGetBasketItems> List { get; set; } = new List<ResponseGetBasketItems>();
         public decimal TotalPrice { get; set; }
@@ -45,7 +47,7 @@ namespace Ghaleb.Web.Pages.Checkout
                     Count = item.Count,
                     Price = pr.GetPrice(),
                     Id = item.Id,
-                    Image = pr.Product.Image.BindImage(),
+                    Image = pr.Product.Image.BindImage(_configuration),
                     Name = pr.Product.Title,
                     TotalPrice = pr.GetPrice() * item.Count
                 });

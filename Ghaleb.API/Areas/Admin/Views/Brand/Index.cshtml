@@ -2,6 +2,8 @@
 @addTagHelper *, AuthoringTagHelpers
 @using ALO.DomainClasses.EntityHelpers;
 @model IEnumerable<ALO.DomainClasses.Entity.Product.tbl_Brands>
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
 @{
     ViewData["Title"] = "لیست برند ها";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
@@ -31,7 +33,7 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td><img src="@item.Logo.BindImage()" style="width:75px"> </td>
+                                <td><img src="@item.Logo.BindImage(Configuration)" style="width:75px"> </td>
                                 <td>@item.Name</td>
                                 <td>@item.MainProductCategory.Name</td>
                                 <td>

@@ -35,7 +35,9 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Content
         }
         public async Task<IActionResult> Edit(long? Id)
         {
-            return View(await _context.GetAsync<tbl_PageContent>(x => x.Id == Id));
+            var data = await _context.GetAsync<tbl_PageContent>(x => x.Id == Id);
+            data.MetaKeywords = data.MetaKeyword.Split(',');
+            return View(data);
         }
         [HttpPost]
         public async Task<IActionResult> Edit(tbl_PageContent model)
@@ -56,7 +58,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Content
                 {
                     data.Description = model.Description;
                     data.MetaDescription = model.MetaDescription;
-                    data.MetaKeyword = model.MetaKeyword;
+                    data.MetaKeyword = string.Join(",", model.MetaKeywords);
                     data.PageTitle = model.PageTitle;
                     data.Url = model.Url;
                 }

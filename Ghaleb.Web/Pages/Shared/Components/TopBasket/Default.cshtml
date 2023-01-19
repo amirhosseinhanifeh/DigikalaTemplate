@@ -3,5 +3,17 @@
 }
 
 <a href="/checkout/basket" style="position:relative ;">
-    <i class="fa-light fa-cart-shopping" style="font-size:20px ;"></i><span style="position: absolute;top:-17px;right:-11px ;">(@Model)</span>
+    <i class="fa-light fa-cart-shopping" style="font-size:20px ;"></i><span style="position: absolute;
+    bottom: -3px;
+    right: -11px;
+    background: #f50a0a;
+    padding: 3px;
+    border-radius: 6px;
+    width: 19px;
+    height: 19px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;">@Model.ToString().toPersianNumber()</span>
 </a>

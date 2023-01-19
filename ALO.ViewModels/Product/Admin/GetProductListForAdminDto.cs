@@ -18,5 +18,6 @@ namespace ALO.ViewModels.Product.Admin
         public int CommentCount { get; set; }
         public int Visit { get; set; }
         public long AllVisit { get; set; }
+        public int TagCount { get; set; }
     }
 }

@@ -25,7 +25,7 @@ namespace Ghaleb.Web.Pages.ViewComponents.FavIcon
             var res = await _memoryCache.GetOrCreateAsync("favIcon", async cachEntry =>
             {
 
-               return (await _context.tbl_Seos.FirstOrDefaultAsync()).FavIcon.BindImage();
+               return (await _context.tbl_Seos.FirstOrDefaultAsync())?.FavIcon?.BindImage(configuration);
             });
             ViewBag.Url = res;
             return View();

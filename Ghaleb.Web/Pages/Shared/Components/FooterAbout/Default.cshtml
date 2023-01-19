@@ -3,12 +3,14 @@
 }
 
 
+@if (Model != null)
+{
+    <h1 class="h6" style="font-weight: bold;">
+        @Model.Name
+    </h1>
 
-<h1 class="h6" style="font-weight: bold;">
-    @Model.Name
-</h1>
-
-<p style="font-size:15px">
-    @Html.Raw(Model.Description)
-</p>
+    <p style="font-size:15px">
+        @Html.Raw(Model.Description)
+    </p>
+}
 

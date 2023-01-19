@@ -15,13 +15,8 @@ namespace Ghaleb.Web.Pages.ViewComponents.SlideShow
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var slideShows = await _context.tbl_SlideShows.Include(x => x.Image).Where(h => h.IsActive && h.IsDelete != true).OrderByDescending(x => x.Id).Take(4).Select(h => new
-            {
-                Id = h.Id,
-                Image = h.Image.BindImage(),
-                h.Link,
-            }).ToListAsync();
-            return View();
+            var slideShows = await _context.tbl_SlideShows.Include(x => x.Image).Where(h => h.IsActive && h.IsDelete != true).OrderByDescending(x => x.Id).Take(4).ToListAsync();
+            return View(slideShows);
         }
     }
 }

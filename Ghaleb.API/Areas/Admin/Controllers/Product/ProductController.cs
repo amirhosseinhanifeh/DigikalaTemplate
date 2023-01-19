@@ -19,7 +19,7 @@ using static ALO.Common.Messages.Message;
 namespace Ghaleb.API.Areas.Admin.Controllers.Product
 {
     [Area("Admin")]
-
+    [Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;

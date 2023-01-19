@@ -1,5 +1,25 @@
-﻿
+﻿@model IEnumerable<ALO.DomainClasses.Entity.Content.tbl_SlideShow>
 
 @{
 }
-sasa
+<div class="swiper slideshow">
+    <!-- Additional required wrapper -->
+    <div class="swiper-wrapper">
+        <!-- Slides -->
+        @foreach (var item in Model)
+        {
+            <div class="swiper-slide">
+                <a href="@Url.Content(item.Link)">
+                    <img src="@item.Image.BindImage(Configuration)" class="img-fluid" style="height:400px ;" alt="@item.Title">
+                </a>
+            </div>
+        }
+    </div>
+    <!-- If we need pagination -->
+    <div class="swiper-pagination"></div>
+
+    <!-- If we need navigation buttons -->
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+
+</div>

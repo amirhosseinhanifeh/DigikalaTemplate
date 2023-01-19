@@ -25,9 +25,11 @@ namespace Ghaleb.Web.Pages
         [BindProperty(SupportsGet = true)]
         public long? ColorId { get; set; }
         public string ChartJson { get; set; }
+        public string Title { get; set; }
         public async Task OnGetAsync()
         {
             var data = await _context.tbl_Products.Include(x => x.ProductPriceHistories).ThenInclude(x=>x.Color).FirstOrDefaultAsync(x => x.Id == Id);
+            Title = data.Title;
             if(ColorId==null)
             {
                 ColorId = data.ProductPriceHistories.First().ColorId;

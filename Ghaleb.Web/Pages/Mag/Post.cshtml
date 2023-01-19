@@ -3,7 +3,13 @@
 @model Ghaleb.Web.Pages.Mag.PostModel
 @{
     Layout = "~/Pages/Shared/_BlogLayout.cshtml";
-    ViewData["Seo"] = Model.Blog;
+    ViewData["Seo"] = new
+    {
+        PageTitle = Model.Blog.Title,
+        MetaKeyword = Model.Blog.MetaKeyword,
+        MetaDescription = Model.Blog.MetaDescription,
+        DoIndex = true
+    };
 }
 <div class="col-12 p-3">
     <div class="row">
@@ -29,7 +35,7 @@
                 </div>
             </div>
             <div class="row">
-                <img src="@Model.Blog.Image.BindImage()" class="img-fluid mx-auto" />
+                <img src="@Model.Blog.Image.BindImage(Configuration)" class="img-fluid mx-auto" />
             </div>
             <div class="row ">
                 <div class="col-10 mx-auto rounded p-4 bg-light">

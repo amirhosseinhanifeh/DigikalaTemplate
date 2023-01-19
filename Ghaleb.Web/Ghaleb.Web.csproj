@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNetCore.ReCaptcha" Version="1.6.0" />
     <PackageReference Include="AspNetCore.SEOHelper" Version="1.0.1" />
     <PackageReference Include="FusionCharts.Visualization" Version="1.0.9" />
     <PackageReference Include="Hangfire" Version="1.7.32" />

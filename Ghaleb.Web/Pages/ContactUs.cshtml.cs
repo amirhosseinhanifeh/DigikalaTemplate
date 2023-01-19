@@ -5,12 +5,14 @@ using ALO.Service.Interface.Forms;
 using ALO.Service.Interface.PageContent;
 using ALO.ViewModels.Forms;
 using ALO.ViewModels.PageContent;
+using AspNetCore.ReCaptcha;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ghaleb.Web.Pages
 {
+    [ValidateReCaptcha(ErrorMessage ="کپچا نا معتبر")]
     public class ContactUsModel : PageModel
     {
         private readonly IFormContactUsService _frmcontact;
@@ -30,14 +32,23 @@ namespace Ghaleb.Web.Pages
             Seo = await _context.tbl_PageContent.FirstOrDefaultAsync(x => x.Url == "contact-us");
         }
         public string Message { get; set; }
-        public async Task OnPostAsync(FormContactUsDTO model)
+        [BindProperty]
+        public FormContactUsDTO model { get; set; }
+
+
+        public async Task<IActionResult> OnPostAsync()
         {
+            if (ModelState.IsValid)
+            {
+                var result = await _frmcontact.CreateAsync(model);
 
-            var result = await _frmcontact.CreateAsync(model);
+                Message = result.Message;
+            }
 
-            Message = result.Message;
             ContactUs = (await _contact.Get()).model;
             Seo = await _context.tbl_PageContent.FirstOrDefaultAsync(x => x.Url == "contact-us");
+
+            return Page();
         }
     }
 }

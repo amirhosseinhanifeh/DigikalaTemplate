@@ -19,10 +19,12 @@ namespace Ghaleb.Web.Pages
     {
         private readonly IProductService _product;
         private readonly ServiceContext _context;
-        public ProductModel(IProductService product, ServiceContext context)
+        private readonly IConfiguration _configuration;
+        public ProductModel(IProductService product, ServiceContext context, IConfiguration configuration)
         {
             _product = product;
             _context = context;
+            _configuration = configuration;
         }
         public ProductDetailsForHomeDto Product { get; set; }
         [BindProperty(SupportsGet = true)]
@@ -57,13 +59,13 @@ namespace Ghaleb.Web.Pages
                 AttrIds = Product.Options.Where(x=>x.Options.Any()).Select(h => h.Options.FirstOrDefault().Id).ToArray();
             }
             
-            RelatedProducts = await _context.tbl_Products.Where(h => h.IsDelete == false && h.IsActive == true && h.Id != Id && h.ProductCategory.Id == Product.Category.Id && h.BrandId == Product.Brand.Id).Select(y => new ProductListForHomeDto
+            RelatedProducts = await _context.tbl_Products.Where(h => h.IsDelete == false && h.IsActive == true && h.Id != Id && (Product.Category!=null? h.ProductCategory.Id == Product.Category.Id:true) && (Product.Brand !=null? h.BrandId == Product.Brand.Id:true)).Select(y => new ProductListForHomeDto
             {
                 Id = y.Id,
                 Abstract = y.Abstract,
                 Discount = y.GetDiscountPrice() != null ? y.GetDiscountPrice().Value.ToString("n0").toPersianNumber() : null,
                 Cost = y.GetLastPrice().ToString("n0").toPersianNumber(),
-                Image = y.Image.BindImage(),
+                Image = y.Image.BindImage(_configuration),
                 IsSpecial = y.IsSpecial,
                 Title = y.Title,
                 Url = y.Url,

@@ -1,12 +1,12 @@
 ﻿@page
-@inject IConfiguration Configuration
 @model Ghaleb.Web.Pages.CompareModel
 @{
     ViewData["Seo"] = new
     {
         PageTitle = "مقایسه " + Model.Title,
         MetaKeyword="مقایسه " + Model.Title,
-        MetaDescription="مقایسه " + Model.Title
+        MetaDescription="مقایسه " + Model.Title,
+        DoIndex=true
 
     };
 }
@@ -17,7 +17,7 @@
         @foreach (var item in Model.Products)
         {
             <div class="col-2 ">
-                <img class="img-fluid d-block mx-auto" src="@item.Image.BindImage()" style="width:150px">
+                <img class="img-fluid d-block mx-auto" src="@item.Image.BindImage(Configuration)" style="width:150px">
                 <h6 class="text-center"> @item.Title</h6>
             </div>
 

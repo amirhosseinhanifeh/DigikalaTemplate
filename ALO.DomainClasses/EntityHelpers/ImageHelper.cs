@@ -20,19 +20,12 @@ namespace ALO.DomainClasses.EntityHelpers
             _httpContextAccessor = new HttpContextAccessor();
 
         }
-
-        public static string BindImage(this tbl_Image model)
+        public static string BindImage(this tbl_Image model,IConfiguration configuration)
         {
             if (model != null)
             {
-                //if (_httpContextAccessor.HttpContext.Request.Host.Host.Contains("localhost"))
-                //{
-                //    return _httpContextAccessor.HttpContext.Request.Scheme + "://" + _httpContextAccessor.HttpContext.Request.Host + "/Uploads/Images/" + model.Image_thumb;
-
-                //}
-                //return _httpContextAccessor.HttpContext.Request.Scheme + "://api." + _httpContextAccessor.HttpContext.Request.Host.Host.Split(".")[1] + "." + _httpContextAccessor.HttpContext.Request.Host.Host.Split(".")[2] + "/Uploads/Images/" + model.Image_thumb;
-                //return "https://api.qiratinstruments.com" + "/Uploads/Images/" + model.Image_thumb;
-                return "https://api.amirprinter.ir" + "/Uploads/Images/" + model.Image_thumb;
+               
+                return configuration["SiteSetting:ApiUrl"] + "/Uploads/Images/" + model.Image_thumb;
 
             }
             return "https://st3.depositphotos.com/23594922/31822/v/600/depositphotos_318221368-stock-illustration-missing-picture-page-for-website.jpg";

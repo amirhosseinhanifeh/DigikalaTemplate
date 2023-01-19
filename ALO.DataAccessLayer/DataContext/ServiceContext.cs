@@ -1,4 +1,5 @@
-﻿using ALO.DataAccessLayer.UnitOfWork;
+﻿using ALO.DataAccessLayer.Convention;
+using ALO.DataAccessLayer.UnitOfWork;
 using ALO.DomainClasses;
 using ALO.DomainClasses.Config.Account;
 using ALO.DomainClasses.Config.City;
@@ -305,6 +306,9 @@ namespace ALO.DataAccessLayer.DataContext
 
             modelBuilder.Entity<tbl_ProductPriceHistory>().HasMany(x => x.ProductPriceOptionValues)
                 .WithMany(x => x.ProductPriceHistories).UsingEntity(x => x.ToTable("tbl_ProductPriceHistoryOptionValues"));
+
+
+            modelBuilder.Seed();
             //foreach (var entityType in modelBuilder.Model.GetEntityTypes()
             //    .SelectMany(x => x.GetProperties())
             //    .Where(x => x.Name == "Id"))

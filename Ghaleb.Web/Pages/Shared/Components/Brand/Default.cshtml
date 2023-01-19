@@ -1,7 +1,8 @@
 ﻿@model IEnumerable<ALO.DomainClasses.Entity.Product.tbl_Brands>
 @{
 }
-
+@if(Model.Any())
+{
 <div class="row bg-white p-3 mt-5 box">
     <div class="col-6">
         <h6 class="border-bottom p-2">برترین برند ها</h6>
@@ -16,7 +17,7 @@
                     <a class="card col-6 d-flex justify-content-center align-items-center"
                    href="/Search/Brand/@item.Id/@item.Name">
                         <img class="card-img-top mx-auto"
-                         src="@item.Logo.BindImage()"
+                         src="@item.Logo.BindImage(Configuration)"
                          alt="@item.Name">
 
                     </a>
@@ -32,3 +33,4 @@
 
     </div>
 </div>
+}

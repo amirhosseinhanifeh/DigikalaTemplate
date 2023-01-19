@@ -101,9 +101,7 @@
                 </div>
                 <div class="form-group col-6">
                     <label asp-for="MetaKeyword"></label>
-                    <select asp-for="MetaKeyword" class="form-control"  multiple="multiple">
-  <option>Alabama</option>
-  <option>Wyoming</option>
+                    <select asp-for="MetaKeyword" class="form-control"  asp-items="new SelectList(Model.MetaKeyword)" multiple="multiple">
 </select>
                 </div>
                 <div class="form-group col-6">

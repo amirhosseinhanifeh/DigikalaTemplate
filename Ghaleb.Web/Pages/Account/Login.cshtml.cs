@@ -1,5 +1,6 @@
 using ALO.Common.Enums;
 using ALO.Service.Interface.Account;
+using AspNetCore.ReCaptcha;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using System.Security.Claims;
 
 namespace Ghaleb.Web.Pages.Account
 {
+    [ValidateReCaptcha]
     public class LoginModel : PageModel
     {
         private readonly IUserService _userService;

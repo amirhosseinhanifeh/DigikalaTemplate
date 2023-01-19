@@ -21,6 +21,7 @@ using ALO.Common.Utilities.ConvertTo;
 using ALO.Common.Utilities.ConvertDt;
 using ALO.Service.Interface.Image;
 using ALO.DomainClasses.Entity.IMG;
+using Microsoft.Extensions.Configuration;
 
 namespace ALO.Service.Service.Product
 {
@@ -28,12 +29,13 @@ namespace ALO.Service.Service.Product
     {
         private readonly ServiceContext _db;
         private readonly IImageService _imageService;
+        private readonly IConfiguration _configuration;
 
-
-        public ProductService(ServiceContext db, IImageService imageService)
+        public ProductService(ServiceContext db, IImageService imageService, IConfiguration configuration)
         {
             _db = db;
             _imageService = imageService;
+            _configuration = configuration;
         }
 
         public async Task<ListResultViewModel<bool>> AddProductForAdmin(AddProductForAdminDTO model)
@@ -215,7 +217,7 @@ namespace ALO.Service.Service.Product
         {
             try
             {
-                var result = (await _db.GetAllAsync<tbl_SubProductCategory>(x => x.ShowInHome == true, new string[] { "ProductCategory", "Products", "Products.Image", "Products.ProductPriceHistories" }).OrderByDescending(x => x.Id).ToListAsync())
+                var result = (await _db.GetAllAsync<tbl_SubProductCategory>(x => x.ShowInHome == true, new string[] { "Products", "Products.Image", "Products.ProductPriceHistories" }).OrderByDescending(x => x.Id).ToListAsync())
                     .Select(x => new CategoryListForHomeDTO
                     {
                         Title = x.Title,
@@ -226,7 +228,7 @@ namespace ALO.Service.Service.Product
                             Abstract = y.Abstract,
                             Discount = y.GetDiscountPrice() != null ? y.GetDiscountPrice().Value.ToString("n0").toPersianNumber() : null,
                             Cost = y.GetLastPrice().ToString("n0").toPersianNumber(),
-                            Image = y.Image.BindImage(),
+                            Image = y.Image.BindImage(_configuration),
                             IsSpecial = y.IsSpecial,
                             Title = y.Title,
                             Url = y.Url,
@@ -310,12 +312,12 @@ namespace ALO.Service.Service.Product
                     CostDisplay = query.GetLastPrice().ToString("n0").toPersianNumber(),
                     Cost = query.GetLastPrice(),
                     Description = query.Description,
-                    Image = query.Image.BindImage(),
+                    Image = query.Image.BindImage(_configuration),
                     Title = query.Title,
                     DoIndex = query.DoIndex,
                     IsSpecial = query.IsSpecial,
                     State = query.State.ToString(),
-                    SubCategory = query.SubProductCategory.Title,
+                    SubCategory = query.SubProductCategory?.Title,
                     MetaDescription = query.MetaDescription,
                     MetaKeyword = query.MetaKeyword,
                     PageTitle = query.PageTitle,
@@ -328,7 +330,7 @@ namespace ALO.Service.Service.Product
                     } : null,
                     Date = query.CreatedDate.RelativeDate().toPersianNumber(),
                     //IsBuy = UserId == null ? null : query.OrderDetails.Any(x => x.Order.UserId == UserId),
-                    Images = query.Images.Select(y => new ProductGalleryDTO { Url = y.BindImage() }).ToList(),
+                    Images = query.Images.Select(y => new ProductGalleryDTO { Url = y.BindImage(_configuration) }).ToList(),
                     Comments = query.ProductComments.Where(x => x.IsActive && x.IsDelete != true).Select(y => new ProductCommentForWebsiteDto
                     {
                         Body = y.Body,
@@ -432,7 +434,7 @@ namespace ALO.Service.Service.Product
                                 Id = x.Id,
                                 Abstract = x.Product.Abstract,
                                 Title = x.Product.Title,
-                                Image = x.Product.Image.BindImage(),
+                                Image = x.Product.Image.BindImage(_configuration),
                                 IsSpecial = x.Product.IsSpecial,
                                 Date = x.CreatedDate.RelativeDate().toPersianNumber(),
                                 Url = x.Product.Url,
@@ -539,7 +541,7 @@ namespace ALO.Service.Service.Product
                     Id = x.Id,
                     Abstract = x.Abstract,
                     Title = x.Title,
-                    Image = x.Image.BindImage(),
+                    Image = x.Image.BindImage(_configuration),
                     IsSpecial = x.IsSpecial,
                     Date = x.CreatedDate.RelativeDate().toPersianNumber(),
                     Url = x.Url,
@@ -585,6 +587,7 @@ namespace ALO.Service.Service.Product
             {
 
                 var result = _db.tbl_Products.Include(x => x.Image)
+                    .Include(x=>x.ProductTags)
                     .Include(x => x.ProductVisits)
                     .Include(x => x.ProductComments)
                     .Include(x => x.ProductPriceHistories)
@@ -599,12 +602,13 @@ namespace ALO.Service.Service.Product
                         Row = 1,
                         Id = x.Id,
                         Title = x.Title,
-                        Image = x.Image.BindImage(),
+                        Image = x.Image.BindImage(_configuration),
                         OrderCount = x.ProductPriceHistories.SelectMany(x => x.OrderDetails).Count(h => h.Order.OrderState == DomainClasses.Entity.Order.OrderState.PAYED),
                         SubCategory = x.SubProductCategory.Title,
                         Status = x.IsActive ? "فعال" : "غیر فعال",
                         Cost = x.GetLastPrice().ToString("n0").toPersianNumber() + " تومان",
                         CommentCount = x.ProductComments.Count(),
+                        TagCount=x.ProductTags.Where(x=>x.IsDelete !=true && x.IsActive).Count(),
                         Visit = x.ProductVisits.Count(),
                         AllVisit = x.Visit,
                         Url = x.Url,
@@ -829,7 +833,7 @@ namespace ALO.Service.Service.Product
                 {
                     Id = x.Id,
                     Title = x.Title,
-                    Image = x.Image.BindImage(),
+                    Image = x.Image.BindImage(_configuration),
                     Url = x.Url,
                     Category = new
                     {

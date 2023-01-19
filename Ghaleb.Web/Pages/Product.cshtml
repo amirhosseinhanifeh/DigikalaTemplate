@@ -54,24 +54,30 @@
             <div class="col-12">
                 <div class="row">
                     <div class="col-6">
-                        <span style="font-size: 13px;">
-                            برند : <a href="/Search/Brand/@Model.Product.Brand.Id/@Model.Product.Brand.Name"
+                        @if (Model.Product.Brand != null)
+                        {
+                            <span style="font-size: 13px;">
+                                برند : <a href="/Search/Brand/@Model.Product.Brand.Id/@Model.Product.Brand.Name"
                                       [routerLink]="['/brand/'+data?.brand?.id+'/'+data?.brand?.name]"
                                       style="font-size: 13px; color: #19bfd3;">
-                                @Model.Product.Brand.Name
-                            </a>
-                        </span>
+                                    @Model.Product.Brand.Name
+                                </a>
+                            </span>
+                        }
 
                     </div>
-                    <div class="col-6">
-                        <span style="font-size: 13px;">
-                            دسته بندی : <a href=""
+                    @if (Model.Product.Category != null)
+                    {
+                        <div class="col-6">
+                            <span style="font-size: 13px;">
+                                دسته بندی : <a href=""
                                            [routerLink]="['/search/category/'+data?.category.id+'/'+data?.category.url]"
                                            style="font-size: 13px;color: #19bfd3;">
-                                @Model.Product.Category.Name
-                            </a>
-                        </span>
-                    </div>
+                                    @Model.Product.Category.Name
+                                </a>
+                            </span>
+                        </div>
+                    }
                 </div>
             </div>
             <div class="col-12 mt-3 border-bottom pb-3">
@@ -82,90 +88,93 @@
             </div>
             <form method="get">
                 <input hidden type="text" name="color" value="@Model.Color" />
-            @if (Model.Product.Colors.Any())
-            {
-                <div class="col-12 mt-5 d-flex align-items-center" style="font-size: 13px;">
-                    رنگ :
-                    @foreach (var item in Model.Product.Colors)
-                    {
-                        <a asp-route-color="@item.Id" class="color d-flex justify-content-center align-items-center" style="border-radius: 50px;border: 2px
+                @if (Model.Product.Colors.Any())
+                {
+                    <div class="col-12 mt-5 d-flex align-items-center" style="font-size: 13px;">
+                        رنگ :
+                        @foreach (var item in Model.Product.Colors)
+                        {
+                            <a asp-route-color="@item.Id" class="color d-flex justify-content-center align-items-center" style="border-radius: 50px;border: 2px
                     solid gray;margin-right:15px; width: 35px;height: 35px;background-color:@item.Hex"
-                   data-bs-toggle="tooltip" data-bs-placement="top" title="@item.Name">
-                            @if (item.Id == Model.Color)
-                            {
-                                <i class="fa-regular fa-check"></i>
-                            }
-                        </a>
+                       data-bs-toggle="tooltip" data-bs-placement="top" title="@item.Name">
+                                @if (item.Id == Model.Color)
+                                {
+                                    <i class="fa-regular fa-check"></i>
+                                }
+                            </a>
+                        }
+
+                    </div>
+                }
+                @if (Model.Product.Options.Any())
+                {
+                    int i = 0;
+                    foreach (var item in Model.Product.Options)
+                    {
+                        <div class="col-12 mt-5 d-flex align-items-center" style="font-size: 13px;">
+                            <div class="row">
+
+                                <h6>@item.Name :</h6>
+                                <select class="form-control" asp-for="AttrIds[i]">
+                                    @foreach (var item2 in item.Options)
+                                    {
+                                        <option value="@item2.Id">@item2.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        i = i + 1;
+
+                    }
+                }
+                <button hidden type="submit">اعمال</button>
+            </form>
+            @if (Model.Product.Values.Any())
+            {
+                <div class="col-12 col-lg-10 mt-5">
+
+                    <h6 style="font-weight:bold ;">ویژگی ها</h6>
+                    @foreach (var item in Model.Product.Values)
+                    {
+                        <div class="row mt-3 d-flex align-items-center">
+                            <div class="col-5" style="color: #9f9e9e;">
+                                @item.Name :
+                            </div>
+                            <div class="col-6 text-right">
+                                @item.Value
+                            </div>
+                        </div>
                     }
 
                 </div>
             }
-            @if (Model.Product.Options.Any())
+            @if (Model.Product.Tags.Any())
             {
-                int i = 0;
-                foreach (var item in Model.Product.Options)
-                {
-                    <div class="col-12 mt-5 d-flex align-items-center" style="font-size: 13px;">
-                        <div class="row">
+                <div class="col-12 col-lg-10 mt-5">
 
-                            <h6>@item.Name :</h6>
-                            <select class="form-control" asp-for="AttrIds[i]">
-                                @foreach (var item2 in item.Options)
-                                {
-                                    <option value="@item2.Id">@item2.Name</option>
-                                }
-                            </select>
-                        </div>
-                        </div>
-                        i = i + 1;
-
-                }
-            }
-            <button type="submit">اعمال</button>
-            </form>
-            <div class="col-12 col-lg-10 mt-5">
-
-                <h6 style="font-weight:bold ;">ویژگی ها</h6>
-                @foreach (var item in Model.Product.Values)
-                {
-                    <div class="row mt-3 d-flex align-items-center">
-                        <div class="col-5" style="color: #9f9e9e;">
-                            @item.Name :
-                        </div>
-                        <div class="col-6 text-right">
-                            @item.Value
-                        </div>
-                    </div>
-                }
-
-            </div>
-            <div class="col-12 col-lg-10 mt-5">
-
-                <h6 style="font-weight:bold ;">برچسب ها</h6>
-                @foreach (var item in Model.Product.Tags)
-                {
-                    <a href="/Search/Tag/@item.Id/@item.Name">
-                        <span class="ms-1" style="background: #f1f1f1;
+                    <h6 style="font-weight:bold ;">برچسب ها</h6>
+                    @foreach (var item in Model.Product.Tags)
+                    {
+                        <a href="/Search/Tag/@item.Id/@item.Name">
+                            <span class="ms-1" style="background: #f1f1f1;
     padding-left: 9px;
     border-radius: 44px;
     padding-right: 9px;
     padding-top: 2px;
     padding-bottom: 2px;">@item.Name</span>
-                    </a>
-                }
+                        </a>
+                    }
 
-            </div>
+                </div>
+            }
         </div>
     </div>
     <div class="col-12 col-lg-3 mt-3 mt-lg-0">
         <div class="row d-flex justify-content-center">
             <div class="col-12 col-lg-10">
-                <div class="row p-4 d-flex justify-content-between
-                    align-items-center" style="border-radius:
-                    10px;background:
-                    #ededed;">
-               @await Component.InvokeAsync("Price",new {prId=Model.Product.Id,colorId=Model.Color,attrIds=Model.AttrIds})
-                </div>
+
+                @await Component.InvokeAsync("Price",new {prId=Model.Product.Id,colorId=Model.Color,attrIds=Model.AttrIds})
+
             </div>
         </div>
     </div>
@@ -273,37 +282,30 @@
 
 </div> -->
 @section Scripts{
-
+    <script src="~/lib/elevateZoom/jquery.elevatezoom.min.js"></script>
+    <script>
+        $('#zoom_04').elevateZoom();
+    </script>
     <script type="application/ld+json">
         {
           "@@context": "https://schema.org/",
-          "@@type": "Recipe",
+          "@@type": "Product",
           "name": "@Model.Product.Title",
           "author": "امیر حسین حنیفه",
           "image": "@Model.Product.Image",
-          "description": "A classic apple pie.",
+          "description": "@Model.Product.Abstract",
           "aggregateRating": {
             "@@type": "AggregateRating",
             "ratingValue": "4.8",
             "reviewCount": "7462",
             "bestRating": "5",
             "worstRating": "1"
-          },
-          "prepTime": "PT30M",
-          "totalTime": "PT1H30M",
-          "recipeYield": "8",
-          "nutrition": {
-            "@@type": "NutritionInformation",
-            "calories": "512 calories"
-          },
-          "recipeIngredient": [
-            "1 box refrigerated pie crusts, softened as directed on box",
-            "6 cups thinly sliced, peeled apples (6 medium)"
-          ]
+          }
         }
+
     </script>
         }
-    @section Modal{
+@section Modal{
     <div class="modal  fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">

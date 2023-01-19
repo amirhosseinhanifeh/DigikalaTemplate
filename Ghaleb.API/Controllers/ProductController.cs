@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -26,6 +27,7 @@ using static ALO.Common.Messages.Message;
 
 namespace Ghaleb.API.Controllers
 {
+
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class ProductController : ControllerBase
@@ -34,13 +36,14 @@ namespace Ghaleb.API.Controllers
         private readonly IProductCategoryService _productcategoryService;
         private readonly IImageService _imageService;
         private readonly ServiceContext _context;
-
-        public ProductController(IProductService product, IImageService imageService, IProductCategoryService productcategoryService, ServiceContext context)
+        private readonly IConfiguration _configuration;
+        public ProductController(IProductService product, IImageService imageService, IProductCategoryService productcategoryService, ServiceContext context, IConfiguration configuration)
         {
             _product = product;
             _imageService = imageService;
             _productcategoryService = productcategoryService;
             _context = context;
+            _configuration = configuration;
         }
         [HttpGet]
         public async Task<ActionResult<List<ProductListForHomeDto>>> GetAllAsync(
@@ -71,7 +74,7 @@ namespace Ghaleb.API.Controllers
                     Id = h.Id,
                     Cost = h.GetLastPrice().ToString("n0").toPersianNumber(),
                     Discount = h.GetDiscountPrice() != null ? h.GetDiscountPrice().Value.ToString("n0").toPersianNumber() : null,
-                    Image = h.Image.BindImage(),
+                    Image = h.Image.BindImage(_configuration),
                     Title = h.Title,
                     Percent = h.CalculatePercent(),
                     Url = h.Url
@@ -86,7 +89,7 @@ namespace Ghaleb.API.Controllers
                         Id = h.Id,
                         Cost = h.GetLastPrice().ToString("n0").toPersianNumber(),
                         Discount = h.GetDiscountPrice() != null ? h.GetDiscountPrice().Value.ToString("n0").toPersianNumber() : null,
-                        Image = h.Image.BindImage(),
+                        Image = h.Image.BindImage(_configuration),
                         Title = h.Title,
                         Url = h.Url,
                         Call = h.GetLastPrice() == 0
@@ -97,14 +100,14 @@ namespace Ghaleb.API.Controllers
                     Id = h.Id,
                     Title = h.Title,
                     h.Url,
-                    Image = h.Image.BindImage(),
+                    Image = h.Image.BindImage(_configuration),
                     h.Visit,
                     h.Abstract
                 }).ToListAsync();
                 var slideShows = await _context.tbl_SlideShows.Include(x => x.Image).Where(h => h.IsActive && h.IsDelete != true).OrderByDescending(x => x.Id).Take(4).Select(h => new
                 {
                     Id = h.Id,
-                    Image = h.Image.BindImage(),
+                    Image = h.Image.BindImage(_configuration),
                     h.Link,
                 }).ToListAsync();
 
@@ -114,7 +117,7 @@ namespace Ghaleb.API.Controllers
                     h.Link,
                     h.Name,
                     h.Description,
-                    Image = h.Image.BindImage(),
+                    Image = h.Image.BindImage(_configuration),
                     h.RouteName
                 }).ToListAsync();
 
@@ -289,7 +292,7 @@ namespace Ghaleb.API.Controllers
             var list = await _context.tbl_ProductPriceHistory.Where(x => x.Id == id && x.Inventory > 0).Select(x => new
             {
                 Id = x.Id,
-                Image = x.Product.Image.BindImage(),
+                Image = x.Product.Image.BindImage(_configuration),
                 Title = x.Product.Title + " (" + x.Color.Name + ")",
                 Price = x.GetPrice(),
                 DisplayPrice = x.GetPriceValue(),

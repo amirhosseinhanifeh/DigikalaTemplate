@@ -3,6 +3,7 @@ using ALO.DomainClasses.Entity.IMG;
 using ALO.DomainClasses.EntityHelpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +16,11 @@ namespace AyandeNama.Web.Helpers.TagHelpers
     public class ImageUploaderTagHelper : TagHelper
     {
         private readonly ServiceContext _context;
-
-        public ImageUploaderTagHelper(ServiceContext context)
+        private readonly IConfiguration _configuration;
+        public ImageUploaderTagHelper(ServiceContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         public ModelExpression For { get; set; }
@@ -45,7 +47,7 @@ namespace AyandeNama.Web.Helpers.TagHelpers
                 var url = _context.GetAsync<tbl_Image>(x => x.Id == (long)For.Model).Result;
                 if (url != null)
                 {
-                    sb.AppendFormat("<img src='{0}' style='width:100px;height:100px' />", url.BindImage());
+                    sb.AppendFormat("<img src='{0}' style='width:100px;height:100px' />", url.BindImage(_configuration));
                 }
 
             }
@@ -56,10 +58,11 @@ namespace AyandeNama.Web.Helpers.TagHelpers
     public class MultipleImageUploaderTagHelper : TagHelper
     {
         private readonly ServiceContext _context;
-
-        public MultipleImageUploaderTagHelper(ServiceContext context)
+        private readonly IConfiguration _configuration;
+        public MultipleImageUploaderTagHelper(ServiceContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         public ModelExpression For { get; set; }
@@ -91,7 +94,7 @@ namespace AyandeNama.Web.Helpers.TagHelpers
                     var url = _context.GetAsync<tbl_Image>(x => x.Id == item).Result;
                     if (url != null)
                     {
-                        sb.AppendFormat("<img src='{0}' style='width:100px;height:100px' />", url.BindImage());
+                        sb.AppendFormat("<img src='{0}' style='width:100px;height:100px' />", url.BindImage(_configuration));
                     }
                 }
 

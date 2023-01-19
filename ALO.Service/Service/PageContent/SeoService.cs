@@ -5,6 +5,7 @@ using ALO.DomainClasses.EntityHelpers;
 using ALO.Service.Interface.PageContent;
 using ALO.ViewModels.PageContent;
 using ALO.ViewModels.Result;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,10 +18,11 @@ namespace ALO.Service.Service.PageContent
     public class SeoService : ISeoService
     {
         private readonly ServiceContext _db;
-
-        public SeoService(ServiceContext db)
+        private readonly IConfiguration _configuration;
+        public SeoService(ServiceContext db, IConfiguration configuration)
         {
             _db = db;
+            _configuration = configuration;
         }
 
         public async Task<ListResultViewModel<GetHomePageSeoDTO>> Get()
@@ -42,7 +44,7 @@ namespace ALO.Service.Service.PageContent
                 {
                     PageTitle=data.PageTitle,
                     Address=data.Address,
-                    FavIcon=data.FavIcon.BindImage(),
+                    FavIcon=data.FavIcon.BindImage(_configuration),
                     Lat=data.Lat,
                     Lng=data.Lng,
                     MetaDescription=data.MetaDescription,

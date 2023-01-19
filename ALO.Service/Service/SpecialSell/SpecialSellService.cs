@@ -6,6 +6,7 @@ using ALO.DomainClasses.EntityHelpers;
 using ALO.Service.Interface.SpecialSell;
 using ALO.ViewModels.Result;
 using ALO.ViewModels.SpecialSell;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +19,11 @@ namespace ALO.Service.Service.SpecialSell
     public class SpecialSellService : ISpecialSellService
     {
         private readonly ServiceContext _db;
-
-        public SpecialSellService(ServiceContext db)
+        private readonly IConfiguration _configuration;
+        public SpecialSellService(ServiceContext db, IConfiguration configuration)
         {
             _db = db;
+            _configuration = configuration;
         }
         public async Task<ListResultViewModel<GetSpecialSellForHomeDto>> GetRandomSpecialSell()
         {
@@ -36,7 +38,7 @@ namespace ALO.Service.Service.SpecialSell
                     SpecialTitle = result.Title,
                     EndDate = result.ToDate,
                     EndDatePersian = "",
-                    Image = x.Product.Image.BindImage(),
+                    Image = x.Product.Image.BindImage(_configuration),
                     OffPrice = "12,000",
                     Url = x.Product.Url,
                     Title = x.Product.Title

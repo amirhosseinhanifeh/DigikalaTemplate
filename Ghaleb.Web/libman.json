@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "Swiper@8.4.5",
+      "destination": "wwwroot/lib/Swiper/"
+    },
+    {
+      "library": "popper.js@2.11.6",
+      "destination": "wwwroot/lib/popper.js/"
+    },
+    {
+      "library": "elevatezoom@2.2.3",
+      "destination": "wwwroot/lib/elevatezoom/"
+    }
+  ]
+}

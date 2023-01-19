@@ -7,6 +7,7 @@ using ALO.Service.Interface.Basket;
 using ALO.ViewModels.Basket;
 using ALO.ViewModels.Result;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,10 +20,11 @@ namespace ALO.Service.Service.Basket
     public class BasketOrderService : IBasketOrderService
     {
         private readonly ServiceContext _db;
-
-        public BasketOrderService(ServiceContext db)
+        private readonly IConfiguration _configuration;
+        public BasketOrderService(ServiceContext db, IConfiguration configuration)
         {
             _db = db;
+            _configuration = configuration;
         }
         public async Task<ListResultViewModel<bool>> AddProductToBasket(long ProductPriceHistoryId, long UserId)
         {
@@ -122,7 +124,7 @@ namespace ALO.Service.Service.Basket
                         Id = result.Id,
                         ProductId = y.ProductPriceHistory.ProductId,
                         Title = y.ProductPriceHistory.Product.Title,
-                        Image = y.ProductPriceHistory.Product.Image.BindImage(),
+                        Image = y.ProductPriceHistory.Product.Image.BindImage(_configuration),
                         UnitPrice = y.ProductPriceHistory.GetPrice() + " تومان",
 
                     }).ToList()
@@ -159,7 +161,7 @@ namespace ALO.Service.Service.Basket
                     BasketProducts = result.BasketOrderProducts.Select(y => new AddBasketForHomeDtO
                     {
                         ProductPriceHistoryId = y.ProductPriceHistoryId,
-                        Image = y.ProductPriceHistory.Product.Image.BindImage(),
+                        Image = y.ProductPriceHistory.Product.Image.BindImage(_configuration),
                         Title = y.ProductPriceHistory.Product.Title,
                         Price = y.ProductPriceHistory.GetPrice(),
                         Id = y.Id
@@ -197,7 +199,7 @@ namespace ALO.Service.Service.Basket
                     BasketProducts = result.BasketOrderProducts.Select(y => new AddBasketForHomeDtO
                     {
                         ProductPriceHistoryId = y.ProductPriceHistoryId,
-                        Image = y.ProductPriceHistory.Product.Image.BindImage(),
+                        Image = y.ProductPriceHistory.Product.Image.BindImage(_configuration),
                         Title = y.ProductPriceHistory.Product.Title,
                         Price = y.ProductPriceHistory.GetPrice(),
                         Id = y.Id

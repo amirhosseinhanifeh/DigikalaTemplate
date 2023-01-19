@@ -34,7 +34,6 @@
             <textarea id="editor1" name="Description" asp-for="Description"></textarea>
         </div>
         <div class="tab-pane fade" id="gallery" role="tabpanel" aria-labelledby="gallery-tab">
-
         </div>
         <div class="tab-pane fade" id="seo" role="tabpanel" aria-labelledby="contact-tab">
             <div class="row">
@@ -48,7 +47,8 @@
                 </div>
                 <div class="form-group col-6">
                     <label asp-for="MetaKeyword"></label>
-                    <input class="form-control" type="text" asp-for="MetaKeyword" />
+                    <select asp-for="MetaKeywords" class="form-control" asp-items="new SelectList(Model.MetaKeywords)" multiple="multiple">
+                    </select>
                 </div>
                 <div class="form-group col-6">
                     <label asp-for="MetaDescription"></label>
@@ -66,38 +66,53 @@
 
 </form>
 @section Scripts{
+    <script>
+        $(document).ready(function() {
+            $('#MetaKeywords').select2({
+                tags: true,
+                tokenSeparators: [',', ',']
+            });
+        });
+    </script>
     <script src="https://cdn.ckeditor.com/4.16.1/full-all/ckeditor.js"></script>
     <script>
         CKEDITOR.replace('editor1', {
-            filebrowserUploadUrl: '/Admin/Upload/UploadImageFromCk'
+            filebrowserUploadUrl: '/Admin/Upload/UploadImageFromCk',
         });
+        CKEDITOR.editorConfig = function(config) {
+            // Define changes to default configuration here. For example:
+            // config.language = 'fr';
+            // config.uiColor = '#AADC6E';
+            //the next line add the new font to the combobox in CKEditor
+            config.font_names = 'iran yekan';
+        };
     </script>
     <script>
 
-    $("#btnSave").click(function (e) {
+        $("#btnSave").click(function(e) {
 
-        e.preventDefault();
-        for (instance in CKEDITOR.instances) {
-            CKEDITOR.instances[instance].updateElement();
-        }
-        $.ajax({
-            url: "@Url.Action("Edit")",
-            method: "POST",
-            data: $("#frmValues").serialize(),
-
-        }).done(function (result) {
-            if (result.status == 0) {
-                Swal.fire(
-                    'تبریک !',
-                    result.message,
-                    'success'
-                )
+            e.preventDefault();
+            for (instance in CKEDITOR.instances) {
+                CKEDITOR.instances[instance].updateElement();
             }
+            $.ajax({
+                url: "@Url.Action("Edit")",
+                method: "POST",
+                data: $("#frmValues").serialize(),
 
-        }).fail(function () {
+            }).done(function(result) {
+                if (result.status == 0) {
+                    Swal.fire(
+                        'تبریک !',
+                        result.message,
+                        'success'
+                    )
+                }
+
+            }).fail(function() {
 
 
+            });
         });
-    });
     </script>
 }
