@@ -36,7 +36,7 @@ namespace Ghaleb.Web.Pages.Checkout
                     Price = pr.GetPrice(),
                     Id = item.Id,
                     Image = pr.Product.Image.BindImage(_configuration),
-                    Name = pr.Product.Title + "("+pr.Color.Name+")",
+                    Name = pr.Product.Title +(pr.Color !=null? "(" + pr.Color.Name + ")" : null) ,
                     TotalPrice = pr.GetPrice() * item.Count
                 });
             }

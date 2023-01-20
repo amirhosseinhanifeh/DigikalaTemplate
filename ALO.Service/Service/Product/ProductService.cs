@@ -595,6 +595,7 @@ namespace ALO.Service.Service.Product
                     .ThenInclude(x => x.Order)
                     .Include(x => x.SubProductCategory)
                     .OrderByDescending(x => x.CreatedDate)
+                    .Where(x=>x.IsDelete==false)
                     .Where(x => brandId != null ? x.BrandId == brandId : true)
                     .Where(x => subcategoryId != null ? x.SubProductCategoryId == subcategoryId : true)
                     .Select((x) => new GetProductListForAdminDto

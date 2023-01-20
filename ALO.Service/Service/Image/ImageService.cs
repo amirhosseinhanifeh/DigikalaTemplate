@@ -110,13 +110,7 @@ namespace ALO.Service.Service.ImageService
 
                                 image.Mutate(
        i => i.Resize(image.Width/2, image.Height/2));
-                                var encoder = new WebpEncoder()
-                                {
-                                    Quality = 30,
-                                    
-                                    
-                                };
-                                image.SaveAsWebp("wwwroot/Uploads/Images/"+name + ".webp",encoder);
+                                image.SaveAsWebp("wwwroot/Uploads/Images/"+name + ".webp");
                                 data = name + ".webp";
                                 // act on the Base64 data
                             }

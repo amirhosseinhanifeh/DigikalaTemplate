@@ -24,7 +24,7 @@
             <a asp-page="Compare" asp-route-pr1="@Model.Product.Id"><i class="fa-regular fa-code-compare"></i></a>
             <a asp-page="Chart" asp-route-id="@Model.Product.Id"><i class="fa-regular fa-chart-line-up"></i></a>
             <div class="col-12">
-                <img style="width: 400px;" id="zoom_04" class="img-fluid mx-auto d-block"
+                <img style="width: 400px;max-height:300px" id="zoom_04" class="img-fluid mx-auto d-block"
                      src="@Model.Product.Image" alt="@Model.Product.Title" data-zoom-image="@Model.Product.Image">
 
             </div>
@@ -181,21 +181,30 @@
 </div>
 <nav>
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
+        @if (Model.Product.Abstract != null)
+        {
+            <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
                 data-bs-target="#nav-home" type="button" role="tab"
                 aria-controls="nav-home" aria-selected="false">
-            معرفی
-        </button>
-        <button class="nav-link" id="nav-description-tab" data-bs-toggle="tab"
+                معرفی
+            </button>
+        }
+        @if (Model.Product.Description != null)
+        {
+            <button class="nav-link" id="nav-description-tab" data-bs-toggle="tab"
                 data-bs-target="#nav-description" type="button" role="tab"
                 aria-controls="nav-description" aria-selected="false">
-            توضیحات
-        </button>
-        <button class="nav-link" id="nav-attr-tab" data-bs-toggle="tab"
+                توضیحات
+            </button>
+        }
+        @if (Model.Product.Values.Any())
+        {
+            <button class="nav-link" id="nav-attr-tab" data-bs-toggle="tab"
                 data-bs-target="#nav-attr" type="button" role="tab"
                 aria-controls="nav-attr" aria-selected="false">
-            مشخصات فنی
-        </button>
+                مشخصات فنی
+            </button>
+        }
         <button class="nav-link " id="nav-comment-tab"
                 data-bs-toggle="tab" data-bs-target="#nav-comment" type="button"
                 role="tab" aria-controls="nav-comment" aria-selected="true">
