@@ -2,7 +2,7 @@
 
 @{
 }
-<div class="swiper slideshow">
+@*<div class="swiper slideshow">
     <!-- Additional required wrapper -->
     <div class="swiper-wrapper">
         <!-- Slides -->
@@ -21,5 +21,94 @@
     <!-- If we need navigation buttons -->
     <div class="swiper-button-prev"></div>
     <div class="swiper-button-next"></div>
+
+</div>*@
+<div class="container">
+
+    <div class="row justify-content-center">
+
+        <div class="col-12">
+            <!-- Slides -->
+            @foreach (var item in Model)
+            {
+                <div class="banner__top__lg">
+                    <a href="@Url.Content(item.Link)">
+                        <img src="@item.Image.BindImage(Configuration)" class="img-fluid" alt="@item.Title">
+                    </a>
+                </div>
+            }
+
+        </div>
+
+
+        <div class="col-10">
+
+            <div class="slogan slogan__bg__glass w-100 d-none d-sm-block">
+
+                <div class="row">
+
+                    <div class="col-6 col-lg-3 align-items-center d-flex">
+
+
+                        <div class="slogan__item mx-auto text-center py-3">
+                            <img src="images/icons/warranty(1).svg" alt="">
+                            <p class="my-3">
+                                ضمانت اصالت کالا
+                            </p>
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="col-6 col-lg-3 align-items-center d-flex">
+
+
+                        <div class="slogan__item mx-auto text-center py-3">
+                            <img src="images/icons/exchange.svg" alt="">
+                            <p class="my-3">
+                                ضمانت برگشت کالا
+                            </p>
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="col-6 col-lg-3 align-items-center d-flex">
+
+
+                        <div class="slogan__item mx-auto text-center py-3">
+                            <img src="images/icons/support1.svg" alt="">
+                            <p class="my-3">
+                                پشتیبانی 24 ساعته
+                            </p>
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="col-6 col-lg-3 align-items-center d-flex">
+
+
+                        <div class="slogan__item mx-auto text-center py-3">
+                            <img src="images/icons/deliver1.svg" alt="">
+                            <p class="my-3">
+                                ارسال به سراسر کشور
+                            </p>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
