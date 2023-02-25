@@ -1226,7 +1226,8 @@ p{
 }
 
 .card-img-top {
-   max-width: 82px;
+	min-height: 200px;
+	max-height: 200px;
 }
 
 .card-title {
