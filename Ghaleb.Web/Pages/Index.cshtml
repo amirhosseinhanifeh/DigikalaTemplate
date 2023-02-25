@@ -37,7 +37,7 @@
 }' />
     }
 
-    <div class="row mt-5 mb-5">
+@*    <div class="row mt-5 mb-5">
         @{
             var whyus = Model.Blocks.Where(x => x.RouteName == "why-us").FirstOrDefault();
         }
@@ -60,7 +60,7 @@
             </div>
         }
 
-    </div>
+    </div>*@
 
     <partial name="~/Components/Product/ProductRow/Row.cshtml" model="Model.MoreSell" view-data='@new ViewDataDictionary(ViewData) { {"HeaderTitle", "پرفروش ترین ها" }}' />
 
@@ -69,9 +69,9 @@
         <partial name="~/Components/Product/ProductRow/Row.cshtml" model="Model.YourVisits" view-data='@new ViewDataDictionary(ViewData) { {"HeaderTitle", "براساس بازید های شما " }}' />
     }
 
-    @await Component.InvokeAsync("Brand")
+@*    @await Component.InvokeAsync("Brand")
 
-    @await Component.InvokeAsync("Blog")
+    @await Component.InvokeAsync("Blog")*@
 
 
 </div>
