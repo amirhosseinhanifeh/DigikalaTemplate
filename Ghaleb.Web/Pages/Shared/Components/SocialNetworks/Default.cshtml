@@ -2,11 +2,18 @@
 @{
 }
 
-<div class="col-12 mt-3 text-center">
+@*<div class="col-12 mt-3 text-center">
     @foreach (var item in Model)
     {
         <a href="@Url.Content(item.Url)">
             <i style="font-size:40px ; margin-left: 20px; color:#a3a3a3" class="@item.Icon"></i>
         </a>
     }
-</div>
+</div>*@
+@foreach (var item in Model)
+{
+    <a class="nav-link footer__social col mb-2 mx-1 mx-md-0" href="@Url.Content(item.Url)">
+        <img src="@item.Icon" class="me-2" alt="" srcset="">
+        @item.Social
+    </a>
+}

@@ -21,7 +21,7 @@
    @await Component.InvokeAsync("FavIcon")
 
    <!-- WebSite Title -->
-   <title>فروشگاه گوشت با ما</title>
+    <title>@Configuration["SiteSetting:SiteName"] | @Configuration["SiteSetting:CategoryName"]</title>
 </head>
 
 <body>
@@ -259,8 +259,8 @@
          <div class="container px-0 d-none d-xl-block">
             <div class="header__top__logo text-center align-items-center d-grid position-absolute top-0">
                <a class="" href="index.html">
-                  <img src="images/logo-imgs/logo.png" alt="" srcset="">
-                  <p class="header__top__logo__text">مرکز تخصصی لوازم دیجیتال </p>
+                        <img src="images/logo-imgs/logo1.png" alt="@Configuration["SiteSetting:SiteName"]" srcset="">
+                        <p class="header__top__logo__text"> فروش گوشت و پروتئین </p>
                </a>
             </div>
          </div>
@@ -393,9 +393,9 @@
 
                      <div class="header__contact-us text-end float-start ms-3 d-none d-lg-block">
                         <img src="images/icons/Calling.svg" alt="" srcset="">
-                        <span class="header__contact-us__number ms-2">0910 000 4485</span><br>
+                        <span class="header__contact-us__number ms-2">@Configuration["SiteSetting:Phone"]</span><br>
                         <span class="header__contact-us__text">
-                           دریافت مشاوره و راهنمایی
+                           دریافت راهنمایی
                         </span>
                      </div>
 
@@ -4016,13 +4016,13 @@
 
                      <div class="col-12 ps-0 text-center">
 
-                        <img src="images/logo-imgs/logo.png" alt="" srcset="">
+                        <img src="images/logo-imgs/logo1.png" alt="@Configuration["SiteSetting:SiteName"]" srcset="">
 
                      </div>
 
                      <div class="col-12 ps-0">
 
-                        <p class="header__top__logo__text">مرکز تخصصی لوازم دیجیتال </p>
+                        <p class="header__top__logo__text"> فروش گوشت و پروتئین </p>
 
                      </div>
 
@@ -4036,18 +4036,7 @@
                   <div class="col-6 d-none d-lg-block">
 
                      <nav class="nav row-cols-auto">
-                        <a class="nav-link footer__nav__link fw-bold col px-xl-4" href="index.html">
-                           صفحه اصلی
-                        </a>
-                        <a class="nav-link footer__nav__link fw-bold col px-xl-4" href="shop.html">
-                           فروشگاه
-                        </a>
-                        <a class="nav-link footer__nav__link fw-bold col px-xl-4" href="#">
-                           درباره ما
-                        </a>
-                        <a class="nav-link footer__nav__link fw-bold col px-xl-4" href="contact.html">
-                           تماس با ما
-                        </a>
+                        @await Component.InvokeAsync("FooterMenu",new {routeName="footer-menu"})
                      </nav>
 
                   </div>
@@ -4056,18 +4045,7 @@
                   <div class="col-6 d-none d-lg-block">
 
                      <nav class="nav float-end row-cols-auto">
-                        <a class="nav-link footer__nav__link fw-bold col px-xl-4" href="index.html">
-                           صفحه اصلی
-                        </a>
-                        <a class="nav-link footer__nav__link fw-bold col px-xl-4" href="shop.html">
-                           فروشگاه
-                        </a>
-                        <a class="nav-link footer__nav__link fw-bold col px-xl-4" href="#">
-                           درباره ما
-                        </a>
-                        <a class="nav-link footer__nav__link fw-bold col px-xl-4" href="contact.html">
-                           تماس با ما
-                        </a>
+                        @await Component.InvokeAsync("FooterMenu",new {routeName="footer-menu"})
                      </nav>
 
                   </div>
@@ -4084,7 +4062,7 @@
                         <div class="col-12 col-lg-1">
 
                            <h4 class="footer__title">
-                              درباره ی <span>دینگ</span>
+                                        درباره ی <span>@Configuration["SiteSetting:SiteName"]</span>
                            </h4>
 
                         </div>
@@ -4108,22 +4086,7 @@
                   <div class="col-12 col-md-4 col-lg-2">
 
                      <nav class="nav flex-md-column row-cols-auto footer__socials px-lg-4">
-                        <a class="nav-link footer__social col mb-2 mx-1 mx-md-0" href="#">
-                           <img src="images/icons/instagram-sm.svg" class="me-2" alt="" srcset="">
-                           اینستاگرام
-                        </a>
-                        <a class="nav-link footer__social col mb-2 mx-1 mx-md-0" href="#">
-                           <img src="images/icons/linkedin-sm.svg" class="me-2" alt="">
-                           لینکدین
-                        </a>
-                        <a class="nav-link footer__social col mb-2 mx-1 mx-md-0" href="#">
-                           <img src="images/icons/twitter-sm.svg" class="me-2" alt="">
-                           توییتر
-                        </a>
-                        <a class="nav-link footer__social col mb-2 mx-1 mx-md-0" href="#">
-                           <img src="images/icons/youtube-sm.svg" class="me-2" alt="">
-                           یوتیوب
-                        </a>
+                         @await Component.InvokeAsync("SocialNetworks")
                      </nav>
 
                   </div>
@@ -4189,15 +4152,15 @@
                         <nav class="nav float-end row-cols-auto">
                            <a class="nav-link footer__nav__link col px-4" href="contact.html">
                               <img src="images/icons/Message.svg" class="me-2" alt="">
-                              example@gmail.com
+                              @Configuration["SiteSetting:Email"]
                            </a>
                            <a class="nav-link footer__nav__link col px-4" href="contact.html">
                               <img src="images/icons/footer-calling.svg" class="me-2" alt="">
-                              0910 000 4485
+                              @Configuration["SiteSetting:Phone"]
                            </a>
                            <a class="nav-link footer__nav__link col px-4" href="contact.html">
                               <img src="images/icons/Location.svg" class="me-2" alt="">
-                              تهران، خیابان انقلاب، پلاک 1
+                              @Configuration["SiteSetting:Address"]
                            </a>
                         </nav>
 
@@ -4210,7 +4173,7 @@
 
 
                <p class="footer_copy__right m-0 py-3">
-                  .کلیه حقوق این سایت متعلق به دینگ می باشد
+                        کلیه حقوق این سایت متعلق به سایت @Configuration["SiteSetting:SiteName"] می باشد.
                </p>
 
 
