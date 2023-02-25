@@ -8,15 +8,7 @@
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-   <!-- Bootstrap CSS -->
-   <link rel="stylesheet" href="css/bootstrap.rtl.min.css">
-   <!-- Custom CSS -->
-   <link rel="stylesheet" href="css/style.css">
-   <link rel="stylesheet" href="css/responsive.css">
-
-   <!-- Carousel CSS -->
-   <link rel="stylesheet" href="css/owl.carousel.min.css">
-   <link rel="stylesheet" href="css/splide.min.css">
+    <partial name="_CssStyles" />
 
    @await Component.InvokeAsync("FavIcon")
 
@@ -258,8 +250,8 @@
 
          <div class="container px-0 d-none d-xl-block">
             <div class="header__top__logo text-center align-items-center d-grid position-absolute top-0">
-               <a class="" href="index.html">
-                        <img src="images/logo-imgs/logo1.png" alt="@Configuration["SiteSetting:SiteName"]" srcset="">
+               <a class="" asp-page="Index">
+                        <img src="~/images/logo-imgs/logo1.png" alt="@Configuration["SiteSetting:SiteName"]" srcset="">
                         <p class="header__top__logo__text"> فروش گوشت و پروتئین </p>
                </a>
             </div>
@@ -327,7 +319,7 @@
                            </div>
 
                            <button class="btn position-absolute end-0 h-100 header__search__btn" type="submit">
-                              <img src="images/icons/Search.svg" alt="" srcset="" class="d-block">
+                              <img src="~/images/icons/Search.svg" alt="" srcset="" class="d-block">
                            </button>
 
                         </form>
@@ -687,7 +679,7 @@
 
 
                               <li class="nav-item">
-                                 <a class="nav-link p-3 fw-bold active" aria-current="page" href="index.html">صفحه
+                                 <a class="nav-link p-3 fw-bold active" aria-current="page" asp-page="Index">صفحه
                                     اصلی</a>
                               </li>
 
@@ -5527,6 +5519,8 @@
    <script src="js/splide-extension-auto-scroll.min.js"></script>
    <script src="js/main.js"></script>
 
+   @await RenderSectionAsync("Scripts",false)
+       @await RenderSectionAsync("Modal", required: false)
 </body>
 
 </html>
