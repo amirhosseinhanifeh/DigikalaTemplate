@@ -1,6 +1,7 @@
 ﻿using ALO.Common.Enums;
 using ALO.Common.Utilities.ConvertTo;
 using ALO.DataAccessLayer.DataContext;
+using ALO.DomainClasses.Entity.Product;
 using ALO.DomainClasses.EntityHelpers;
 using ALO.Service.Interface.Image;
 using ALO.Service.Interface.Product;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -69,7 +71,7 @@ namespace Ghaleb.API.Controllers
                 var result = await _product.GetHomeProductsByCategoryList();
 
 
-                var hasDiscounts = await _context.tbl_Products.Where(h =>h.IsDelete==false && h.IsActive==true && h.ProductPriceHistories.Any(g => g.DiscountPrice != null)).Select(h => new
+                var hasDiscounts = await _context.tbl_Products.Where(h => h.IsDelete == false && h.IsActive == true && h.ProductPriceHistories.Any(g => g.DiscountPrice != null)).Select(h => new
                 {
                     Id = h.Id,
                     Cost = h.GetLastPrice().ToString("n0").toPersianNumber(),
@@ -304,7 +306,7 @@ namespace Ghaleb.API.Controllers
         public async Task<IActionResult> ExportToExcel()
         {
             // Get the user list 
-            var products = await _context.tbl_Products.Select(h =>new { h.Id, h.Title,h.ImageId }).ToListAsync();
+            var products = await _context.tbl_Products.Select(h => new { h.Id, h.Title, h.ImageId }).ToListAsync();
 
             var stream = new MemoryStream();
             ExcelPackage.LicenseContext = LicenseContext.Commercial;
@@ -356,12 +358,71 @@ namespace Ghaleb.API.Controllers
             {
                 item.Image = new ALO.DomainClasses.Entity.IMG.tbl_Image
                 {
-                    Image_thumb=item.Id+".png",
+                    Image_thumb = item.Id + ".png",
 
                 };
             }
             await _context.SaveChangesAsync();
             return Ok(true);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ImportProductPriceByExcel(IFormFile batchUsers
+
+            )
+        {
+
+            if (ModelState.IsValid)
+            {
+                if (batchUsers?.Length > 0)
+                {
+                    var stream = batchUsers.OpenReadStream();
+                    List<tbl_Product> users = new List<tbl_Product>();
+                    try
+                    {
+                        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                        using (var package = new ExcelPackage(stream))
+                        {
+                            var worksheet = package.Workbook.Worksheets.First();//package.Workbook.Worksheets[0];
+                            var rowCount = worksheet.Dimension.Rows;
+
+                            for (var row = 2; row <= rowCount; row++)
+                            {
+                                try
+                                {
+
+                                    var productId = worksheet.Cells[row, 1].Value?.ToString();
+                                    var price = worksheet.Cells[row, 2].Value?.ToString();
+                                    var Inventory = worksheet.Cells[row, 3].Value?.ToString();
+                                    var data = new tbl_ProductPriceHistory
+                                    {
+                                        ColorId = null,
+                                        Price = decimal.Parse(price),
+                                        DiscountPrice = null,
+                                        Inventory = Inventory != null ? int.Parse(Inventory) : 0
+                                    };
+                                    await _context.tbl_ProductPriceHistory.AddAsync(data);
+                                    await _context.SaveChangesAsync();
+
+
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine("Something went wrong");
+                                }
+                            }
+                        }
+
+                        return Ok(users);
+
+                    }
+                    catch (Exception e)
+                    {
+                        return Ok();
+                    }
+                }
+            }
+
+            return Ok();
         }
     }
 }
