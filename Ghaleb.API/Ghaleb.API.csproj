@@ -27,10 +27,8 @@
     <Folder Include="Areas\Berber\Data\" />
     <Folder Include="Areas\Berber\Models\" />
     <Folder Include="Areas\Berber\Views\" />
-    <Folder Include="Areas\User\Controllers\" />
-    <Folder Include="Areas\User\Data\" />
-    <Folder Include="Areas\User\Models\" />
-    <Folder Include="Areas\User\Views\" />
+    <Folder Include="Areas\Clerk\Data\" />
+    <Folder Include="Areas\Clerk\Models\" />
   </ItemGroup>
 
   <ItemGroup>

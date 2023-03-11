@@ -1,0 +1,38 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model IEnumerable<ALO.DomainClasses.Entity.Order.tbl_OrderDetails>
+
+    @{
+        ViewData["Title"] = "جزییات سفارش";
+    Layout = "~/Areas/Clerk/Views/Shared/_Layout.cshtml";
+    }
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+
+                <div class="table-responsive">
+                    <table class="table align-items-center table-flush">
+                        <thead>
+                            <tr>
+                                <th>نام محصول</th>
+                                <th>تعداد</th>
+                                <th>قیمت واحد</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.ProductPriceHistory.Product.Title</td>
+                                    <td>@item.Count</td>
+                                    <td>@item.ProductPriceHistory.GetPrice().ToString("n0") تومان</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+

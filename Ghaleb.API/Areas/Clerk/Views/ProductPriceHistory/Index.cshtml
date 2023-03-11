@@ -1,0 +1,54 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model IEnumerable<ALO.DomainClasses.Entity.Product.tbl_ProductPriceHistory>
+@{
+    ViewData["Title"] = "لیست محصولات";
+    Layout = "~/Areas/Clerk/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row align-items-center">
+    <div class="col text-right">
+        <a type="button" asp-action="Create" asp-route-productId="@ViewBag.ProductId" class="btn btn-primary">افزودن</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="">
+            <div class="card-header border-0">
+
+            </div>
+
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                    <thead>
+                        <tr>
+                            <th>قیمت</th>
+                            <th>تخفیف</th>
+                            <th>نام محصول</th>
+                            <th>رنگ</th>
+                            <th>گارانتی</th>
+                            <th>موجودی</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Price.ToString("n0") تومان</td>
+                                <td>@item.DiscountPrice</td>
+                                <td>@item.Color?.Name</td>
+                                <td>@item.ProductGuarantee?.Name</td>
+                                <td>@item.Inventory</td>
+                                <td>
+                                    <a class="btn btn-dark" asp-route-id="@item.Id" asp-action="Edit">ویرایش</a>
+                                    <a class="btn btn-danger" asp-action="Delete" asp-area="Admin" asp-controller="ProductPriceHistory" asp-route-id="@item.Id">حذف</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

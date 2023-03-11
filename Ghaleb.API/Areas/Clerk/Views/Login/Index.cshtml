@@ -1,0 +1,41 @@
+﻿
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "ورود";
+    Layout = "~/Areas/Clerk/Views/Shared/_AccountLayout.cshtml";
+}
+<div class="container-fluid bg" style="background:url(https://kpa.ketabplus.com/Images/bg/bg.svg)">
+    <div class="row box  p-5" style="    height: 100vh;
+    display: flex;
+    align-items: center;">
+        <div class="col-12 bg-white col-sm-3 mx-auto" style="    border: 1px solid #e7e7e7;
+        border-radius: 5px;
+        padding: 82px;">
+            <h4 class="text-center">وارد حساب کاربری خود شوید</h4>
+
+            <form method="post" class="row mt-5" (submit)="Login($event)">
+
+                <div class="col-12 form-group mt-2">
+                    <label>نام کاربری</label>
+                    <input name="username" class="form-control" value=""
+                        placeholder="نام کاربری خود را وارد نمایید">
+                </div>
+
+                <div class="col-12 form-group mt-2">
+                                        <label>رمز عبور</label>
+                    <input name="password" class="form-control" type="password"
+                        value="" placeholder="رمز عبور">
+                </div>
+                <div class="col-12 form-group mt-2">
+                    <button type="submit" class="btn btn-danger col-12" style="padding: 11px;
+                    border-radius: 25px;">ورود</button>
+                </div>
+                <span class="text-danger mt-2"> @ViewBag.Message      </span>
+ 
+            </form>
+
+        </div>
+    </div>
+</div>
