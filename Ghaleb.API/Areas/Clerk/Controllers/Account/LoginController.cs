@@ -33,6 +33,7 @@ namespace Ghaleb.API.Areas.Clerk.Controllers.Account
                 {
                     var claims = new[] {
                 new Claim("Id", result.model.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier,result.model.Id.ToString()),
                 new Claim(ClaimTypes.Name, result.model.Profile.FirstName+" "+result.model.Profile.LastName),
                 new Claim(ClaimTypes.Role,"Clerk"),
                 new Claim(JwtRegisteredClaimNames.Jti,result.model.Id.ToString())

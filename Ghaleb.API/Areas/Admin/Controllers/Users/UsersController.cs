@@ -33,6 +33,6 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Users
             //send sms
             return Redirect("~/");
         }
-        
+       
     }
 }

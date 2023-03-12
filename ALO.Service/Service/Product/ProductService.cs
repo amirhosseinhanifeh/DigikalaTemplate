@@ -22,6 +22,12 @@ using ALO.Common.Utilities.ConvertDt;
 using ALO.Service.Interface.Image;
 using ALO.DomainClasses.Entity.IMG;
 using Microsoft.Extensions.Configuration;
+using System.Security.Claims;
+using System.Security.Principal;
+
+using System.Threading;
+using ALO.ViewModels.Order;
+using Microsoft.AspNetCore.Http;
 
 namespace ALO.Service.Service.Product
 {
@@ -30,18 +36,23 @@ namespace ALO.Service.Service.Product
         private readonly ServiceContext _db;
         private readonly IImageService _imageService;
         private readonly IConfiguration _configuration;
-
-        public ProductService(ServiceContext db, IImageService imageService, IConfiguration configuration)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public ProductService(ServiceContext db, IImageService imageService, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _db = db;
             _imageService = imageService;
             _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<ListResultViewModel<bool>> AddProductForAdmin(AddProductForAdminDTO model)
         {
             try
             {
+                var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                long ownerId;
+                long.TryParse(userId, out ownerId);
+
                 if (!_db.tbl_Products.Any(y => y.Url == model.Url && y.IsDelete != true))
                 {
                     var data = new tbl_Product
@@ -63,7 +74,7 @@ namespace ALO.Service.Service.Product
                         EnTitle = model.EnTitle,
                         FileId = model.FileId,
                         DoIndex = model.DoIndex,
-
+                        OwnerId = ownerId,
 
                     };
                     data.ProductCustomFieldValues = new List<tbl_ProductCustomFieldValues>();
@@ -382,8 +393,10 @@ namespace ALO.Service.Service.Product
         {
             try
             {
-
-                var result = (await _db.GetAsync<tbl_Product>(x => x.Id == Id, includes: new string[] { "ProductPriceHistories", "Images" }));
+                var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                long ownerId;
+                long.TryParse(userId, out ownerId);
+                var result = (await _db.GetAsync<tbl_Product>(x => x.Id == Id && x.OwnerId == ownerId, includes: new string[] { "ProductPriceHistories", "Images" }));
                 var data = new AddProductForAdminDTO
                 {
                     Abstract = result.Abstract,
@@ -576,15 +589,15 @@ namespace ALO.Service.Service.Product
                 NotificationType = NotificationType.success,
                 Status = Status.Success
             };
-
-
-
         }
 
         public ListResultViewModel<IQueryable<GetProductListForAdminDto>> GetProductListForAdmin(long? brandId, long? subcategoryId, int page = 1, int pageSize = 6)
         {
             try
             {
+                var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                long ownerId;
+                long.TryParse(userId, out ownerId);
 
                 var result = _db.tbl_Products.Include(x => x.Image)
                     .Include(x=>x.ProductTags)
@@ -597,7 +610,7 @@ namespace ALO.Service.Service.Product
                     .OrderByDescending(x => x.CreatedDate)
                     .Where(x=>x.IsDelete==false)
                     .Where(x => brandId != null ? x.BrandId == brandId : true)
-                    .Where(x => subcategoryId != null ? x.SubProductCategoryId == subcategoryId : true)
+                    .Where(x => x.OwnerId == ownerId && (subcategoryId != null ? x.SubProductCategoryId == subcategoryId : true))
                     .Select((x) => new GetProductListForAdminDto
                     {
                         Row = 1,
