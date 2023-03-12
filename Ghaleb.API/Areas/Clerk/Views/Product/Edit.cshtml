@@ -167,7 +167,7 @@
         function loadFields() {
             var subProductCategoryId = $("#SubProductCategoryId").val();
             var ProductCategoryId = $("#ProductCategoryId").val();
-            $("#fields").load("/Admin/Product/GetFields?categoryId=" + ProductCategoryId + "&subcategoryId=" + subProductCategoryId + "&productId=" + @Model.Id);
+            $("#fields").load("/Clerk/Product/GetFields?categoryId=" + ProductCategoryId + "&subcategoryId=" + subProductCategoryId + "&productId=" + @Model.Id);
         }
         $(document).ready(function() {
             $('#MetaKeyword').select2({

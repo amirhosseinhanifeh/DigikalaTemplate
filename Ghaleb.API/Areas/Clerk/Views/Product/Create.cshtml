@@ -131,7 +131,7 @@
     <script src="https://cdn.ckeditor.com/4.16.1/full-all/ckeditor.js"></script>
     <script>
         CKEDITOR.replace('editor1', {
-            filebrowserUploadUrl: '/Admin/Upload/UploadImageFromCk'
+            filebrowserUploadUrl: '/Clerk/Upload/UploadImageFromCk'
         });
     </script>
     <script>
@@ -143,7 +143,7 @@
                 CKEDITOR.instances[instance].updateElement();
             }
             $.ajax({
-                url: "@Url.Action("Create","Product",new{area="Admin"})",
+                url: "@Url.Action("Create","Product",new{area="Clerk"})",
                 method: "POST",
                 data: $("#frmValues").serialize()
 
@@ -171,7 +171,7 @@
             formdata.append("MainProuctCategoryId", $("#MainProuctCategoryId").val());
             formdata.append("SubProductCategoryId", $("#SubProductCategoryId").val());
             $.ajax({
-                url: "@Url.Action("ImportExcel","Product",new{area="Admin"})",
+                url: "@Url.Action("ImportExcel","Product",new{area="Clerk"})",
                 method: "POST",
                 data: formdata,
                 processData: false,
@@ -201,7 +201,7 @@
         function loadFields() {
             var subProductCategoryId = $("#SubProductCategoryId").val();
             var ProductCategoryId = $("#ProductCategoryId").val();
-            $("#fields").load("/Admin/Product/GetFields?categoryId=" + ProductCategoryId + '&subCategoryId=' + subProductCategoryId);
+            $("#fields").load("/Clerk/Product/GetFields?categoryId=" + ProductCategoryId + '&subCategoryId=' + subProductCategoryId);
         }
     </script>
 }
