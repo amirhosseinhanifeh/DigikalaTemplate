@@ -306,9 +306,7 @@ namespace ALO.DataAccessLayer.DataContext
             modelBuilder.Entity<tbl_Product>().HasMany(x => x.Users)
 .WithMany(x => x.Products).UsingEntity(x=>x.ToTable("UserFavouriteProducts"));
 
-            modelBuilder.Entity<tbl_Product>().HasOne(x => x.Owner)
-.WithMany(x => x.UserProducts)
-.HasForeignKey(x => x.OwnerId);
+
 
             modelBuilder.Entity<tbl_ProductPriceHistory>().HasMany(x => x.ProductPriceOptionValues)
                 .WithMany(x => x.ProductPriceHistories).UsingEntity(x => x.ToTable("tbl_ProductPriceHistoryOptionValues"));

@@ -74,7 +74,6 @@ namespace ALO.Service.Service.Product
                         EnTitle = model.EnTitle,
                         FileId = model.FileId,
                         DoIndex = model.DoIndex,
-                        OwnerId = ownerId,
 
                     };
                     data.ProductCustomFieldValues = new List<tbl_ProductCustomFieldValues>();
@@ -146,14 +145,12 @@ namespace ALO.Service.Service.Product
             {
                 Abstract = model.Title,
                 Title = model.Title,
-                CityId = 1,
                 Description = model.Description,
                 IsSpecial = false,
                 SubProductCategoryId = model.SubCategoryId,
                 MainProductCategoryId = category.ProductCategory.MainProuctCategoryId,
                 ProductCategoryId = category.ProductCategoryId,
                 Url = RandomString(8),
-                OwnerId = userId,
 
             };
             if (model.Values != null && model.Values.Any())
@@ -407,7 +404,7 @@ namespace ALO.Service.Service.Product
                 var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 long ownerId;
                 long.TryParse(userId, out ownerId);
-                var result = (await _db.GetAsync<tbl_Product>(x => x.Id == Id && x.OwnerId == ownerId, includes: new string[] { "ProductPriceHistories", "Images" }));
+                var result = (await _db.GetAsync<tbl_Product>(x => x.Id == Id, includes: new string[] { "ProductPriceHistories", "Images" }));
                 var data = new AddProductForAdminDTO
                 {
                     Abstract = result.Abstract,
@@ -490,7 +487,6 @@ namespace ALO.Service.Service.Product
             string order = null,
             int page = 1,
             int pageSize = 10,
-            long? ownerId = null,
             long? userId=null,
             bool? isExists = null)
         {
@@ -550,10 +546,6 @@ namespace ALO.Service.Service.Product
             if (!string.IsNullOrEmpty(title))
             {
                 strQuery = strQuery.And(y => y.Title.Contains(title));
-            }
-            if (ownerId != null)
-            {
-                strQuery = strQuery.And(x => x.OwnerId == ownerId);
             }
             if (isExists == true)
             {
@@ -628,7 +620,7 @@ namespace ALO.Service.Service.Product
                     .OrderByDescending(x => x.CreatedDate)
                     .Where(x => x.IsDelete == false)
                     .Where(x => brandId != null ? x.BrandId == brandId : true)
-                    .Where(x => x.OwnerId == ownerId && (subcategoryId != null ? x.SubProductCategoryId == subcategoryId : true))
+                    .Where(x => (subcategoryId != null ? x.SubProductCategoryId == subcategoryId : true))
                     .Select((x) => new GetProductListForAdminDto
                     {
                         Row = 1,

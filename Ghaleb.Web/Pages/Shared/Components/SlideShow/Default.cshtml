@@ -1,26 +1,25 @@
 ﻿@model IEnumerable<ALO.DomainClasses.Entity.Content.tbl_SlideShow>
 
-
-<section class="hero-slider">
-    <div class="swiper hero-swiper">
-        <div class="swiper-wrapper">
-            @foreach (var item in Model)
-            {
-                <div class="swiper-slide">
-                    <div class="box">
-                        <a href="@Url.Content(item.Link)">
-                            <img src="@item.Image.BindImage(Configuration)" alt="@item.Title">
-                        </a>
-                    </div>
-                </div>
-            }
-        </div>
-        <div class="next-slider">
-            <img src="~/assets/images/public/right-arrow-prev.svg" alt="">
-        </div>
-        <div class="prev-slider">
-            <img src="~/assets/images/public/left-arrow-next.svg" alt="">
-        </div>
+@{
+}
+<div class="swiper slideshow">
+    <!-- Additional required wrapper -->
+    <div class="swiper-wrapper">
+        <!-- Slides -->
+        @foreach (var item in Model)
+        {
+            <div class="swiper-slide">
+                <a href="@Url.Content(item.Link)">
+                    <img src="@item.Image.BindImage(Configuration)" class="img-fluid" style="height:400px ;" alt="@item.Title">
+                </a>
+            </div>
+        }
     </div>
+    <!-- If we need pagination -->
+    <div class="swiper-pagination"></div>
 
-</section>
+    <!-- If we need navigation buttons -->
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+
+</div>

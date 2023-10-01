@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Http.Extensions;
 @model Ghaleb.Web.Pages.Mag.PostModel
 @{
+    Layout = "~/Pages/Shared/_BlogLayout.cshtml";
     ViewData["Seo"] = new
     {
         PageTitle = Model.Blog.Title,
@@ -10,190 +11,43 @@
         DoIndex = true
     };
 }
-<div class="container">
-    <div class="position-relative">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">خانه</a></li>
-                <li class="breadcrumb-item active" aria-current="page">وبلاگ</li>
-            </ol>
-        </nav>
-        <div class="title-page"><strong>وبلاگ</strong></div>
-    </div>
+<div class="col-12 p-3">
     <div class="row">
-        <div class="col-lg-3">
-            <div class="sidebar-blog">
-                <div class="side-card">
-                    <div class="side-card-main">
-                        <div class="block-content">
-                            <div class="side-search">
-                                <form method="get" action="/Mag">
-                                    <input id="" type="search" class="search-input form-control" name="query"
-                                           placeholder="جستوجوی محصولات ..." autocomplete="off">
-                                    <button type="submit" name="" class="search-submit btn">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+    </div>
+    <div class="row ">
+        <div class="col-12 col-lg-3">
+        </div>
+        <div class="col-12 col-lg-6 bg-white p-3 rounded shadow">
+            <div class="row p-4">
+                <div class="col-12 d-flex justify-content-center align-items-start flex-column" style="font-size:15px">
+                    <div class="breadcramps"><a href="@Url.Page("index")">خانه </a> > <a href="@HttpContext.Request.GetDisplayUrl()"> @Model.Blog.PageTitle</a></div>
                 </div>
-                <div class="side-card">
-                    <div class="side-card-main">
-                        <div class="block-title"><span>پست های اخیر</span></div>
-                        <div class="block-content">
-                            <ul class="recentPost-list">
-                                @foreach (var item in Model.NewBlogs)
-                                {
-                                    <li><a asp-page="Post" asp-route-id="@item.Id" asp-route-url="@item.Url">@item.Title</a></li>
-                                }
-                            </ul>
-                        </div>
-                    </div>
+            </div>
+            <div class="row">
+                <h1 class="h4 text-right d-block" style="color:#6b7074">@Model.Blog.Title</h1>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    نویسنده : مدیر سایت
+                </div>
+                <div class="col-6">
+                    در تاریخ @Model.Blog.CreatedDate.ConvertToPesainDate()
+                </div>
+            </div>
+            <div class="row">
+                <img src="@Model.Blog.Image.BindImage(Configuration)" class="img-fluid mx-auto" />
+            </div>
+            <div class="row ">
+                <div class="col-10 mx-auto rounded p-4 bg-light">
+                    @Model.Blog.Abstract
+                </div>
 
-                </div>
-                <div class="side-card">
-                    <div class="side-card-main">
-                        <div class="block-title"><span>نظرات اخیر</span></div>
-                        <div class="block-content">
-                            <ul>
-                                @foreach (var item in Model.BlogComments)
-                                {
-                                    <li><a>@item.Body</a></li>
-                                }
-
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+            </div>
+            <div class="row p-4 mt-5">
+                @Html.Raw(Model.Blog.Description)
             </div>
         </div>
-        <div class="col-lg-9">
-            <div class="news-detail">
-                <h1 class="post-title">
-                    @Model.Blog.Title
-                </h1>
-                <div class="post-meta">
-                    <span class="post-author">
-                        admin
-                    </span>
-                    <span class="post-date"><i class="fa fa-clock-o"></i>@Model.Blog.CreatedDate.ConvertToPesainDate()</span>
-                    <span class="post-hits"><i class="fa fa-eye"></i> @Model.Blog.Visit</span>
-                    <span class="post-comment">
-                        <i class="fa fa-comments-o"></i>
-                        <a href="#comment-list" class="comments-link">@Model.Blog.BlogComments.Count()</a>
-                    </span>
-                </div>
-
-                <div class="post-content-area">
-                    <div class="mt-2 mb-2">
-                        <img src="@Model.Blog.Image.BindImage(Configuration)" alt="" class="img-fluid">
-                    </div>
-                    @Html.Raw(Model.Blog.Description)
-                </div>
-            </div>
-            <div id="tab-content-comment">
-                <div id="comment-list">
-                    <ul>
-                        @foreach (var item in Model.Blog.BlogComments.Where(x=>x.IsActive && x.BlogCommentId==null))
-                        {
-                            <li>
-                                <div class="comment_item">
-                                    <div class="mb-2">
-                                        <i class="fa fa-calendar"></i>
-                                        <span class="mx-2">@item.CreatedDate.ConvertToPesainDate()</span>
-                                        <i class="fa fa-user"></i>
-                                        <span class="mx-2">@item.User.Profile.FirstName @item.User.Profile.LastName</span>
-                                    </div>
-                                    <div class="">
-                                        @item.Body
-                                    </div>
-                                </div>
-                                @foreach (var item2 in item.BlogComments.Where(x=>x.IsActive))
-                                {
-                                    <div class="comment_item_reply">
-                                        <div class="info-editor">
-                                            <div class="mb-2">
-                                                <i class="fa fa-calendar"></i>
-                                                <span class="mx-2">@item.CreatedDate.ConvertToPesainDate()</span>
-                                                <i class="fa fa-user"></i>
-                                                <span class="mx-2">@item.User.Profile.FirstName @item.User.Profile.LastName</span>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex">
-                                            <div class="reply-icon">
-                                                <i class="fa fa-reply"></i>
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <p>
-                                                    @item2.Body
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                            </li>
-                        }
-
-                    </ul>
-                </div>
-                @if (!User.Identity.IsAuthenticated)
-                {
-                    <h6 class="my-4 dark-color">
-                        برای نظر دادن ، باید عضو شده باشید.
-                    </h6>
-                }
-                else
-                {
-                    <div data-toggle="collapse" data-target="#demo" class="collapse-text">
-                        برای ارسال نظر ابتدا توضیحات بالا را بخوانید سپس روی
-                        <span class="text-success"> « اینجا » </span>
-                        کلیک کنید
-                    </div>
-
-                    <div id="demo" class="collapse">
-                        <h3 class="title-normal dark-color my-3">
-                            عقیده ات رو بیان کن
-                        </h3>
-                        <form role="form" method="post">
-                            <div class="row">
-
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <input class="form-control" name="FullName" id="name" placeholder="نام" type="text"
-                                               required="">
-                                    </div>
-                                </div><!-- Col end -->
-
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <input class="form-control" name="Email" id="emailForm" placeholder="ایمیل"
-                                               type="email" required="">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <textarea class="form-control required-field" id="message"
-                                        name="Body"
-                                                  placeholder="دیدگاه شما" required=""></textarea>
-                                    </div>
-                                </div><!-- Col end -->
-
-                            </div><!-- Form row end -->
-                            <div class="">
-                                <button class="comments-btn btn-default btn" type="submit">ارسال</button>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <span id="Result"></span>
-                                </div>
-                            </div>
-                        </form><!-- Form end -->
-                    </div>
-                }
-            </div>
-
+        <div class="col-12 col-lg-3">
         </div>
 
     </div>

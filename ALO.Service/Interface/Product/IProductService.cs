@@ -26,7 +26,6 @@ namespace ALO.Service.Interface.Product
             string order = null,
             int page = 1,
             int pageSize = 10,
-            long? ownerId = null,
             long? userId = null,
             bool? isExists = null);
         Task<ListResultViewModel<IEnumerable<ProductListForHomeDto>>> GetLastVisitProductList(long userId);

@@ -1,6 +1,5 @@
 ﻿@page
 @model Ghaleb.Web.Pages.ContactUsModel
-
 @{
     ViewData["Seo"] = new
     {
@@ -15,103 +14,66 @@
         font-size: 14px;
     }
 </style>
-@*@await Component.InvokeAsync("BreadCrumps",Model.Seo)*@
-<div class="container">
-    <div class="position-relative">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">خانه</a></li>
-                <li class="breadcrumb-item active" aria-current="page">ارتباط با ما</li>
-            </ol>
-        </nav>
-        <div class="title-page"><strong>ازتباط با ما</strong></div>
+@await Component.InvokeAsync("BreadCrumps",Model.Seo)
+<div class="row bg-white p-5 table-responsive contactus">
+    <h4 class="text-center mb-5">تماس با شرکت</h4>
+    <div class="col-6 mt-2">
+        <span>تلفن بخش فروش : @Model.ContactUs.Phone</span>
     </div>
-    <div class="row form-contact">
-        <div class="col-lg-8 contact-form-message">
-            <h2 class="title">
-                ارسال پیام
-            </h2>
-            <form method="post">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="form-label" asp-for="model.FullName">نام و نام خانوادگی <span class="necessary">*</span></label>
-                            <input asp-for="model.FullName" class="form-control" type="text"
-                                   placeholder="نام و نام خانوادگی">
-                            <span asp-validation-for="model.FullName" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="form-label" asp-for="model.Email">ایمیل <span class="necessary">*</span></label>
-                            <input asp-for="model.Email" class="form-control"
-                                   placeholder="ایمیل خود را وارد نمایید">
-                            <span asp-validation-for="model.Email" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="form-label" asp-for="model.Mobile">موبایل <span class="necessary">*</span></label>
-                            <input asp-for="model.Mobile" class="form-control" type="text"
-                                   placeholder="موبایل">
-                            <span asp-validation-for="model.Mobile" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="form-label" for="Section">
-                                ارتباط با بخش
-                            </label>
-                            <select name="DepartementType" id="Section" class="form-control" tabindex="1">
-                                <option value="">انتخاب کنید ...</option>
-                                <option value="0">پشتیبانی</option>
-                                <option value="1">مالی</option>
-                                <option value="2">فروش</option>
-                                <option value="2">مدیریت</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
+    <div class="col-6 mt-2">
+        <span>   تلفن دیگر : @Model.ContactUs.Tel.toPersianNumber()</span>
+    </div>
+    <div class="col-6 mt-2">
+        <span>  شماره همراه : @Model.ContactUs.Mobile</span>
+    </div>
 
-                <div class="form-group">
-                    <label class="form-label" asp-for="model.Body">
-                        پیام
-                    </label>
-                    <textarea asp-for="model.Body" class="form-control" rows="8"
-                              placeholder="متن پیام"></textarea>
-                    <span asp-validation-for="model.Body" class="text-danger"></span>
-                </div>
-                <input type="submit" class="btn btn-submit2" value="ارسال">
-                @Model.Message
-            </form>
+    <div class="col-6 mt-2">
+        <span>   ایمیل شرکت : @Model.ContactUs.Email</span>
+    </div>
+    <div class="col-12 mt-2">
+        <span>   آدرس ما : @Model.ContactUs.Address</span>
+    </div>
+    <div class="col-12 col-xl-6 mt-5">
+        <h5 class="text-center">پیام خود را برای ما ارسال کنید</h5>
 
-        </div>
-        <div class="col-lg-4 contact-information">
-            <div class="">
-                <h2 class="title">
-                    اطلاعات تماس
-                </h2>
-                <div class="contact-information-address">
-                    <ul>
-                        <li>
-                            <i class="fa fa-map-marker"></i>
-                            <span>آدرس : @Model.ContactUs.Address</span>
-                        </li>
-                        <li>
-                            <i class="fa fa-phone"></i>
-                            <strong class="ml-auto">@Model.ContactUs.Mobile</strong>
-                        </li>
-                        <li>
-                            <i class="fa fa-envelope"></i>
-                            <strong class="ml-auto">
-                                <a href="mailto:@Model.ContactUs.Email">@Model.ContactUs.Email</a>
-                            </strong>
-                        </li>
-                    </ul>
-                </div>
+        <form method="post" class="row mt-5" (submit)="SendData($event)">
+
+            <div class="col-12 form-group mt-2">
+                <input  asp-for="model.Email" class="form-control"
+                       placeholder="ایمیل خود را وارد نمایید">
+                <span asp-validation-for="model.Email" class="text-danger"></span>
             </div>
 
-            @await Component.InvokeAsync("SocialNetworks")
-        </div>
+            <div class="col-12 form-group mt-4">
+                <input asp-for="model.FullName" class="form-control" type="text"
+                        placeholder="نام و نام خانوادگی">
+                <span asp-validation-for="model.FullName" class="text-danger"></span>
+            </div>
+            <div class="col-12 form-group mt-4">
+                <input asp-for="model.Mobile" class="form-control" type="text"
+                       placeholder="موبایل">
+                <span asp-validation-for="model.Mobile" class="text-danger"></span>
+            </div>
+            <div class="col-12 form-group mt-4">
+                <textarea asp-for="model.Body" class="form-control" rows="8" 
+                           placeholder="متن پیام"></textarea>
+                <span asp-validation-for="model.Body" class="text-danger"></span>
+            </div>
+            <recaptcha error-callback="کپچا نا معتبر" />
+            <div class="col-12 form-group mt-4">
+                <button type="submit" class="btn btn-danger col-12" style="padding:
+                    11px;
+                    border-radius: 25px;">
+                    ارسال پیام
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="col-12 col-xl-6 mt-5">
+        @Html.Raw(Model.ContactUs.Google)
+
     </div>
 </div>
+@section scripts{
+   <partial name="_ValidationScriptsPartial" />
+}

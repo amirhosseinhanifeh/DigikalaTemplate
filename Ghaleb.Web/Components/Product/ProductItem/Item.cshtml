@@ -1,34 +1,36 @@
 ﻿@model ALO.ViewModels.Product.ProductListForHomeDto
 @{
-    var average = Math.Round(Model.Ratings.Select(x=>x.Rating).Sum() / Model.Ratings.Count());
 }
+<a target="_blank" href="@Url.Page("product",new{id=Model.Id,url=Model.Url})">
+    <img class="card-img-top mx-auto"
+         src="@Model.Image"
+         alt="Card image
+        cap" style="width:150px;min-height:150px ;">
+    <div class="card-body border-bottom">
+        <span class="card-text" style="color:#9f9f9f ;">@Model.Title</span>
+    </div>
+    @if (Model.Discount != null)
+    {
+        <div class="text-center mt-3">
+            <s style="color: rgb(182, 182, 182);"> @Model.Cost تومان </s>
+            <br>
+            @Model.Discount تومان
 
-<div class="box">
-    <div class="box">
-        <a href="/Product/@Model.Id/@Model.Url">
-            <img src="@Model.Image" alt="">
-        </a>
-        <div class="star-place">
-            @for (int i = 1; i <= 5; i++)
+        </div>
+    }
+    else
+    {
+
+        <div class="text-center mt-3">
+            @if (!Model.Call)
             {
-                if (i <= average)
-                {
-                    <i class="fa fa-star"></i>
-                }
-                else
-                {
-                    <i class="fa fa-star" style="color:gray"></i>
-
-                }
+                <span *ngIf="!product?.call"> @Model.Cost تومان </span>
+            }
+            else
+            {
+                <span *ngIf="product?.call"> تماس بگیرید</span>
             }
         </div>
-        <div class="Product-code">
-            <a href="/Product/@Model.Id/@Model.Url">
-                کد : @Model.Id
-            </a>
-        </div>
-        <div class="price">
-            @Model.Cost تومان
-        </div>
-    </div>
-</div>
+    }
+
+</a>

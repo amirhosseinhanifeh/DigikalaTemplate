@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ghaleb.Web.Pages
 {
-
+    [ValidateReCaptcha(ErrorMessage ="کپچا نا معتبر")]
     public class ContactUsModel : PageModel
     {
         private readonly IFormContactUsService _frmcontact;
@@ -34,6 +34,7 @@ namespace Ghaleb.Web.Pages
         public string Message { get; set; }
         [BindProperty]
         public FormContactUsDTO model { get; set; }
+
 
         public async Task<IActionResult> OnPostAsync()
         {

@@ -11,7 +11,7 @@ namespace ALO.DataAccessLayer.Migrations
                 name: "DeliveryPriceId",
                 table: "tbl_Orders",
                 type: "bigint",
-                nullable: false,
+                nullable: true,
                 defaultValue: 0L);
 
             migrationBuilder.CreateTable(

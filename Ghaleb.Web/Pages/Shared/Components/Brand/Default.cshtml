@@ -1,25 +1,36 @@
 ﻿@model IEnumerable<ALO.DomainClasses.Entity.Product.tbl_Brands>
-
-
-<section class="blog-posts">
-    <div class="swiper slick-list-swiper">
+@{
+}
+@if(Model.Any())
+{
+<div class="row bg-white p-3 mt-5 box">
+    <div class="col-6">
+        <h6 class="border-bottom p-2">برترین برند ها</h6>
+    </div>
+    <div class="swiper products mt-5">
+        <!-- Additional required wrapper -->
         <div class="swiper-wrapper">
+            <!-- Slides -->
             @foreach (var item in Model)
             {
-                <div class="swiper-slide">
-                    <div class="box">
-                        <a href="/Search?brandIds=@item.Id">
-                            <img src="@item.Logo.BindImage(Configuration)" alt="@item.Name">
-                        </a>
-                    </div>
+                <div class="swiper-slide brandItem">
+                    <a class="card col-6 d-flex justify-content-center align-items-center"
+                   href="/Search/Brand/@item.Id/@item.Name">
+                        <img class="card-img-top mx-auto"
+                         src="@item.Logo.BindImage(Configuration)"
+                         alt="@item.Name">
+
+                    </a>
                 </div>
             }
         </div>
-        <div class="next-slider">
-            <img src="~/assets/images/public/next-right-gray.svg" alt="">
-        </div>
-        <div class="prev-slider">
-            <img src="~/assets/images/public/prev-left-gray.svg" alt="">
-        </div>
+        <!-- If we need pagination -->
+        <div class="swiper-pagination"></div>
+
+        <!-- If we need navigation buttons -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+
     </div>
-</section>
+</div>
+}

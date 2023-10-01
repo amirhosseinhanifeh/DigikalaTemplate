@@ -27,6 +27,8 @@ namespace Ghaleb.Web.Pages.ViewComponents.TopMenu
 
                return await _context.tbl_LinkManagements.Where(x => x.IsActive && x.IsDelete != true && x.GroupLinkManagement.RouteName == routeName).ToListAsync();
             });
+            ViewBag.Phone = (await _context.tbl_ContactUsDetails.FirstOrDefaultAsync())?.Phone.ToString().toPersianNumber();
+            ViewBag.Cat = configuration.GetSection("SiteSetting:CategoryName").Value;
             return View(res);
         }
     }

@@ -3,342 +3,63 @@
 @{
 }
 
-<form asp-page-handler="Pay" class="container">
-    <div class="row">
-        <div class="col-12">
-            <ul class="progressbar">
-                <li class="active">
-                    سبد خرید
-                </li>
-                <li class="active">
-                    اطلاعات
-                </li>
-                <li class="active">
-                    پرداخت
-                </li>
-            </ul>
-        </div>
-        <div class="col-lg-8">
-            <div class="cart-checkout_address">
-                <label class="card-title">
-                    آدرس تحویل سفارش
-                </label>
-                <div class="list-address mb-3">
-                    @foreach (var item in Model.Addresses)
-                    {
-                        <div class="d-flex justify-content-between ">
-                            <div class="custom-control custom-radio mb-2">
-                                <input type="radio" class="custom-control-input" @(Model.Addresses[0] == item ? "checked" : "") id="customRadio-@item.Id" name="addressId"
-                                       value="@item.Id">
-                                <label class="custom-control-label" for="customRadio-@item.Id"> @item.Address</label>
-                            </div>
-                            @*							<div class="dropdown dropright">
-                        <a class="btn dropdown-toggle" data-toggle="dropdown" >
-                        <i class="fa fa-circle"></i>
-                        </a>
-                        <div class="dropdown-menu">
-                        <a class="dropdown-item" data-toggle="modal" data-target="#EditAddressModal">
-                        <i class="fa fa-edit"></i>ویرایش آدرس
-                        </a>
-                        <a class="dropdown-item" asp-page="Address" asp-page-handler="Delete" asp-route-Id="@item.Id"><i class="fa fa-trash"></i>حذف آدرس</a>
-                        </div>
-                        </div>*@
-                        </div>
-                    }
+
+<form method="post" class="row bg-white p-5">
+    <h4>لطفا یک آدرس انتخاب نمایید</h4>
+
+    <div class="col-12 col-lg-12 ">
+        <div class="row">
+            @foreach (var item in Model.Addresses)
+            {
+                <div class="col-12 col-lg-2" style="
+                background: #f1f1f1;
+                height: 150px;
+                padding: 10px;
+                border-radius: 15px;margin-left: 5px;" *ngFor="let item of addresses">
+                    <input type="radio" name="addressId" value="@item.Id" required>
+                    <br>
+                    موبایل : @item.Mobile
+                    <br>
+                    تلفن : @item.Phone
+                    <br>
+                    آدرس : @item.Address
                 </div>
-                <ul>
-                    <li>
-                        <a data-toggle="modal" data-target="#CreateAddressModal" class="btn btn-add-address">
-                            ایجاد آدرس
-                        </a>
-                    </li>
-                </ul>
-                <label class="card-title">زمان تحویل سفارش</label>
-                <p class="mb-4">لطفا روزی را که می خواهید ارسال کنید انتخاب کنید.</p>
-                @{
-                    int index = 0;
-                }
-                <div class="box-tab-time">
-                    <ul class="nav nav-pills justify-content-between">
-                        @for (PersianDateTime i = PersianDateTime.Now; i < PersianDateTime.Now.AddDays(6); i = i.AddDays(1))
-                        {
-                            <li class="nav-item flex-grow-1">
-                                <a class="nav-link @(index==0?"active":"")" data-toggle="pill" href="#tab-@index">
-                                    @i.DayName
-                                    <span>@i.Month/@i.Day</span>
-                                </a>
-                            </li>
-                            index = index + 1;
-                        }
-                    </ul>
-                    @{
-                        index = 0;
-                        int g = 0;
-                    }
-                    <!-- Tab panes -->
-                    <div class="tab-content">
+            }
 
-                        @for (PersianDateTime i = PersianDateTime.Now; i < PersianDateTime.Now.AddDays(6); i = i.AddDays(1))
-                        {
-                            <div class="tab-pane container @(index==0?"active":"")" id="tab-@index">
-                                <div class="d-flex justify-content-center mt-3">
-                                    <input value="@i.ToDateTime()" hidden name="Date">
-                                    @for (TimeSpan t = TimeSpan.Parse("09:00"); t < TimeSpan.Parse("21:00"); t = t.Add(TimeSpan.FromHours(4)))
-                                    {
-                                        <div class="custom-control custom-radio mx-2">
+            <div class="col-12 col-lg-2 p-4 d-flex mt-3 mt-lg-0 justify-content-center
+                align-items-center" style="
+                background: #f1f1f1;
+                height: 150px;
+                padding: 10px;
+                border-radius: 15px;"  data-bs-toggle="modal" data-bs-target="#exampleModal">
 
-                                            <input type="radio" class="custom-control-input" id="timing-@g" name="time"
-                                                   value="@i.ToDateTime();@t.Hours-@t.Add(TimeSpan.FromHours(4)).Hours">
-                                            <label class="custom-control-label" for="timing-@g">
-                                                @t.Hours - @t.Add(TimeSpan.FromHours(4)).Hours ساعت
-                                            </label>
-                                        </div>
-                                        g = g + 1;
-                                    }
-                                </div>
-                            </div>
-                            index = index + 1;
-                        }
-                    </div>
-                </div>
-
+                افزودن آدرس جدید
             </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="cart_page_aside">
-                <div class="d-flex p-20">
-                    <div class="">قیمت کالاها :</div>
-                    <div class="ml-auto">@Model.Order.ProductPrices.ToString("n0") تومان</div>
-                </div>
-                @*				<div class="d-flex p-20">
-                <div class="">تخفیف کالا :</div>
-                <div class="ml-auto checkout_discount_price">20,000 ريال</div>
-                </div>*@
-                <div class="p-20">
-                    <img src="~/assets/img/Delivery.svg" alt="" width="30px">
-                    هزینه حمل و نقل :
-                    @if (Model.Order.DeliveryPrice != 0)
-                    {
-                        <span>@Model.Order.DeliveryPrice.ToString("n0") تومان</span>
-                    }
-                    else
-                    {
-                        <span>رایگان</span>
-                    }
-                </div>
-                <input name="DeliveryPriceId" hidden value="@Model.Order.DeliveryId" />
-                <div class="d-flex p-20">
-                    <div class="">مبلغ قابل پرداخت :</div>
-                    <div class="ml-auto">@Model.Order.TotalPrice.ToString("n0") تومان</div>
-                </div>
-                <div class="p-20">
-                    <p class="text-center">روش پرداخت</p>
-                    <div class="d-flex justify-content-center mt-3">
-                        <div class="custom-control custom-radio mx-2">
-                            <input type="radio" class="custom-control-input" id="way1" checked name="payType"
-                                   value="0">
-                            <label class="custom-control-label" for="way1">
-                                درگاه پرداخت بانکی
-                            </label>
-                        </div>
-                        <div class="custom-control custom-radio mx-2">
-                            <input type="radio" class="custom-control-input" id="way2" name="payType"
-                                   value="1">
-                            <label class="custom-control-label" for="way2">
-                                کیف پولی
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-20">
-
-                    <button type="submit" class="btn btn-continue">
-                        ادامه خرید
-                    </button>
-                </div>
-            </div>
-
         </div>
     </div>
+
+
+    <div class="col-12 mt-2 d-flex justify-content-center">
+        <button type="submit" class="btn btn-primary col-12 col-lg-3 ">
+            تکمیل
+            فرایند
+        </button>
+    </div>
+    <!-- <div id="map"></div> -->
+
 </form>
-<div class="modal fade" id="CreateAddressModal" tabindex="-1" role="dialog" aria-labelledby="CreateAddressModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="CreateAddressModalLabel">ایجاد آدرس</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div>
-
-                        <form class="row" asp-page-handler="CreateAddress" method="post">
-
-                            <div class="col-12 col-lg-6">
-                                <div class="row">
-                                    <div class="row">
-                                        <div class="col-lg-6 col-md-6 form-group">
-                                            <label for="mob">استان <span class="necessary">*</span></label>
-                                            <select name="" class="form-control" id="">
-                                                <option value="">khgjh</option>
-                                                <option value="">kjhhk</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group col-lg-6 col-md-6">
-                                            <label for="mob">شهر <span class="necessary">*</span> </label>
-                                            <select name="" class="form-control" id="">
-                                                <option value="">khgjh</option>
-                                                <option value="">kjhhk</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-12 form-group">
-                                            <label for="mob">آدرس <span class="necessary">*</span></label>
-                                            <input type="text" class="form-control" placeholder="" id="mob">
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 form-group">
-                                            <label for="mob">پلاک <span class="necessary">*</span></label>
-                                            <input type="text" class="form-control" placeholder="" id="mob">
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 form-group">
-                                            <label for="mob"> واحد <span class="necessary">*</span></label>
-                                            <input type="text" class="form-control" placeholder="" id="mob">
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 form-group">
-                                            <label for="mob">کد پستی <span class="necessary">*</span></label>
-                                            <input type="text" class="form-control" placeholder="" id="mob">
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 form-group">
-                                            <label for="mob">نام گیرنده <span class="necessary">*</span></label>
-                                            <input type="text" class="form-control" placeholder="" id="mob">
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 form-group">
-                                            <label for="mob">کد ملی <span class="necessary">*</span></label>
-                                            <input type="text" class="form-control" placeholder="" id="mob">
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 form-group">
-                                            <label for="mob"> شماره تلفن <span class="necessary">*</span></label>
-                                            <input type="text" class="form-control" placeholder="" id="mob">
-                                        </div>
-
-                                        <div class="col-12 col-lg-6 form-group mt-2">
-                                            <label>نام گیرنده</label>
-                                            <input name="fullname" class="form-control" value=""
-                                                   placeholder="نام گیرنده">
-                                        </div>
-
-                                        <div class="col-12 col-lg-6 form-group mt-2">
-                                            <label>تلفن گیرنده</label>
-                                            <input name="phone" class="form-control" value=""
-                                                   placeholder="تلفن گیرنده">
-                                        </div>
-
-                                        <div class="col-12 col-lg-6 form-group mt-2">
-                                            <label>موبایل گیرنده</label>
-                                            <input name="mobile" class="form-control" value=""
-                                                   placeholder="موبایل گیرنده">
-                                        </div>
-                                        <div class="col-12 form-group mt-2">
-                                            <label>آدرس گیرنده</label>
-                                            <input type="text" name="address" required class="form-control" [value]="addr">
-                                        </div>
-                                        <div class="col-12 col-lg-6 form-group mt-2">
-                                            <label>پلاک</label>
-                                            <input name="pelak" class="form-control" value=""
-                                                   placeholder="پلاک" required>
-                                        </div>
-                                        <div class="col-12 col-lg-6 form-group mt-2">
-                                            <label>واحد</label>
-                                            <input name="vahed" class="form-control" value=""
-                                                   placeholder="واحد" required>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 mt-2 mt-lg-0">
-
-                                <div class="map match-parent" id="map"></div>
-                            </div>
-                            <input name="Lat" value="" hidden />
-                            <input name="Lng" value="" hidden />
-                            <div class="col-12 form-group mt-2">
-                                <button type="submit" class="btn btn-primary col-12">ثبت اطلاعات</button>
-                            </div>
-                        </form>
-
-                    </div>
+@section Modal{
+    <div class="modal  fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">ثبت آدرس جدید</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @await Component.InvokeAsync("Address")
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="modal fade" id="EditAddressModal" tabindex="-1" role="dialog" aria-labelledby="EditAddressModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="EditAddressModalLabel">ویرایش آدرس</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form asp-page-handler="EditAddress">
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 form-group">
-                            <label for="mob">استان <span class="necessary">*</span></label>
-                            <select name="" class="form-control" id="">
-                                <option value="">khgjh</option>
-                                <option value="">kjhhk</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-lg-6 col-md-6">
-                            <label for="mob">شهر <span class="necessary">*</span> </label>
-                            <select name="" class="form-control" id="">
-                                <option value="">khgjh</option>
-                                <option value="">kjhhk</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-12 form-group">
-                            <label for="mob">آدرس <span class="necessary">*</span></label>
-                            <input type="text" class="form-control" placeholder="" id="mob">
-                        </div>
-                        <div class="col-lg-6 col-md-6 form-group">
-                            <label for="mob">پلاک <span class="necessary">*</span></label>
-                            <input type="text" class="form-control" placeholder="" id="mob">
-                        </div>
-                        <div class="col-lg-6 col-md-6 form-group">
-                            <label for="mob"> واحد <span class="necessary">*</span></label>
-                            <input type="text" class="form-control" placeholder="" id="mob">
-                        </div>
-                        <div class="col-lg-6 col-md-6 form-group">
-                            <label for="mob">کد پستی <span class="necessary">*</span></label>
-                            <input type="text" class="form-control" placeholder="" id="mob">
-                        </div>
-                        <div class="col-lg-6 col-md-6 form-group">
-                            <label for="mob">نام گیرنده <span class="necessary">*</span></label>
-                            <input type="text" class="form-control" placeholder="" id="mob">
-                        </div>
-                        <div class="col-lg-6 col-md-6 form-group">
-                            <label for="mob">کد ملی <span class="necessary">*</span></label>
-                            <input type="text" class="form-control" placeholder="" id="mob">
-                        </div>
-                        <div class="col-lg-6 col-md-6 form-group">
-                            <label for="mob"> شماره تلفن <span class="necessary">*</span></label>
-                            <input type="text" class="form-control" placeholder="" id="mob">
-                        </div>
-                        <div class="col-lg-12 text-center mt-3">
-                            <button class="btn btn-default" type="submit">
-                                ویرایش آدرس
-                            </button>
-                        </div>
-                    </div>
-
-                </form>
-
-            </div>
-        </div>
-    </div>
-</div>
+        }

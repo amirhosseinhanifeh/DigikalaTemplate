@@ -1,23 +1,65 @@
 ﻿@model ALO.DomainClasses.Entity.Product.tbl_ProductPriceHistory
 @{
 }
-@if(Model !=null)
-{
-<form method="post" class="c_quantity d-flex align-items-center justify-content-center flex-wrap mb-3">
-        <div class="new-price"><span>@Model.Price.ToString("n0")</span> تومان</div>
-    <span class="mx-2 mt-3">تعداد: </span>
-    <div class="c_quantity-a d-flex mt-3">
-        <button class=" increment btn" type="button"><i class="fa fa-plus"></i></button>
-        <input class="counter form-control" name="Count" type='text'>
-        <button type="button" class="decrement btn"><i class="fa fa-minus"></i></button>
-    </div>
-    <button asp-page-handler="AddToBasket" asp-route-id="@Model.Id"  class="btn btn-default mt-3">
-        افزودن
-        به سبد
-        خرید
-    </button>
-</form>
-}
-else{
-    <span>ناموجود</span>
-}
+<div class="row d-flex justify-content-between
+                    align-items-center" >
+    @if (Model != null)
+    {
+
+        <form method="post" class="col-12 col-xl-10 p-3" style="border-radius:
+                    10px;background:
+                    #ededed;border:1px solid #cbcbcb" *ngIf="price?.inventory>0">
+            <div class="row">
+
+                @if (Model.ProductGuarantee != null)
+                {
+
+                    <span><i class="fa-regular fa-file-certificate ms-4" style="font-size:15px"></i> گارانتی @Model.ProductGuarantee.Name</span>
+                }
+                <hr class="col-10 mx-auto mt-2 mb-2">
+                @if (Model.DiscountPrice != null)
+                {
+                    <div class="text-center mt-3" *ngIf="price?.discount
+                                !=null">
+                        <s style="color: rgb(182, 182, 182);">
+                            @Model.Price.ToString("n0").toPersianNumber() تومان
+                        </s>
+                        <br>
+                        <label style="font-size:15px ;">
+                            @Model.DiscountPrice.GetValueOrDefault().ToString("n0") تومان
+                        </label>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center mt-3" style="font-size:15px
+                                ;">
+                        @Model.Price.ToString("n0").toPersianNumber() تومان
+                    </div>
+                }
+                <div class="col-12 mt-1">
+                    <button asp-page-handler="AddToBasket" asp-route-id="@Model.Id" as class="btn btn-danger col-12 p-3">
+                        افزودن
+                        به سبد
+                        خرید
+                    </button>
+                </div>
+            </div>
+        </form>
+
+    }
+    else
+    {
+        <div *ngIf="price?.inventory==0">
+
+            <div class="col-12 mt-1">
+                <button class="btn btn-dark col-12 p-3"
+                    style="font-size:15px ;">
+                    ناموجود
+                </button>
+            </div>
+
+        </div>
+    }
+</div>

@@ -30,7 +30,6 @@
                                 <td>@item.OrderCode</td>
                                 <td>@item.OrderDetails.Sum(x=>x.Count * x.ProductPriceHistory.GetPrice()).ToString("n0") تومان</td>
                                 <td>@item.CreatedDate.ConvertToPesainDate()</td>
-                                <td>@item.OrderState.ToString()</td>
 
                                 <td>
                                     <a class="btn btn-dark" asp-route-addressid="@item.UserAddressId" asp-action="UserDetail">اطلاعات خریدار</a>

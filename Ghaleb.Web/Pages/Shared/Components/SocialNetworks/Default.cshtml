@@ -2,16 +2,11 @@
 @{
 }
 
-<div class="mt-auto">
-    <ul class="contact-us-socials">
-        @foreach (var item in Model)
-        {
-        <li>
-            <a href="@Url.Content(item.Url)" class="social-item" target="_blank">
-                <i class="icon @item.Icon"></i>
-            </a>
-        </li>
-        }
-    </ul>
+<div class="col-12 mt-3 text-center">
+    @foreach (var item in Model)
+    {
+        <a href="@Url.Content(item.Url)">
+            <i style="font-size:40px ; margin-left: 20px; color:#a3a3a3" class="@item.Icon"></i>
+        </a>
+    }
 </div>
-

@@ -15,40 +15,25 @@
         margin-left: 0;
     }
 </style>
-@*@await Component.InvokeAsync("BreadCrumps",Model.Seo)*@
-<div class="container mt-5">
-    <div class="position-relative">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">خانه</a></li>
-                <li class="breadcrumb-item active" aria-current="page">سوالات متداول</li>
-            </ol>
-        </nav>
-        <div class="title-page"><strong>سوالات متداول</strong></div>
-    </div>
-    <div class="col-lg-10 m-auto faq-page">
-        <div class="panel-group" id="accordionGroupOpen" role="tablist" aria-multiselectable="true">
-            @foreach (var item in Model.Faqs)
-            {
-                <div class="panel panel-default">
-                    <button class="panel-heading btn" role="tab" id="headingOne">
-                        <h4 class="panel-title">
-                            <a role="button" data-toggle="collapse" data-parent="#accordionGroupOpen"
-                               href="#collapseOpenOne-@item.Id" aria-expanded="true" aria-controls="collapseOpenOne-@item.Id">
-                                @item.Question
-                            </a>
-                        </h4>
+@await Component.InvokeAsync("BreadCrumps",Model.Seo)
+<div class="col-8 mt-5 mx-auto">
+    <p>@Html.Raw(Model.Seo.Description)</p>
+    <div class="accordion accordion-flush" id="accordionFlushExample">
+        @foreach (var item in Model.Faqs)
+        {
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne-@item.Id" aria-expanded="false" style="justify-content: space-between;
+    border: 1px solid #ededed;
+    border-radius: 5px;
+    margin-bottom: 5px;" aria-controls="flush-collapseOne">
+                        @item.Question
                     </button>
-                    <div id="collapseOpenOne-@item.Id" class="panel-collapse collapse show" role="tabpanel"
-                         aria-labelledby="headingOne">
-                        <div class="panel-body">
-                            <p>
-                              @item.Answer
-                            </p>
-                        </div>
-                    </div>
+                </h2>
+                <div id="flush-collapseOne-@item.Id" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">@item.Answer</div>
                 </div>
-            }
-        </div>
+            </div>
+        }
     </div>
 </div>

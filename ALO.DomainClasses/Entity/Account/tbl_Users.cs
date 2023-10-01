@@ -55,7 +55,6 @@ namespace ALO.DomainClasses.Entity.Account
 
         public ICollection<tbl_FinancialAccount> FinancialAccounts { get; set; }
         public ICollection<Product.tbl_Product> Products { get; set; }
-        public ICollection<Product.tbl_Product> UserProducts { get; set; }
         public ICollection<tbl_UserAddresses> Addresses { get; set; }
         public ICollection<tbl_Order> Orders { get; set; }
         public ICollection<tbl_Menu> Menus { get; set; }

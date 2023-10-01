@@ -10,27 +10,26 @@
         color: #62666d;
     }
 </style>
-<nav class="menu-nav">
-    <ul>
-        <li class="close-menu">
-            <i class="fa fa-close"></i>
-        </li>
-        <li>
-            <a href="~/">
-                خانه
-            </a>
-        </li>
-        <li class="menu-m">
-            @await Component.InvokeAsync("Categories")
-        </li>
-        @foreach (var item in Model)
-        {
-            <li>
-                <a href="@Url.Content(item.Link)">
-                    @item.Title
-                </a>
-            </li>
-        }
-
-    </ul>
-</nav>
+<div class="col-8 mt-1 menu d-none d-md-none d-lg-flex align-items-center mb-1">
+    <a class="top-menu-items" style="    font-weight: 600;
+    color: #4c4c4c;
+    border-left: 1px solid #d3d3d3;
+    padding-left: 13px;">
+        @ViewBag.Cat
+    </a>
+    <a class="top-menu-items" asp-page="~/">
+       صفحه اصلی
+    </a>
+    @foreach (var item in Model)
+    {
+        <a class="top-menu-items" href="@Url.Content(item.Link)">
+            @item.Title
+        </a>
+    }
+    <a href="tel:@ViewBag.Phone" style="font-size:12px ;">
+        <span style="display:flex;align-items:center">
+        پشتیبانی : @ViewBag.Phone
+        <i class="fa-regular fa-phone-volume" style="font-size: 15px;margin-right:10px"></i>
+        </span>
+    </a>
+</div>

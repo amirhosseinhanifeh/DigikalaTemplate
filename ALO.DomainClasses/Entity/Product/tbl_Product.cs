@@ -42,12 +42,6 @@ namespace ALO.DomainClasses.Entity.Product
 
         public long? BrandId { get; set; }
         public tbl_Brands Brand { get; set; }
-
-        public long? CityId { get; set; }
-        public tbl_City City { get; set; }
-        public long? OwnerId { get; set; }
-        [ForeignKey(nameof(OwnerId))]
-        public tbl_Users Owner { get; set; }
         public ICollection<tbl_ProductComment> ProductComments { get; set; }
         public ICollection<tbl_Image> Images { get; set; }
         public ICollection<tbl_ProductRating> Ratings { get; set; }

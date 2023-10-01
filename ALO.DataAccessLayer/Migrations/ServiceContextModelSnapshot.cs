@@ -1252,7 +1252,7 @@ namespace ALO.DataAccessLayer.Migrations
                         new
                         {
                             Id = 3L,
-                            CreatedDate = new DateTime(2023, 8, 5, 12, 21, 28, 238, DateTimeKind.Local).AddTicks(9780),
+                            CreatedDate = new DateTime(2023, 10, 1, 20, 44, 6, 888, DateTimeKind.Local).AddTicks(4514),
                             IsActive = true,
                             IsDelete = false,
                             LanguageCode = "fa",
@@ -1497,7 +1497,7 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Property<long?>("Createdby")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("DeliveryPriceId")
+                    b.Property<long?>("DeliveryPriceId")
                         .HasColumnType("bigint");
 
                     b.Property<bool>("IsActive")
@@ -1851,9 +1851,6 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Property<long?>("BrandId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("CityId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -1899,9 +1896,6 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Property<long?>("Modifiedby")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("OwnerId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("PageTitle")
                         .HasColumnType("nvarchar(max)");
 
@@ -1927,15 +1921,11 @@ namespace ALO.DataAccessLayer.Migrations
 
                     b.HasIndex("BrandId");
 
-                    b.HasIndex("CityId");
-
                     b.HasIndex("FileId");
 
                     b.HasIndex("ImageId");
 
                     b.HasIndex("MainProductCategoryId");
-
-                    b.HasIndex("OwnerId");
 
                     b.HasIndex("ProductCategoryId");
 
@@ -3087,9 +3077,7 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.HasOne("ALO.DomainClasses.Entity.Order.tbl_DeliveryPrice", "DeliveryPrice")
                         .WithMany("Orders")
-                        .HasForeignKey("DeliveryPriceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DeliveryPriceId");
 
                     b.HasOne("ALO.DomainClasses.Entity.Account.tbl_UserAddresses", "UserAddress")
                         .WithMany()
@@ -3192,10 +3180,6 @@ namespace ALO.DataAccessLayer.Migrations
                         .WithMany("Products")
                         .HasForeignKey("BrandId");
 
-                    b.HasOne("ALO.DomainClasses.Entity.City.tbl_City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId");
-
                     b.HasOne("ALO.DomainClasses.Entity.IMG.tbl_File", "File")
                         .WithMany()
                         .HasForeignKey("FileId");
@@ -3208,10 +3192,6 @@ namespace ALO.DataAccessLayer.Migrations
                         .WithMany()
                         .HasForeignKey("MainProductCategoryId");
 
-                    b.HasOne("ALO.DomainClasses.Entity.Account.tbl_Users", "Owner")
-                        .WithMany("UserProducts")
-                        .HasForeignKey("OwnerId");
-
                     b.HasOne("ALO.DomainClasses.Entity.Product.tbl_ProductCategory", "ProductCategory")
                         .WithMany("Products")
                         .HasForeignKey("ProductCategoryId");
@@ -3222,15 +3202,11 @@ namespace ALO.DataAccessLayer.Migrations
 
                     b.Navigation("Brand");
 
-                    b.Navigation("City");
-
                     b.Navigation("File");
 
                     b.Navigation("Image");
 
                     b.Navigation("MainProductCategory");
-
-                    b.Navigation("Owner");
 
                     b.Navigation("ProductCategory");
 
@@ -3577,8 +3553,6 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Navigation("Orders");
 
                     b.Navigation("Profile");
-
-                    b.Navigation("UserProducts");
                 });
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.Basket.tbl_BasketOrder", b =>

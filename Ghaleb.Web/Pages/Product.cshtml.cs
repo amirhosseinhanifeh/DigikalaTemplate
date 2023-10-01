@@ -44,7 +44,7 @@ namespace Ghaleb.Web.Pages
                 Product = (await _product.GetProductDetails(Id.GetValueOrDefault(), User.UserId())).model;
                 if (Product != null)
                 {
-                    await _product.AddProductVisit(Product.Id, User.UserId().GetValueOrDefault());
+                    await _product.AddProductVisit(Product.Id, User.UserId());
                 }
             }
             else
@@ -56,10 +56,10 @@ namespace Ghaleb.Web.Pages
 
             if (!attrIds.Any())
             {
-                AttrIds = Product.Options.Where(x => x.Options.Any()).Select(h => h.Options.FirstOrDefault().Id).ToArray();
+                AttrIds = Product.Options.Where(x=>x.Options.Any()).Select(h => h.Options.FirstOrDefault().Id).ToArray();
             }
-
-            RelatedProducts = await _context.tbl_Products.Where(h => h.IsDelete == false && h.IsActive == true && h.Id != Id && (Product.Category != null ? h.ProductCategory.Id == Product.Category.Id : true) && (Product.Brand != null ? h.BrandId == Product.Brand.Id : true)).Select(y => new ProductListForHomeDto
+            
+            RelatedProducts = await _context.tbl_Products.Where(h => h.IsDelete == false && h.IsActive == true && h.Id != Id && (Product.Category!=null? h.ProductCategory.Id == Product.Category.Id:true) && (Product.Brand !=null? h.BrandId == Product.Brand.Id:true)).Select(y => new ProductListForHomeDto
             {
                 Id = y.Id,
                 Abstract = y.Abstract,
@@ -79,15 +79,14 @@ namespace Ghaleb.Web.Pages
         {
             if (User.Identity.IsAuthenticated)
             {
-                model.Id = 0;
-                model.UserId = User.UserId().GetValueOrDefault();
+                model.UserId = User.UserId();
                 model.IsActive = false;
                 _context.tbl_ProductComments.Add(model);
                 await _context.SaveChangesAsync();
             }
             return RedirectToPage("Product", new { id = model.ProductId });
         }
-        public IActionResult OnPostAddToBasket(int count)
+        public IActionResult OnPostAddToBasket()
         {
             var list = GetBasket();
             if (list == null)
@@ -97,7 +96,7 @@ namespace Ghaleb.Web.Pages
             var item = list.FirstOrDefault(x => x.Id == Id);
             if (item != null)
             {
-                item.Count = item.Count + count;
+                item.Count = item.Count + 1;
             }
             else
                 list.Add(new ResponseBasketDTO
@@ -108,47 +107,6 @@ namespace Ghaleb.Web.Pages
             var cookieOptions = new CookieOptions();
             Response.Cookies.Append("basket", JsonConvert.SerializeObject(list), cookieOptions);
             return RedirectToPage("/checkout/basket");
-        }
-        public IActionResult OnGetAddToBasket(long productId)
-        {
-            var list = GetBasket();
-            if (list == null)
-            {
-                list = new List<ResponseBasketDTO>();
-            }
-            var item = list.FirstOrDefault(x => x.Id == productId);
-            if (item != null)
-            {
-                item.Count = item.Count + 1;
-            }
-            else
-                list.Add(new ResponseBasketDTO
-                {
-                    Id = productId,
-                    Count = 1
-                });
-            var cookieOptions = new CookieOptions();
-            Response.Cookies.Append("basket", JsonConvert.SerializeObject(list), cookieOptions);
-            return RedirectToPage("/checkout/basket");
-        }
-
-        public async Task<IActionResult> OnGetAddToFavorite(long prId)
-        {
-            var product = await _context.tbl_Products.Include(x => x.Users).FirstOrDefaultAsync(x => x.Id == prId);
-            if (product.Users.Any(h => h.Id == User.UserId()))
-            {
-                var pu = product.Users.FirstOrDefault(h=>h.Id==User.UserId());
-                product.Users.Remove(pu);
-            }
-            else
-            {
-                var user =await _context.tbl_Users.FindAsync(User.UserId());
-                product.Users.Add(user);
-            }
-            await _context.SaveChangesAsync();
-
-            return Redirect("/Product/" + prId + "/" + product.Url);
-
         }
         public List<ResponseBasketDTO> GetBasket()
         {

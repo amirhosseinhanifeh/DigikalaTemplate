@@ -16,7 +16,7 @@ namespace ALO.DomainClasses.Entity.Order
         public PaymentMethod PaymentMethod { get; set; }
         public long? UserAddressId { get; set; }
 
-        public long DeliveryPriceId { get; set; }
+        public long? DeliveryPriceId { get; set; }
         public tbl_DeliveryPrice DeliveryPrice { get; set; }
 		public DateTime SentDate { get; set; }
 		public string SentTime { get; set; }

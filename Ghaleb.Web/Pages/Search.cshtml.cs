@@ -3,7 +3,6 @@ using ALO.DataAccessLayer.DataContext;
 using ALO.DomainClasses.Entity.Product;
 using ALO.Service.Interface.Product;
 using ALO.ViewModels.Product;
-using Ghaleb.Web.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +26,6 @@ namespace Ghaleb.Web.Pages
         public List<tbl_Brands> Brands { get; set; } = new List<tbl_Brands>();
         public List<tbl_ProductCustomFields> ProductCustomFields { get; set; } = new List<tbl_ProductCustomFields>();
         public tbl_SubProductCategory SubProductCategory { get; set; }
-        public tbl_MainProductCategory MainProductCategory { get; set; }
         public tbl_ProductTags ProductTag { get; set; }
 
 
@@ -45,7 +43,7 @@ namespace Ghaleb.Web.Pages
         [BindProperty(SupportsGet = true)]
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 16;
-        public Dictionary<string, string> Routes { get; set; }
+        public Dictionary<string, string> Routes{ get; set; }
 
         public async Task OnGetAsync(
             long? mainCategoryId = null,
@@ -61,12 +59,6 @@ namespace Ghaleb.Web.Pages
             {
                 Brand = await _context.tbl_Brands.Include(x => x.Logo).FirstOrDefaultAsync(x => x.Id == BrandId);
                 ProductCategories = await _context.tbl_ProductCategories.ToListAsync();
-            }
-            if (mainCategoryId != null)
-            {
-                ProductCategories = await _context.tbl_ProductCategories.Include(x=>x.SubProductCategories).Where(x => x.MainProuctCategoryId == mainCategoryId).ToListAsync();
-                MainProductCategory = await _context.tbl_MainProductCategory.Include(x=>x.Logo).FirstOrDefaultAsync(x=>x.Id==mainCategoryId);
-                Brands = await _context.tbl_Brands.Where(x => x.IsActive && x.IsDelete != true && x.MainProductCategoryId == mainCategoryId).ToListAsync();
             }
             if (categoryId != null)
             {
@@ -85,12 +77,12 @@ namespace Ghaleb.Web.Pages
             {
                 ProductTag = await _context.tbl_ProductTags.FindAsync(tagId);
             }
-            var res = _product.GetProductList(mainCategoryId, categoryId, subcategoryId, CategoryIds, BrandIds, tagId, OptionIds, q, order, PageNumber, PageSize, null,User.UserId(), IsExists).model;
+            var res = _product.GetProductList(mainCategoryId, categoryId, subcategoryId, CategoryIds, BrandIds, tagId, OptionIds, q, order, PageNumber, PageSize, null, isExists:IsExists).model;
             TotalCount = await res.CountAsync();
-            Routes = RouteBuiler(BrandId, categoryId, subcategoryId, BrandIds, CategoryIds, OptionIds, IsExists);
-            Products = await _product.GetProductList(mainCategoryId, categoryId, subcategoryId, CategoryIds, BrandIds, tagId, OptionIds, q, order, PageNumber, PageSize, null,User.UserId(), IsExists).model.Skip((PageNumber - 1) * PageSize).Take(PageSize).ToListAsync();
+            Routes = RouteBuiler(BrandId, categoryId,subcategoryId, BrandIds, CategoryIds, OptionIds, IsExists);
+            Products = await _product.GetProductList(mainCategoryId, categoryId, subcategoryId, CategoryIds, BrandIds, tagId, OptionIds, q, order, PageNumber, PageSize, null, isExists: IsExists).model.Skip((PageNumber - 1) * PageSize).Take(PageSize).ToListAsync();
         }
-        public Dictionary<string, string> RouteBuiler(long? brandId, long? categoryId, long? subcategoryId, long[] brandIds, long[] categoryIds, long[] optionIds, bool isExists)
+        public Dictionary<string, string> RouteBuiler(long? brandId,long? categoryId,long? subcategoryId, long[] brandIds, long[] categoryIds, long[] optionIds, bool isExists)
         {
             var routes = new Dictionary<string, string>();
             routes.Add("brandId", brandId.ToString());

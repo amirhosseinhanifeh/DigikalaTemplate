@@ -34,37 +34,37 @@ namespace Ghaleb.Web.Pages
         }
         public IEnumerable<CategoryListForHomeDTO> SubCategoryProducts { get; set; }
         public IEnumerable<CategoryListForHomeDTO> CategoryProducts { get; set; }
-        public List<ProductListForHomeDto> NewProducts { get; set; }
+        public List<ProductListForHomeDto> HasDiscounts { get; set; }
         public List<ProductListForHomeDto> YourVisits { get; set; }
         public List<ProductListForHomeDto> MoreSell { get; set; }
         public List<ALO.DomainClasses.Entity.Content.tbl_Blocks> Blocks { get; set; }
         public GetHomePageSeoDTO Seo { get; set; }
         public async Task OnGetAsync()
         {
-            //SubCategoryProducts = (await _product.GetHomeProductsByCategoryList()).model;
-            //CategoryProducts = (await _context.GetAllAsync<tbl_ProductCategory>(x => x.ShowInHome == true, new string[] { "Products", "Products.Image", "Products.ProductPriceHistories" }).ToListAsync())
-            //        .Select(x => new CategoryListForHomeDTO
-            //        {
-            //            Title = x.Title,
-            //            Id = x.Id,
-            //            Products = x.Products.Where(x => x.IsActive == true && x.IsDelete == false).OrderByDescending(x => x.Id).Take(10).Select(y => new ProductListForHomeDto
-            //            {
-            //                Id = y.Id,
-            //                Abstract = y.Abstract,
-            //                Discount = y.GetDiscountPrice() != null ? y.GetDiscountPrice().Value.ToString("n0").toPersianNumber() : null,
-            //                Cost = y.GetLastPrice().ToString("n0").toPersianNumber(),
-            //                Image = y.Image.BindImage(_configuration),
-            //                IsSpecial = y.IsSpecial,
-            //                Title = y.Title,
-            //                Url = y.Url,
-            //                Call = y.GetLastPrice() == 0
+            SubCategoryProducts = (await _product.GetHomeProductsByCategoryList()).model;
+            CategoryProducts = (await _context.GetAllAsync<tbl_ProductCategory>(x => x.ShowInHome == true, new string[] { "Products", "Products.Image", "Products.ProductPriceHistories" }).OrderByDescending(x => x.Id).ToListAsync())
+                    .Select(x => new CategoryListForHomeDTO
+                    {
+                        Title = x.Title,
+                        Id = x.Id,
+                        Products = x.Products.Where(x => x.IsActive == true && x.IsDelete == false).OrderByDescending(x => x.Id).Take(10).Select(y => new ProductListForHomeDto
+                        {
+                            Id = y.Id,
+                            Abstract = y.Abstract,
+                            Discount = y.GetDiscountPrice() != null ? y.GetDiscountPrice().Value.ToString("n0").toPersianNumber() : null,
+                            Cost = y.GetLastPrice().ToString("n0").toPersianNumber(),
+                            Image = y.Image.BindImage(_configuration),
+                            IsSpecial = y.IsSpecial,
+                            Title = y.Title,
+                            Url = y.Url,
+                            Call = y.GetLastPrice() == 0
 
-            //            }).ToList(),
+                        }).ToList(),
 
-            //            Url = x.Url
+                        Url = x.Url
 
-            //        }).ToList(); ;
-            NewProducts = await _context.tbl_Products.Include(x=>x.ProductPriceHistories).Include(x=>x.Ratings).Where(h => h.IsDelete == false && h.IsActive == true).OrderByDescending(x=>x.Id).Take(10).Select(h => new ProductListForHomeDto
+                    }).ToList(); ;
+            HasDiscounts = await _context.tbl_Products.Where(h => h.IsDelete == false && h.IsActive == true && h.ProductPriceHistories.Any(g => g.DiscountPrice != null)).Select(h => new ProductListForHomeDto
             {
                 Id = h.Id,
                 Cost = h.GetLastPrice().ToString("n0").toPersianNumber(),
@@ -72,35 +72,34 @@ namespace Ghaleb.Web.Pages
                 Image = h.Image.BindImage(_configuration),
                 Title = h.Title,
                 Percent = h.CalculatePercent(),
-                Url = h.Url,
-                Ratings=h.Ratings.ToList()
+                Url = h.Url
             }).ToListAsync();
 
-            //MoreSell = await _context.tbl_ProductPriceHistory.Where(h => h.IsDelete == false && h.IsActive == true && h.Product.IsActive && h.OrderDetails.Any(g => g.Order.OrderState == ALO.DomainClasses.Entity.Order.OrderState.PAYED)).OrderByDescending(x => x.OrderDetails.Count()).Select(h => new ProductListForHomeDto
-            //{
-            //    Id = h.Product.Id,
-            //    Cost = h.Product.GetLastPrice().ToString("n0").toPersianNumber(),
-            //    Discount = h.Product.GetDiscountPrice() != null ? h.Product.GetDiscountPrice().Value.ToString("n0").toPersianNumber() : null,
-            //    Image = h.Product.Image.BindImage(_configuration),
-            //    Title = h.Product.Title,
-            //    Percent = h.Product.CalculatePercent(),
-            //    Url = h.Product.Url
-            //}).Take(10).ToListAsync();
-            //if (User.Identity.IsAuthenticated)
-            //{
-            //    YourVisits = await _context.tbl_Products.Where(h => h.IsDelete == false && h.IsActive == true && h.ProductVisits.Any(g => g.UserId == User.UserId())).Select(y => new ProductListForHomeDto
-            //    {
-            //        Id = y.Id,
-            //        Abstract = y.Abstract,
-            //        Discount = y.GetDiscountPrice() != null ? y.GetDiscountPrice().Value.ToString("n0").toPersianNumber() : null,
-            //        Cost = y.GetLastPrice().ToString("n0").toPersianNumber(),
-            //        Image = y.Image.BindImage(_configuration),
-            //        IsSpecial = y.IsSpecial,
-            //        Title = y.Title,
-            //        Url = y.Url,
-            //        Call = y.GetLastPrice() == 0
-            //    }).ToListAsync();
-            //}
+            MoreSell = await _context.tbl_ProductPriceHistory.Where(h => h.IsDelete == false && h.IsActive == true && h.Product.IsActive).OrderByDescending(x => x.OrderDetails.Count()).Select(h => new ProductListForHomeDto
+            {
+                Id = h.Product.Id,
+                Cost = h.Product.GetLastPrice().ToString("n0").toPersianNumber(),
+                Discount = h.Product.GetDiscountPrice() != null ? h.Product.GetDiscountPrice().Value.ToString("n0").toPersianNumber() : null,
+                Image = h.Product.Image.BindImage(_configuration),
+                Title = h.Product.Title,
+                Percent = h.Product.CalculatePercent(),
+                Url = h.Product.Url
+            }).Take(10).ToListAsync();
+            if (User.Identity.IsAuthenticated)
+            {
+                YourVisits = await _context.tbl_Products.Where(h => h.IsDelete == false && h.IsActive == true && h.ProductVisits.Any(g => g.UserId == User.UserId())).Select(y => new ProductListForHomeDto
+                {
+                    Id = y.Id,
+                    Abstract = y.Abstract,
+                    Discount = y.GetDiscountPrice() != null ? y.GetDiscountPrice().Value.ToString("n0").toPersianNumber() : null,
+                    Cost = y.GetLastPrice().ToString("n0").toPersianNumber(),
+                    Image = y.Image.BindImage(_configuration),
+                    IsSpecial = y.IsSpecial,
+                    Title = y.Title,
+                    Url = y.Url,
+                    Call = y.GetLastPrice() == 0
+                }).ToListAsync();
+            }
 
             Blocks = await _context.tbl_Blocks.AsNoTracking().Include(x => x.Image).Where(h => h.IsActive && h.IsDelete != true).OrderBy(x => x.Id).ToListAsync();
 
