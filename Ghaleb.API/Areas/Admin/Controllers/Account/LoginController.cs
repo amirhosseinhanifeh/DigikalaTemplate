@@ -3,6 +3,7 @@ using ALO.Service.Interface.Account;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -66,6 +67,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Account
                         //RedirectUri = <string>
                         // The full path or absolute URI to be used as an http 
                         // redirect response value.
+                        ExpiresUtc=DateTimeOffset.UtcNow.AddDays(30),
                         IsPersistent = true,
                         RedirectUri = ReturnUrl,
                     };

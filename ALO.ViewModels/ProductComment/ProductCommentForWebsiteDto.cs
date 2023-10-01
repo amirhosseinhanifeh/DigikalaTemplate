@@ -12,5 +12,7 @@ namespace ALO.ViewModels.ProductComment
         public string Body { get; set; }
         public string Date { get; set; }
         public string Response { get; set; }
+
+        public List<ProductCommentForWebsiteDto> Replies { get; set; }
     }
 }

@@ -17,9 +17,9 @@ namespace Ghaleb.Web.Pages.ViewComponents.TopCategory
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var result = await _productCategory.GetCategoryForSiteHeader();
+            var result = await _context.tbl_MainProductCategory.Include(x=>x.Logo).ToListAsync();
 
-            return View("TopCategory",result.model);
+            return View(result);
         }
     }
 }

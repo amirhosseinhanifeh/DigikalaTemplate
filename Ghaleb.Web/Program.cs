@@ -37,12 +37,13 @@ using Microsoft.AspNetCore.HttpOverrides;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages().AddRazorPagesOptions(options =>
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation().AddRazorPagesOptions(options =>
 {
-    options.Conventions.AddPageRoute("/Search", "Search/Category/{subCategoryId?}/{subCategoryUrl?}");
+    options.Conventions.AddPageRoute("/Search", "Search/SubCategory/{subCategoryId?}/{subCategoryUrl?}");
     options.Conventions.AddPageRoute("/Search", "Search/Brand/{brandId?}/{brandName?}");
     options.Conventions.AddPageRoute("/Search", "Search/Tag/{tagId}/{tagName}");
-    options.Conventions.AddPageRoute("/Search", "Search/{categoryId?}/{categoryUrl?}/{subCategoryId?}/{subCategoryUrl?}");
+    options.Conventions.AddPageRoute("/Search", "Search/Category/{categoryId?}/{categoryUrl?}/SubCategory/{subCategoryId?}/{subCategoryUrl?}");
+    options.Conventions.AddPageRoute("/Search", "Search/Maincategory/{maincategoryId?}/{maincategoryUrl?}");
 }); ;
 builder.Services.AddDbContext<ServiceContext>
     (options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

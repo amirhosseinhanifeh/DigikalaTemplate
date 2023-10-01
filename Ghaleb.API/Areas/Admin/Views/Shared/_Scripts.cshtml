@@ -4,6 +4,43 @@
 @{
 }
 <script src="~/AdminTemplate/assets/plugins/jquery/jquery.min.js"></script>
+<script src="~/lib/dropzone/min/dropzone.min.js"></script>
+<script type="text/javascript">
+
+        Dropzone.autoDiscover = false;
+    $(document).ready(function () {
+        //Simple Dropzonejs
+        $(".uploader").dropzone({
+            init:function(){
+                myDropzone=this;
+                var file = {
+                    name: "slam",
+                    size: 1000,
+                    status: Dropzone.ADDED,
+                    accepted: true
+                };
+                myDropzone.emit("addedfile", file);
+                myDropzone.emit("thumbnail", file, "salam.png");
+                myDropzone.emit("complete", file);
+                myDropzone.files.push(file);
+            },
+            url: "/Admin/Upload/UploadImage",
+            addRemoveLinks: true,
+            maxFiles: 1,
+            maxfilesexceeded: function (file) {
+                this.removeAllFiles();
+                this.addFile(file);
+            },
+            success: function (file,response) {
+                console.log(file);
+                console.log(response)
+            },
+            error: function (file, response) {
+                file.previewElement.classList.add("dz-error");
+            }
+        });
+    });
+</script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- Bootstrap js -->
 <script src="~/AdminTemplate/assets/plugins/bootstrap/js/popper.min.js"></script>
@@ -33,8 +70,6 @@
 <script src="~/AdminTemplate/assets/plugins/rating/jquery.barrating.js"></script>
 
 <!-- Sidebar js -->
-
-
 <!-- Right-sidebar js -->
 <script src="~/AdminTemplate/assets/plugins/sidebar/sidebar-rtl.js"></script>
 <script src="~/AdminTemplate/assets/plugins/sidebar/sidebar-custom.js"></script>
@@ -56,4 +91,5 @@
 
 <!-- Switcher js -->
 <script src="~/AdminTemplate/assets/switcher/js/switcher-rtl.js"></script>
-<script src="~/AdminTemplate/assets/ui-helpers.js"></script><script src="~/AdminTemplate/assets/plugins/side-menu/sidemenu.js"></script>
+<script src="~/AdminTemplate/assets/ui-helpers.js"></script>
+<script src="~/AdminTemplate/assets/plugins/side-menu/sidemenu.js"></script>

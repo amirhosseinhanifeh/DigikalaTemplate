@@ -12,88 +12,180 @@
             DoIndex = true
         };
     }
+    Layout = null;
 }
 
-@await Component.InvokeAsync("SlideShow")
+<!doctype html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <partial name="_SeoPartial" model="@ViewData["Seo"]" />
 
-
-<div class="col-12 col-lg-11 mx-auto">
-
-    <partial name="~/Components/Product/ProductRow/Row.cshtml" model="Model.HasDiscounts" view-data='@new ViewDataDictionary(ViewData) { {"HeaderTitle", "دارای تخفیف " }}' />
-    @foreach (var item in Model.SubCategoryProducts.Where(x => x.Products.Any()))
-    {
-        <partial name="~/Components/Product/ProductRow/Row.cshtml" model="item.Products" view-data='@new ViewDataDictionary(ViewData) {
-{"HeaderTitle", "تازه های "+item.Title },
-{"SubCategoryId",item.Id},
-{"SubCategoryUrl",item.Url}
-}' />
-    }
-    @foreach (var item in Model.CategoryProducts.Where(x => x.Products.Any()))
-    {
-        <partial name="~/Components/Product/ProductRow/Row.cshtml" model="item.Products" view-data='@new ViewDataDictionary(ViewData) {
-{"HeaderTitle", "جدید ترین "+item.Title },
-{"SubCategoryId",item.Id},
-{"SubCategoryUrl",item.Url}
-}' />
-    }
-
-@*    <div class="row mt-5 mb-5">
-        @{
-            var whyus = Model.Blocks.Where(x => x.RouteName == "why-us").FirstOrDefault();
-        }
-        <div class="col-12 col-lg-6">
-            <h4 style="font-weight: 900; text-align: right;">@whyus?.Name</h4>
-            <div>
-                @Html.Raw(whyus?.Description)
-            </div>
+    @ViewData["Robots"]
+    @await Component.InvokeAsync("Tools" ,new {type="meta"})
+    <!--css links-->
+    @await Html.PartialAsync("_CssStyles")
+</head>
+<body>
+    <header>
+        <div class="menu-button">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
         </div>
-        @{
-            var repair = Model.Blocks.Where(x => x.RouteName == "/repair").FirstOrDefault();
-        }
-        @if (repair != null)
-        {
+        <div class="header-logo">
+            <a href="index.html">
+                <img src="assets/images/header/logo.png" alt="">
+            </a>
+        </div>
 
-            <div class="col-12 col-lg-6">
-                <a href="@Url.Content(repair?.Link)">
-                    <img src="@repair?.Image.BindImage(Configuration)" style="border-radius:10px;width:644px" class="img-fluid" alt="@repair?.Name">
+        @await Component.InvokeAsync("TopMenu" ,new { routeName="top-menu"})
+
+        <div class="user-login icon-box">
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <a asp-page="account/login">
+                    <i class="fa fa-user"></i>
                 </a>
-            </div>
-        }
+            }
+            else
+            {
+                <a asp-page="profile/dashboard">
+                    <i class="fa fa-user"></i>
+                    @User.Identity.Name
+                </a>
+            }
+        </div>
+    </header>
 
-    </div>*@
+    @await Component.InvokeAsync("SlideShow")
 
-    <partial name="~/Components/Product/ProductRow/Row.cshtml" model="Model.MoreSell" view-data='@new ViewDataDictionary(ViewData) { {"HeaderTitle", "پرفروش ترین ها" }}' />
+    @await Component.InvokeAsync("LinkManagement",new {viewName="_TopBanner",routeName="top-banner"})
 
-    @if (User.Identity.IsAuthenticated)
-    {
-        <partial name="~/Components/Product/ProductRow/Row.cshtml" model="Model.YourVisits" view-data='@new ViewDataDictionary(ViewData) { {"HeaderTitle", "براساس بازید های شما " }}' />
+    @await Component.InvokeAsync("TopCategory")
+
+    @{
+        var video_section = Model.Blocks.FirstOrDefault(x => x.RouteName == "video-section");
     }
 
-@*    @await Component.InvokeAsync("Brand")
+    @if (video_section != null)
+    {
 
-    @await Component.InvokeAsync("Blog")*@
-
-
-</div>
-@*    <div class="col-12" style="background: #3d9ff3;
-    color: #fff;
-    font-size: 16px;
-    text-shadow: 1px 1px 14px #343434;
-    font-weight: bolder;">
-        <div class="container">
-            <div class="row" style="min-height: 150px; display: flex;align-items: center;">
-                <div class="col-12 col-xl-6">
-                    <i class="fa-light fa-location-dot"></i> {{data?.contactus?.address}}
-                    <br>
-                    <br>
-                    شنبه - چهارشنبه: 8 الی 18 / پنجشنبه: 8 الی 14
+        <section class="video-section">
+            <video class="main-video" muted autoplay>
+                <source src="@video_section.Image.BindVideo(Configuration)">
+            </video>
+            <div class="content-box">
+                <div class="container-fluid">
+                    <h1>
+                        @video_section.Name
+                    </h1>
+                    <p>
+                        @Html.Raw(video_section.Description)
+                    </p>
+                    <a href="@Url.Content(video_section.Link)">
+                        مشاهده
+                    </a>
                 </div>
-                <div class="col-12 col-xl-6">
-                    تلفن تماس : {{data?.contactus?.phone}}
-                    <br>
-                    <br>
+            </div>
+        </section>
+    }
 
+    <partial name="~/Components/Product/ProductRow/Row.cshtml" model="Model.NewProducts" view-data='@new ViewDataDictionary(ViewData) { {"HeaderTitle", "محصولات ما"} }' />
+
+    <section class="our-products">
+        <div class="cat-banner">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 col-lg-4">
+                        <div class="text-place">
+                            <div class="btn-label">
+                                لورم ایپسوم
+                            </div>
+                            <h1>
+                                فروش
+                            </h1>
+                            <p>
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان
+                            </p>
+                            <a href="#">
+                                مشاهده بیشتر
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-4 col-md-6">
+                        <div class="center-sec">
+                            <div class="banner-item">
+                                <div class="img-place">
+                                    <a href="#">
+                                        <img src="assets/images/Products/banner/2.jpg" alt="">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="banner-item">
+                                <div class="img-place">
+                                    <a href="#">
+                                        <img src="assets/images/Products/banner/3.jpg" alt="">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-4 col-md-6">
+                        <div class="sec3">
+                            <div class="banner-item">
+                                <div class="img-place">
+                                    <a href="#">
+                                        <img src="assets/images/Products/banner/1.jpg" alt="">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>*@
+
+    </section>
+    @await Component.InvokeAsync("LinkManagement",new {viewName="_TopBlog",routeName="top-blog"})
+    @{
+        var offer = Model.Blocks.FirstOrDefault(x => x.RouteName == "offer-section");
+    }
+
+    @if (offer != null)
+    {
+        <section class="offer">
+            <div class="background-img" style="background-image:url(@offer.Image.BindImage(Configuration))">
+                <div class="offer-detail">
+                    <div class="text-head">
+                        @offer.Name
+                    </div>
+                    <p>
+                        @Html.Raw(offer.Description)
+                    </p>
+                    <a href="@Url.Content(offer.Link)">
+                        همین الان سفارش دهید
+                    </a>
+                </div>
+            </div>
+        </section>
+    }
+    @await Component.InvokeAsync("Blog")
+
+
+    @await Component.InvokeAsync("Brand")
+
+    @await Component.InvokeAsync("Footer")
+
+    @await Component.InvokeAsync("Tools" ,new {type="script"})
+    <!--javascript files-->
+    <script src="~/assets/js/jquery.min.js"></script>
+    <script src="~/assets/js/swiper-bundle.min.js"></script>
+    <!--my js-->
+    <script src="~/assets/js/index.js"></script>
+
+</body>
+</html>

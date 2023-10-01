@@ -47,8 +47,22 @@
                 <div class="form-group col-6">
                     <label asp-for="ImageId"></label>
                     <image-upload Id="img" For="ImageId"></image-upload>
-                </div>
 
+                </div>
+                <div class="form-group col-6">
+                    <label asp-for="ImageId"></label>
+                    <image-upload Id="img" For="ImageId"></image-upload>
+
+                </div>
+@*                <div class="col-md-">
+                    <div id="dropzone">
+                        <div action="/Admin/Upload/UploadImage" class="dropzone needsclick dz-clickable" id="uploader">
+                            <div class="dz-message needsclick">
+                                عکس را بکشید<br>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
                 <div class="form-group col-6">
                     <label asp-for="Abstract"></label>
                     <textarea rows="8" class="form-control" type="text" asp-for="Abstract"></textarea>
@@ -87,6 +101,7 @@
     </div>
 
 </form>
+
 @section Scripts{
     <script src="https://cdn.ckeditor.com/4.16.1/full-all/ckeditor.js"></script>
     <script>
@@ -94,32 +109,32 @@
     </script>
     <script>
 
-    $("#btnSave").click(function (e) {
+        $("#btnSave").click(function (e) {
 
-        e.preventDefault();
-        for (instance in CKEDITOR.instances) {
-            CKEDITOR.instances[instance].updateElement();
-        }
-        $.ajax({
-            url: "@Url.Action("Create")",
-            method: "POST",
-            data: $("#frmValues").serialize(),
-
-        }).done(function (result) {
-            if (result.status == 0) {
-                Swal.fire(
-                    'تبریک !',
-                    result.message,
-                    'success'
-                )
-                $('#exampleModal').modal('hide');
+            e.preventDefault();
+            for (instance in CKEDITOR.instances) {
+                CKEDITOR.instances[instance].updateElement();
             }
+            $.ajax({
+                url: "@Url.Action("Create")",
+                method: "POST",
+                data: $("#frmValues").serialize(),
 
-        }).fail(function () {
+            }).done(function (result) {
+                if (result.status == 0) {
+                    Swal.fire(
+                        'تبریک !',
+                        result.message,
+                        'success'
+                    )
+                    $('#exampleModal').modal('hide');
+                }
+
+            }).fail(function () {
 
 
+            });
         });
-    });
 
     </script>
     <script>

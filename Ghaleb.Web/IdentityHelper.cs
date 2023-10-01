@@ -7,9 +7,15 @@ namespace Ghaleb.Web.Helpers
     public static class IdentityHelper
     {
 
-        public static long UserId(this ClaimsPrincipal identity)
+        public static long? UserId(this ClaimsPrincipal identity)
         {
-            return identity.FindFirst("Id").Value.Tolong().Value;
+            var s = identity.FindFirst("Id");
+            if (s != null)
+            {
+                return s.Value.Tolong();
+
+            }
+            return null;
         }
     }
 }

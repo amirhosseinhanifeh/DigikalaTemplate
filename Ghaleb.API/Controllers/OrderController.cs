@@ -1,4 +1,5 @@
-﻿using ALO.Common.Utilities.ConvertTo;
+﻿using ALO.Common.Extentions;
+using ALO.Common.Utilities.ConvertTo;
 using ALO.DataAccessLayer.DataContext;
 using Ghaleb.API.Helpers;
 using Microsoft.AspNetCore.Http;
@@ -24,6 +25,7 @@ namespace Ghaleb.API.Controllers
         {
             var userId = User.UserId();
             return Ok((await _context.tbl_Orders
+                .Include(x=>x.OrderStateHistories)
                 .Include(x=>x.OrderDetails)
                 .ThenInclude(x=>x.ProductPriceHistory)
                 .Include(x=>x.UserAddress)
@@ -35,7 +37,7 @@ namespace Ghaleb.API.Controllers
                 {
                     Id=h.Id,
                     OrderCode=h.OrderCode,
-                    OrderState=h.OrderState,
+                    OrderState=h.OrderStateHistories.OrderBy(x=>x.Id).LastOrDefault().OrderState.GetDisplay(),
                     Date =h.CreatedDate,
                     UserAddress=new
                     {

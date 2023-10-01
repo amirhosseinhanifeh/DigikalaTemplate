@@ -20,6 +20,8 @@
                             <th>نام خانوادگی </th>
                             <th>موبایل </th>
                             <th>رمز عبور </th>
+                            <th>آخرین لاگین </th>
+                            <th>مرورگر </th>
                             <th>تعداد سفارش </th>
                             <th> </th>
 
@@ -34,10 +36,15 @@
                                 <td>@item.Profile.LastName</td>
                                 <td>@item.Mobile</td>
                                 <td>@item.Password</td>
-                                <td>@item.Orders.Count(h=>h.OrderState==ALO.DomainClasses.Entity.Order.OrderState.PAYED)</td>
+                                <td>@item.LastLogin</td>
+                                <td>@item.BrowserName</td>
+                                <td>@item.Orders.Count(h=>h.OrderStateHistories.Any(f=>f.OrderState==ALO.DomainClasses.Entity.Order.OrderState.PAYED))</td>
                                 <td>
-                                    <a class="btn btn-danger" asp-route-id="@item.Id" asp-action="Addresses">آدرس ها</a>
+                                    <a class="btn btn-primary" asp-route-userId="@item.Id" asp-controller="Order" asp-action="Index">سفارشات</a>
+                                    <a class="btn btn-dark" asp-route-id="@item.Id" asp-action="Menu">دسترسی ها</a>
+                                    <a class="btn btn-warning" asp-route-id="@item.Id" asp-action="Addresses">آدرس ها</a>
                                     <a class="btn btn-success" asp-route-id="@item.Id" asp-action="SendSms">ارسال پیامک</a>
+                                    <a class="btn btn-danger" asp-route-id="@item.Id" asp-action="Delete">حذف</a>
                                 </td>
 
                             </tr>

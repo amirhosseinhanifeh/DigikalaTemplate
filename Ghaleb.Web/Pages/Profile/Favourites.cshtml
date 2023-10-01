@@ -1,0 +1,50 @@
+﻿@page
+@model Ghaleb.Web.Pages.Profile.FavouritesModel
+@{
+    Layout = "~/Pages/Profile/Shared/_Layout.cshtml";
+}
+<div class="profile_status">
+	<div class="heade-status mb-4">
+		<h5>علاقه مندی ها</h5>
+	</div>
+	<div class="row">
+		@foreach (var item in Model.UserFavourite)
+		{
+
+		<div class="col-lg-4 col-md-6 col-sm-6 mb-4">
+			<div class="product-block">
+				<span class="onsale">-29%</span>
+				<a href="../product.html" class="img-block">
+					<img src="@item.Image.BindImage(Configuration)" class="img-fluid bg-img1" width="100%">
+						<img src="@item.Image.BindImage(Configuration)" class="img-fluid bg-img2" width="100%">
+				</a>
+				<div class="product-button-hover">
+						<a asp-page="Favourites" asp-page-handler="AddToFavorite" asp-route-prId="@item.Id" class="btn btn-heart"><i class="fa fa-heart"></i> </a>
+						<a asp-page="Product" asp-route-id="@item.Id" asp-route-Url="@item.Url" class="btn btn-eye"><i class="fa fa-eye"></i> </a>
+				</div>
+				<div class="product-detail">
+					<div class="star-rating">
+						<i class="fa fa-star"></i>
+						<i class="fa fa-star"></i>
+						<i class="fa fa-star"></i>
+						<i class="fa fa-star"></i>
+					</div>
+					<a href="/Product/@item.Id/@item.Url">
+						<h3>
+							@item.Title
+						</h3>
+					</a>
+					<div class="d-flex flex-wrap price-offer justify-content-center">
+						<!-- <div class="pre-price">£<span>130,000</span></div>
+						<div class="new-price">£<span>100,000</span></div> -->
+						<!-- <div class="current-price">£<span>100,000</span></div> -->
+						<div class="unavailable">unavailable</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		}
+	</div>
+</div>

@@ -15,6 +15,7 @@ namespace ALO.DomainClasses.Entity.Blog
         public string Abstract { get; set; }
         public int Visit { get; set; }
         public bool ShowInHome { get; set; } = false;
+        public bool CanComment { get; set; } = true;
 
         public long? ImageId { get; set; }
 

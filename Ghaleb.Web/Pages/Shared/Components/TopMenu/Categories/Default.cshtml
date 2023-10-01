@@ -1,0 +1,19 @@
+﻿@model IEnumerable<ALO.DomainClasses.Entity.Product.tbl_MainProductCategory>
+@{
+}
+
+<a href="#!">
+    محصولات
+</a>
+<i class="fa fa-plus"></i>
+<i class="fa fa-minus"></i>
+<div class="sub-menu">
+
+    @foreach (var item in Model)
+    {
+        <a href="/Search/Maincategory/@item.Id/@item.Url">
+            @item.Name
+        </a>
+    }
+
+</div>

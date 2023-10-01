@@ -28,31 +28,53 @@ namespace AyandeNama.Web.Helpers.TagHelpers
         public string Id { get; set; }
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            output.TagName = "input";
-            output.Attributes.SetAttribute("type", "file");
-            output.Attributes.SetAttribute("data-Id", For.Name);
-            output.Attributes.SetAttribute("file-type", "image");
-            output.Attributes.SetAttribute("class", "form-control");
-            if (Multiple == true)
-            {
-                output.Attributes.SetAttribute("multiple", "multiple");
+            output.Content.AppendHtml($"<div>\r\n" +
+                $"<div action=\"/Admin/Upload/UploadImage\" class=\"dropzone needsclick dz-clickable uploader\" >\r\n" +
+                $"<div class=\"dz-message needsclick\">\r\nعکس را بکشید<br>\r\n</div>\r\n</div>" +
+                $"\r\n" +
+                $"</div>");
 
-            }
-            output.TagMode = TagMode.SelfClosing;
 
             var sb = new StringBuilder();
             sb.AppendFormat("<input hidden name='{0}' value='{1}' />", For.Name.ToString(), For.Model);
-            if (For.Model != null)
-            {
-                var url = _context.GetAsync<tbl_Image>(x => x.Id == (long)For.Model).Result;
-                if (url != null)
-                {
-                    sb.AppendFormat("<img src='{0}' style='width:100px;height:100px' />", url.BindImage(_configuration));
-                }
+            //if (For.Model != null)
+            //{
+            //    var url = _context.GetAsync<tbl_Image>(x => x.Id == (long)For.Model).Result;
+            //    if (url != null)
+            //    {
+            //        sb.AppendFormat("<img src='{0}' style='width:100px;height:100px' />", url.BindImage(_configuration));
+            //    }
 
-            }
+            //}
             output.PostElement.SetHtmlContent(sb.ToString());
         }
+        //public override void Process(TagHelperContext context, TagHelperOutput output)
+        //{
+        //    output.TagName = "input";
+        //    output.Attributes.SetAttribute("type", "file");
+        //    output.Attributes.SetAttribute("data-Id", For.Name);
+        //    output.Attributes.SetAttribute("file-type", "image");
+        //    output.Attributes.SetAttribute("class", "form-control");
+        //    if (Multiple == true)
+        //    {
+        //        output.Attributes.SetAttribute("multiple", "multiple");
+
+        //    }
+        //    output.TagMode = TagMode.SelfClosing;
+
+        //    var sb = new StringBuilder();
+        //    sb.AppendFormat("<input hidden name='{0}' value='{1}' />", For.Name.ToString(), For.Model);
+        //    if (For.Model != null)
+        //    {
+        //        var url = _context.GetAsync<tbl_Image>(x => x.Id == (long)For.Model).Result;
+        //        if (url != null)
+        //        {
+        //            sb.AppendFormat("<img src='{0}' style='width:100px;height:100px' />", url.BindImage(_configuration));
+        //        }
+
+        //    }
+        //    output.PostElement.SetHtmlContent(sb.ToString());
+        //}
     }
     [HtmlTargetElement("multiple-image-upload")]
     public class MultipleImageUploaderTagHelper : TagHelper

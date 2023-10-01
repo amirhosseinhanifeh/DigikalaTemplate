@@ -24,6 +24,9 @@ namespace ALO.ViewModels.Product
         public List<ProductCustomFields> Values { get; set; }
         public bool Call { get; set; }
         public int? Percent { get; set; }
+        public long? LastPriceId { get; set; }
+        public bool IsFavourite { get; set; }
+        public List<tbl_ProductRating> Ratings { get; set; }
     }
 
 }

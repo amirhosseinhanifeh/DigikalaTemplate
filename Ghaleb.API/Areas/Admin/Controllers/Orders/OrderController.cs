@@ -20,17 +20,17 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Orders
         {
             _context = context;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(long? userId)
         {
-            return View(await _context.GetAllAsync<tbl_Order>().Include(x=>x.OrderDetails).ThenInclude(x=>x.ProductPriceHistory).ToListAsync());
+            return View(await _context.GetAllAsync<tbl_Order>().Include(x=>x.OrderStateHistories).Include(x => x.OrderDetails).ThenInclude(x => x.ProductPriceHistory).Where(x => userId != null ? x.UserId == userId : true).ToListAsync());
         }
         public async Task<IActionResult> Details(long? Id)
         {
-            return View(await _context.GetAllAsync<tbl_OrderDetails>(x => x.OrderId == Id).Include(x=>x.ProductPriceHistory).ThenInclude(x=>x.Product).ToListAsync());
+            return View(await _context.GetAllAsync<tbl_OrderDetails>(x => x.OrderId == Id).Include(x => x.ProductPriceHistory).ThenInclude(x => x.Product).ToListAsync());
         }
         public async Task<IActionResult> UserDetail(long addressId)
         {
-            return View(await _context.tbl_UserAddresses.Include(x=>x.User).ThenInclude(x=>x.Profile).FirstOrDefaultAsync(x=>x.Id==addressId));
+            return View(await _context.tbl_UserAddresses.Include(x => x.User).ThenInclude(x => x.Profile).FirstOrDefaultAsync(x => x.Id == addressId));
         }
     }
 }

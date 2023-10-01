@@ -3,64 +3,111 @@
 @{
     int i = 0;
 }
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <ul class="progressbar">
+                <li class="active">
+                    سبد خرید
+                </li>
+                <li>
+                    اطلاعات
+                </li>
+                <li>
+                    پرداخت
+                </li>
+            </ul>
+        </div>
+        <div class="col-lg-8">
+            <div class="coupen-box">
+                <div class="coupon d-block d-sm-flex">
+                    <label class="coupon_code mb-0" for="PromotionCode">آیا کد تخفیف دارید؟ :</label>
+                    <input id="PromotionCode" value="" type="text" class="form-control"
+                           placeholder="ورود کد">
+                    <button class="btn">
+                        کد تخفیف را اعمال کنید
+                    </button>
+                </div>
+            </div>
+            <form method="post" class="cart-product-list">
+                @if (Model.Order.Items.Any())
+                {
+                    <ul>
+                        @foreach (var item in Model.Order.Items)
+                        {
 
-<div class="row bg-white p-5 table-responsive">
-    @if (Model.List.Any())
-    {
-        <form id="basketForm" method="post">
-            <table class="table table-striped" *ngIf="data.length>0">
+                            <li class="list_item">
+                                <a asp-page-handler="Delete" asp-route-id="@item.Id"><i class="fa fa-trash"></i></a>
+                                <img src="@item.Image" alt="" class="img-fluid" style="width:150px">
+                                <div class="w-100">
+                                    <h5>
+                                        <a href="#" class="">
+                                            @item.Name
+                                        </a>
+                                    </h5>
+                                    <span>ویژگی محصول</span>
+                                    <div class="d-flex flex-wrap align-items-center">
+                                        <div class="d-flex pt-3">
+                                            <div class="product-quantity mr-2">
+                                                <input hidden name="model[@i].Id" value="@item.Id">
+                                                <a class="add btn" onclick="add('@item.Id')"><i class="fa fa-plus"></i></a>
+                                                <input type="number" data-id="@item.Id" min="1" value="@item.Count" name="model[@i].Count" onchange="oncountChange()">
+                                                <a class="sub btn" onclick="sub('@item.Id')" data-id="@item.Id"><i class="fa fa-minus"></i></a>
+                                            </div>
+                                        </div>
+                                        <div class="mr-auto ml-2 pt-3 d-flex align-items-center flex-wrap price-offer">
+                                            <!-- <div class="pre-price">£<span>130,000</span></div>
+                                            <div class="new-price">£<span>100,000</span></div> -->
+                                            <div class="current-price"><span>@item.Price.ToString("n0")</span>تومان</div>
+                                        </div>
 
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>عکس محصول</th>
-                        <th>نام محصول</th>
-                        <th>قیمت واحد</th>
-                        <th>تعداد</th>
-                        <th>قیمت کل</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.List)
+                                    </div>
+                                </div>
+                            </li>
+
+                        }
+                    </ul>
+                    <button type="submit" hidden id="btnUpdateCount" asp-page-handler="UpdateCount">اعمال تغییرات</button>
+                }
+            </form>
+        </div>
+        <div class="col-lg-4">
+            <div class="cart_page_aside">
+                <div class="d-flex p-20">
+                    <div class="">قیمت کالاها :</div>
+                    <div class="ml-auto">@Model.Order.ProductPrices.ToString("n0") تومان</div>
+                </div>
+                @*				<div class="d-flex p-20">
+                <div class="">تخفیف کالا : </div>
+                <div class="ml-auto checkout_discount_price">20,000 £</div>
+                </div>*@
+
+
+                <div class="p-20">
+                    <img src="~/assets/img/Delivery.svg" alt="" width="30px">
+                    هزینه حمل و نقل :
+                    @if (Model.Order.DeliveryPrice != 0)
                     {
-
-                        <tr *ngFor="let item of data" style="vertical-align:middle ;">
-                            <td>
-                                1
-                            </td>
-                            <td>
-                                <img src="@item.Image" style="width:100px;height:100px ;">
-                            </td>
-                            <td>
-                                @item.Name
-                            </td>
-                            <td>
-                                @item.Price.ToString("n0").toPersianNumber() تومان
-                            </td>
-                            <td>
-                                <input hidden name="model[@i].Id" value="@item.Id">
-                                <input class="basket-input" value="@item.Count" name="model[@i].Count" onchange="oncountChange()">
-                            </td>
-                            <td>
-                                @item.TotalPrice.ToString("n0").toPersianNumber() تومان
-                            </td>
-                            <td><a asp-page-handler="Delete" asp-route-id="@item.Id"><i class="fa-regular fa-circle-xmark" style="font-size: 20px;"></i></a></td>
-                        </tr>
-                        i++;
+                        <span>@Model.Order.DeliveryPrice.ToString("n0") تومان</span>
                     }
-                </tbody>
-            </table>
-            <button type="submit" hidden id="btnUpdateCount" asp-page-handler="UpdateCount">اعمال تغییرات</button>
-        </form>
-        <form method="post" class="row d-flex justify-content-end mt-2" *ngIf="data.length>0">
-            <button class="btn btn-danger col-2" type="submit">مرحله بعد</button>
-        </form>
-    }
-    else
-    {
-        <h4 *ngIf="data?.length==0">سبد خرید شما خالی می باشد</h4>
-    }
+                    else
+                    {
+                        <span>رایگان</span>
+                    }
+                </div>
+                <div class="d-flex p-20">
+                    <div class="">مبلغ قابل پرداخت :</div>
+                    <div class="ml-auto">@Model.Order.TotalPrice.ToString("n0") تومان</div>
+                </div>
+                <div class="p-20">
+                    <a href="/checkout/address" class="btn btn-continue">
+                        ادامه خرید
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
 
 
@@ -69,5 +116,15 @@
         function oncountChange() {
             $("#btnUpdateCount").click();
         }
+        function add(id) {
+            var input = $("input[data-id=" + id + "]");
+            input.val(parseInt(input.val()) + 1);
+            oncountChange();
+        };
+        function sub(id) {
+            var input = $("input[data-id=" + id + "]");
+            input.val(parseInt(input.val()) - 1);
+            oncountChange();
+        };
     </script>
                         }

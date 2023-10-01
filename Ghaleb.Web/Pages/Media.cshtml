@@ -1,0 +1,71 @@
+﻿@page
+@model Ghaleb.Web.Pages.MediaModel
+@{
+}
+
+<div class="container">
+    <div class="position-relative">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">خانه</a></li>
+                <li class="breadcrumb-item active" aria-current="page">ویدئوها</li>
+            </ol>
+        </nav>
+        <div class="title-page"><strong>ویدئوها</strong></div>
+    </div>
+
+    <div class="row videos">
+        <div class="col-lg-4">
+            <div class="list-videos">
+                <ul>
+                    @{
+                        int i = 1;
+                    }
+                    @foreach (var item in Model.Videoes)
+                    {
+
+                        <li>
+                            <div class="playlist_index">@i</div>
+                            <a asp-route-id="@item.Id" class="container-img">
+                                <img src="./assets/img/2.jpeg" alt="" class="img-fluid">
+                                <span class="lable-item">@item.VideoDetail.Duration</span>
+                            </a>
+                            <div class="content-box">
+                                <p class="title">
+                                    @item.VideoDetail.Title
+                                </p>
+                            </div>
+                        </li>
+                        i = i + 1;
+                    }
+
+                </ul>
+            </div>
+        </div>
+        @if (Model.Video != null)
+        {
+            <div class="col-lg-8 single-details_view">
+                <video controls="" width="100%" poster="" autoplay>
+                    <source src="@Model.Video.BindVideo(Configuration)" type="video/mp4" autoplay="" poster="">
+                    Your browser does not support the video tag.
+                </video>
+                <h1 class="title">
+                    @Model.Video.VideoDetail.Title
+                </h1>
+
+                <p class="more dscp">
+                    @Model.Video.VideoDetail.Description
+                    <span class="moreellipses">...&nbsp;</span>
+                    <span class="morecontent">
+                        <span>
+                        </span>&nbsp;&nbsp;<a class="morelink">مطالعه بیشتر </a>
+                    </span>
+                </p>
+            </div>
+        }
+
+
+    </div>
+
+
+</div>

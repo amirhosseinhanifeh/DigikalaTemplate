@@ -22,13 +22,13 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
         {
             _context = context;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(long? mainId)
         {
-            return View(await _context.GetAllAsync<tbl_ProductCategory>(includes:new string[] { "SubProductCategories","Products" }).ToListAsync());
+            return View(await _context.GetAllAsync<tbl_ProductCategory>(x => mainId != null ? x.MainProuctCategoryId == mainId : true, includes: new string[] { "SubProductCategories", "Products" }).ToListAsync());
         }
         public async Task<IActionResult> Create()
         {
-            ViewBag.Categories = new SelectList((await _context.GetAllAsync<tbl_MainProductCategory>(x=>x.IsDelete==false).ToListAsync()), "Id", "Name");
+            ViewBag.Categories = new SelectList((await _context.GetAllAsync<tbl_MainProductCategory>(x => x.IsDelete == false).ToListAsync()), "Id", "Name");
             return View();
         }
         [HttpPost]

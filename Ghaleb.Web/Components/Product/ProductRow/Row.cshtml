@@ -3,90 +3,26 @@
 @{
 }
 
-@if (Model.Any())
-{
-@*    <div class="row bg-white p-3 mt-5 box">
-        <div class="col-6">
-            <h6 class="border-bottom p-2">@ViewData["HeaderTitle"]</h6>
-        </div>
-        <div class="col-6 justify-content-end d-flex" *ngIf="showheaderButton">
-            <a class="p-2 text-left" href="Search/Category/1"
-            [routerLink]="['search/category/'+header.id+'/'+header.url]">
-                نمایش
-                همه
-            </a>
-        </div>
-        <div class="swiper products">
-            <!-- Additional required wrapper -->
-            <div class="swiper-wrapper">
-                <!-- Slides -->
-                @foreach (var item2 in Model)
-                {
-                    <div class="swiper-slide">
-                        @await Html.PartialAsync("~/Components/Product/ProductItem/Item.cshtml", item2)
+<section class="our-products">
+    <h2 class="title-section">
+        @ViewData["HeaderTitle"]
+    </h2>
+    <div class="swiper product-swiper">
+        <div class="swiper-wrapper">
 
-                    </div>
-
-
-                }
-            </div>
-
-            <!-- If we need navigation buttons -->
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
-
-            <!-- If we need scrollbar -->
-        </div>
-    </div>*@
- <div class="container off__slider__top short__bg short__bg__lg position-relative">
-
-    <div class="off__slider__top__body p-4">
-
-        <div class="row g-5">
-
-            <div class="col-12">
-
-                <div class="position-relative">
-
-                    <div class="off__slider__top__title position-relative mx-auto text-center">
-
-                    <h3 class="fw-bold m-0">
-                        @ViewData["HeaderTitle"]
-                    </h3>
-    @*                            <span>
-                        Buy at a discount
-                    </span>*@
-
-                    <div class="off__slider__top__title__line mx-auto mt-2"></div>
-
-                    </div>
-
-                    <a href="shop.html"
-                class="off__slider__top__link position-absolute bottom-0 end-0 fw-bold px-1 py-2">
-                    مشاهده همه
-                    </a>
+            @foreach (var item2 in Model)
+            {
+                <div class="swiper-slide">
+                    @await Html.PartialAsync("~/Components/Product/ProductItem/Item.cshtml", item2)
 
                 </div>
-
-            </div>
-
-            <div class="col-12">
-
-                <div class="owl-carousel owl-theme owl-first-carousel">
-                @foreach (var item2 in Model)
-                {
-                    <div class="swiper-slide">
-                        @await Html.PartialAsync("~/Components/Product/ProductItem/Item.cshtml", item2)
-
-                    </div>
-                }
-                </div>
-
-            </div>
-
+            }
         </div>
-
+        <div class="next-slider">
+            <img src="assets/images/public/next-right-gray.svg" alt="">
+        </div>
+        <div class="prev-slider">
+            <img src="assets/images/public/prev-left-gray.svg" alt="">
+        </div>
     </div>
-
-</div>
-}
+</section>

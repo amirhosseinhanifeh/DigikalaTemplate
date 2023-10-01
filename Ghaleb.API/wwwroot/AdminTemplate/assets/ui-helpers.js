@@ -27,9 +27,12 @@
         debugger;
         var input = $(this);
         var name = input.attr("data-id");
+        var Id = $("input[hidden][name=" + name + "]").val();
         var files = input.get(0).files;
         var formData = new FormData();
-
+        if (Id.length > 0) {
+            formData.append("Id", Id);
+        }
         for (var i = 0; i != files.length; i++) {
             formData.append("file", input.get(0).files[i]);
         }

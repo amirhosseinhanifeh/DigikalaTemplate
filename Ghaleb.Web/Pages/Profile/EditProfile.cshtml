@@ -1,0 +1,59 @@
+﻿@page
+@model Ghaleb.Web.Pages.Profile.EditProfileModel
+@{
+    Layout = "~/Pages/Profile/Shared/_Layout.cshtml";
+}
+<div class="profile_status">
+    <div class="heade-status">
+        <h5>ویرایش اطلاعات کاربری</h5>
+    </div>
+    <div class="edit-profile-form">
+        <form method="post">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 form-group">
+                    <label for="mob">نام</label>
+                    <input type="text" asp-for="UserInfo.Profile.FirstName" class="form-control" placeholder="" >
+                </div>
+                <div class="col-lg-6 col-md-6 form-group">
+                    <label for="mob">نام خانوادگی</label>
+                    <input type="text" asp-for="UserInfo.Profile.LastName" class="form-control" placeholder="">
+                </div>
+                <div class="col-lg-6 col-md-6 form-group">
+                    <label for="mob">ایمیل</label>
+                    <input type="text" asp-for="UserInfo.Email" class="form-control" placeholder="">
+                </div>
+@*                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="mob">تاریخ تولد</label>
+                        </div>
+                        <div class="col-lg-4 col-md-4 form-group">
+                            <select name="" class="form-control" id="">
+                                <option value="" selected>day</option>
+                                <option value="">kjhhk</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-4 col-md-4 form-group">
+                            <select name="" class="form-control" id="">
+                                <option value="" selected>mounth</option>
+                                <option value="">kjhhk</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-4 col-md-4 form-group">
+                            <select name="" class="form-control" id="">
+                                <option value="" selected>years</option>
+                                <option value="">kjhhk</option>
+                            </select>
+                        </div>
+
+                    </div>
+                </div>*@
+                <div class="col-12">
+                    <button class="btn btn-default px-4" type="submit">ثبت اطلاعات</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+</div>

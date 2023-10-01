@@ -44,7 +44,6 @@ namespace ALO.Service.Service.Order
                     {
                         OrderCode = Generate.GenerateCode(5),
                         UserId = baskets.model.UserId,
-                        OrderState = OrderState.PAYED,
                         OrderDetails = new List<tbl_OrderDetails>()
                     });
 

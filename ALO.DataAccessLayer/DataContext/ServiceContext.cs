@@ -20,9 +20,11 @@ using ALO.DomainClasses.Entity.LinkManagement;
 using ALO.DomainClasses.Entity.Menu;
 using ALO.DomainClasses.Entity.MSG;
 using ALO.DomainClasses.Entity.Order;
+using ALO.DomainClasses.Entity.Permission;
 using ALO.DomainClasses.Entity.PFL;
 using ALO.DomainClasses.Entity.Product;
 using ALO.DomainClasses.Entity.SpecialSell;
+using ALO.DomainClasses.Entity.Wallet;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -83,6 +85,7 @@ namespace ALO.DataAccessLayer.DataContext
         public DbSet<tbl_ProductPriceOption> tbl_ProductPriceOptions{ get; set; }
         public DbSet<tbl_ProductPriceOptionValue> tbl_ProductPriceOptionValues{ get; set; }
         public DbSet<tbl_ProductGuarantee> tbl_ProductGuarantees { get; set; }
+        public DbSet<tbl_DeliveryPrice> tbl_DeliveryPrices { get; set; }
 
 
         #endregion
@@ -134,12 +137,15 @@ namespace ALO.DataAccessLayer.DataContext
         #region Order
         public DbSet<tbl_Order> tbl_Orders { get; set; }
         public DbSet<tbl_OrderDetails> tbl_OrderDetails { get; set; }
+        public DbSet<tbl_Wallet> tbl_Wallets { get; set; }
+        public DbSet<tbl_WalletHistory> tbl_WalletHistories { get; set; }
 
 
-        #endregion
+		#endregion
 
-        #region Menu
-        public DbSet<tbl_Menu> tbl_Menus { get; set; }
+		#region Menu
+		public DbSet<tbl_Menu> tbl_Menus { get; set; }
+		public DbSet<tbl_Permission> tbl_Permissions { get; set; }
         #endregion
 
         #region Language

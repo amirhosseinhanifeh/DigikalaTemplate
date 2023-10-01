@@ -1,0 +1,36 @@
+﻿@model IEnumerable<ALO.DomainClasses.Entity.Product.tbl_MainProductCategory>
+@{
+}
+
+
+@if (Model.Any())
+{
+    <section class="Categories">
+        <h2 class="title-section">
+            خرید با دسته بندی
+        </h2>
+        <div class="swiper Category-slider">
+            <div class="swiper-wrapper">
+                @foreach (var item in Model)
+                {
+                    <div class="swiper-slide">
+                        <div class="box">
+                            <a asp-page="search" asp-route-maincategoryId="@item.Id" asp-route-maincategoryUrl="@item.Url">
+                                <img src="@item.Logo.BindImage(Configuration)" alt="@item.Name">
+                                <span class="title">@item.Name</span>
+                            </a>
+                        </div>
+                    </div>
+                }
+
+
+            </div>
+            <div class="next-slider">
+                <img src="assets/images/public/next-right-gray.svg" alt="">
+            </div>
+            <div class="prev-slider">
+                <img src="assets/images/public/prev-left-gray.svg" alt="">
+            </div>
+        </div>
+    </section>
+}

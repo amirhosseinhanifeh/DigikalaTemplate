@@ -31,22 +31,30 @@ namespace ALO.Service.Service.ImageService
             _webHostEnvironment = webHostEnvironment;
             _db = db;
         }
-        public async Task<ListResultViewModel<tbl_Image>> CreateAsync(string file)
+        public async Task<ListResultViewModel<tbl_Image>> CreateAsync(string file, long? Id = null)
         {
             try
             {
                 if (file != null)
                 {
-                    tbl_Image img = new tbl_Image()
+                    var img = await _db.tbl_Image.FindAsync(Id);
+                    if (img == null)
                     {
-                        Url = null,
-                        Image_thumb = file,
-                    };
-                    var result = _db.Create(img);
+                        img = new tbl_Image()
+                        {
+                            Url = null,
+                            Image_thumb = file,
+                        };
+                        var result = _db.Create(img);
+                    }
+                    else
+                    {
+                        img.Image_thumb = file;
+                    }
                     await _db.SaveChangesAsync();
                     return new ListResultViewModel<tbl_Image>
                     {
-                        model = result,
+                        model = img,
                         Message = SuccessfullMessage,
                         NotificationType = NotificationType.success,
                         Status = Status.Success
@@ -71,7 +79,7 @@ namespace ALO.Service.Service.ImageService
                 };
             }
         }
-        public FormFile ConvertByteToFile(byte[] byteArray,string name)
+        public FormFile ConvertByteToFile(byte[] byteArray, string name)
         {
             using (var stream = new MemoryStream(byteArray))
             {
@@ -94,7 +102,7 @@ namespace ALO.Service.Service.ImageService
             }
             return null;
         }
-        public async Task<ListResultViewModel<string>> UploadAsync(IFormFile file, string name)
+        public async Task<ListResultViewModel<string>> UploadAsync(IFormFile file, string name = null)
         {
             try
             {
@@ -102,19 +110,38 @@ namespace ALO.Service.Service.ImageService
                 {
                     if (file.Length > 0)
                     {
+                        string path = "";
                         string data = null;
-                        using (var ms = new MemoryStream())
+                        name = (name == null ? Guid.NewGuid().ToString() : name) + Path.GetExtension(file.FileName);
+                        if (file.ContentType.Contains("video"))
                         {
-                            using (var image = Image.Load(file.OpenReadStream()))
+                            path = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "wwwroot/Uploads/Videos"));
+                            if (!Directory.Exists(path))
                             {
-
-                                image.Mutate(
-       i => i.Resize(image.Width/2, image.Height/2));
-                                image.SaveAsWebp("wwwroot/Uploads/Images/"+name + ".webp");
-                                data = name + ".webp";
-                                // act on the Base64 data
+                                Directory.CreateDirectory(path);
+                            }
+                            using (var fileStream = new FileStream(Path.Combine(path, name), FileMode.Create))
+                            {
+                                await file.CopyToAsync(fileStream);
+                                data = name;
                             }
                         }
+                        else
+                        {
+                            using (var ms = new MemoryStream())
+                            {
+                                using (var image = Image.Load(file.OpenReadStream()))
+                                {
+
+                                    image.Mutate(
+           i => i.Resize(image.Width / 2, image.Height / 2));
+                                    image.SaveAsWebp("wwwroot/Uploads/Images/" + name + ".webp");
+                                    data = name + ".webp";
+                                    // act on the Base64 data
+                                }
+                            }
+                        }
+
 
 
                         return new ListResultViewModel<string>

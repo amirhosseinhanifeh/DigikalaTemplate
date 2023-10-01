@@ -286,6 +286,10 @@ namespace ALO.Service.Service.Product
                     .Include(x => x.ProductComments)
                     .ThenInclude(x => x.User)
                     .ThenInclude(x => x.Profile)
+                    .Include(x => x.ProductComments)
+                    .ThenInclude(x => x.ProductComments)
+                    .ThenInclude(x => x.User)
+                    .ThenInclude(x => x.Profile)
                     .Include(x => x.ProductCustomFieldValues)
                     .ThenInclude(x => x.ProductCustomField)
                     .ThenInclude(x => x.ProductCustomFieldsOptionValues)
@@ -312,7 +316,7 @@ namespace ALO.Service.Service.Product
                         Name = query.SubProductCategory.Title,
                         Url = query.SubProductCategory.Url
                     } : null,
-                    Colors = query.ProductPriceHistories.Where(x=>x.Color!=null).Select(x => x.Color).Select(h => new ProductBrandDto
+                    Colors = query.ProductPriceHistories.Where(x => x.Color != null).Select(x => x.Color).Select(h => new ProductBrandDto
                     {
                         Id = h.Id,
                         Name = h.Name,
@@ -342,12 +346,19 @@ namespace ALO.Service.Service.Product
                     Date = query.CreatedDate.RelativeDate().toPersianNumber(),
                     //IsBuy = UserId == null ? null : query.OrderDetails.Any(x => x.Order.UserId == UserId),
                     Images = query.Images.Select(y => new ProductGalleryDTO { Url = y.BindImage(_configuration) }).ToList(),
-                    Comments = query.ProductComments.Where(x => x.IsActive && x.IsDelete != true).Select(y => new ProductCommentForWebsiteDto
+                    Comments = query.ProductComments.Where(x => x.IsActive && x.IsDelete != true && x.ProductCommentId == null).Select(y => new ProductCommentForWebsiteDto
                     {
                         Body = y.Body,
                         FullName = y.User.Profile.FirstName + " " + y.User.Profile.LastName,
                         Response = y.Response,
-                        Date = y.CreatedDate.ConvertToPesainDate().toPersianNumber()
+                        Date = y.CreatedDate.ConvertToPesainDate().toPersianNumber(),
+                        Replies = y.ProductComments.Select(y => new ProductCommentForWebsiteDto
+                        {
+                            Body = y.Body,
+                            FullName = y.User.Profile.FirstName + " " + y.User.Profile.LastName,
+                            Response = y.Response,
+                            Date = y.CreatedDate.ConvertToPesainDate().toPersianNumber()
+                        }).ToList()
                     }).ToList(),
                     Values = query.ProductCustomFieldValues.Select(x => new ProductCustomFields
                     {
@@ -480,6 +491,7 @@ namespace ALO.Service.Service.Product
             int page = 1,
             int pageSize = 10,
             long? ownerId = null,
+            long? userId=null,
             bool? isExists = null)
         {
 
@@ -548,6 +560,8 @@ namespace ALO.Service.Service.Product
                 strQuery = strQuery.And(x => !x.ProductPriceHistories.Any(h => h.IsActive && h.OrderDetails.Count() == h.Inventory));
             }
             var result = _db.GetAllAsync<tbl_Product>(strQuery, new string[] { "Image", "ProductPriceHistories" })
+                .Include(x=>x.ProductPriceHistories)
+                .Include(x=>x.Ratings)
                 .Where(x => x.IsActive && x.IsDelete != true)
                 .Select(x => new ProductListForHomeDto
                 {
@@ -561,7 +575,10 @@ namespace ALO.Service.Service.Product
                     State = x.State.ToString(),
                     Cost = x.GetLastPrice().ToString("n0").toPersianNumber(),
                     Discount = x.GetDiscountPrice() != null ? x.GetDiscountPrice().Value.ToString("n0").toPersianNumber() : null,
-                    Call = x.GetLastPrice() == 0
+                    Call = x.GetLastPrice() == 0,
+                    LastPriceId=x.ProductPriceHistories.Any()?x.ProductPriceHistories.OrderBy(h=>h.Id).LastOrDefault().Id:null,
+                    IsFavourite = x.Users.Any(x => x.Id == userId),
+                    Ratings=x.Ratings.ToList()
 
                 });
 
@@ -600,15 +617,16 @@ namespace ALO.Service.Service.Product
                 long.TryParse(userId, out ownerId);
 
                 var result = _db.tbl_Products.Include(x => x.Image)
-                    .Include(x=>x.ProductTags)
+                    .Include(x => x.ProductTags)
                     .Include(x => x.ProductVisits)
                     .Include(x => x.ProductComments)
                     .Include(x => x.ProductPriceHistories)
                     .ThenInclude(x => x.OrderDetails)
                     .ThenInclude(x => x.Order)
+                    .ThenInclude(x=>x.OrderStateHistories)
                     .Include(x => x.SubProductCategory)
                     .OrderByDescending(x => x.CreatedDate)
-                    .Where(x=>x.IsDelete==false)
+                    .Where(x => x.IsDelete == false)
                     .Where(x => brandId != null ? x.BrandId == brandId : true)
                     .Where(x => x.OwnerId == ownerId && (subcategoryId != null ? x.SubProductCategoryId == subcategoryId : true))
                     .Select((x) => new GetProductListForAdminDto
@@ -617,12 +635,12 @@ namespace ALO.Service.Service.Product
                         Id = x.Id,
                         Title = x.Title,
                         Image = x.Image.BindImage(_configuration),
-                        OrderCount = x.ProductPriceHistories.SelectMany(x => x.OrderDetails).Count(h => h.Order.OrderState == DomainClasses.Entity.Order.OrderState.PAYED),
+                        OrderCount = x.ProductPriceHistories.SelectMany(x => x.OrderDetails).Count(h => h.Order.OrderStateHistories.Any(g=>g.OrderState== DomainClasses.Entity.Order.OrderState.PAYED)),
                         SubCategory = x.SubProductCategory.Title,
                         Status = x.IsActive ? "فعال" : "غیر فعال",
                         Cost = x.GetLastPrice().ToString("n0").toPersianNumber() + " تومان",
                         CommentCount = x.ProductComments.Count(),
-                        TagCount=x.ProductTags.Where(x=>x.IsDelete !=true && x.IsActive).Count(),
+                        TagCount = x.ProductTags.Where(x => x.IsDelete != true && x.IsActive).Count(),
                         Visit = x.ProductVisits.Count(),
                         AllVisit = x.Visit,
                         Url = x.Url,

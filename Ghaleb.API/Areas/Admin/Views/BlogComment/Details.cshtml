@@ -6,7 +6,7 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<form id="frmValues">
+<form method="post" id="frmValues">
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="row">
@@ -29,7 +29,7 @@
                 </div>
                 <div class="form-group col-12">
                     <label>پاسخ</label>
-                    <input class="form-control" type="text" name="Answer" />
+                    <input class="form-control" type="text" name="Body" />
                 </div>
             </div>
         </div>
@@ -39,6 +39,11 @@
             <button class="btn btn-primary" id="btnSave" type="submit">ذخیره</button>
         </div>
     </div>
-
+    <ul>
+    @foreach (var item in Model.BlogComments)
+    {
+        <li>@item.Body</li>
+    }
+    </ul>
 </form>
 

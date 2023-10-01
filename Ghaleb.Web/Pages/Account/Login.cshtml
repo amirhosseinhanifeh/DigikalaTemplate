@@ -2,37 +2,33 @@
 @model Ghaleb.Web.Pages.Account.LoginModel
 @{
 }
-<div class="container-fluid bg">
-    <div class="row box p-1 d-flex align-items-center" style="height:100vh">
-        <div class="col-12 bg-white col-lg-5 col-xl-3 mx-auto rounded border p-3">
-            <h4 class="text-center">وارد حساب کاربری خود شوید</h4>
 
-            <form method="post"  class="row mt-5">
-
-                <div class="col-12 form-group mt-2">
-                    <input name="username" class="form-control" value=""
-                        placeholder="ایمیل خود را وارد نمایید">
+<div class="container">
+    <div class="col-lg-6 m-auto">
+        <div class="form-login">
+            <img src="~/assets/img/logo.png" class="img-fluid logo-login" alt="">
+            <h5 class="title-login">ورود / عضویت</h5>
+            <form method="post">
+                <div class="form-group">
+                    <label for="mob">شماره تلفن</label>
+                    <input type="text" class="form-control" name="username" value="" placeholder="09123456789" id="mob">
                 </div>
-
-                <div class="col-12 form-group mt-4">
-                    <input name="password" class="form-control" type="password"
-                        value="" placeholder="رمز عبور">
+                <div class="form-group">
+                    <label for="pwd">رمز عبور</label>
+                    <input type="password" name="password" value="" class="form-control" placeholder="" id="pwd">
                 </div>
-                                <recaptcha />
-                <div class="col-12 form-group mt-4">
-                    <button type="submit" class="btn btn-danger col-12" style="padding: 11px;
-                    border-radius: 25px;">ورود</button>
-                </div>
+                <button type="submit" class="btn btn-default ">ورود</button>
                 <span class="text-danger mt-2">               @Model.Message</span>
-                <div class="col-12 form-group mt-4 d-flex
-                    justify-content-between">
-                    <a asp-page="register">ثبت نام کن</a>
-                    <a asp-page="forget">رمز عبور را فراموش
-                        کردم</a>
-                </div>
- 
             </form>
-
+            <div class="text-caption">
+                <a href="register">
+                    ثبت نام در سایت
+                </a>
+                |
+                <a href="forget">
+                    فراموشی رمز
+                </a>
+            </div>
         </div>
     </div>
 </div>

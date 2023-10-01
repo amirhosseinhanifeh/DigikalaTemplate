@@ -21,12 +21,17 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Users
 
         public async Task<IActionResult> Index(long? roleId)
         {
-            return View(await _context.tbl_Users.Include(x=>x.Profile).Include(x=>x.Orders).Where(x=>roleId!=null?x.Roles.Any(h=>h.Id==roleId):true).ToListAsync());
+            return View(await _context.tbl_Users.Include(x=>x.Profile).Include(x=>x.Orders).ThenInclude(x=>x.OrderStateHistories).Where(x=>roleId!=null?x.Roles.Any(h=>h.Id==roleId):true).ToListAsync());
         }
         [HttpGet]
         public async Task<IActionResult> Addresses(long id)
         {
             return View(await _context.tbl_UserAddresses.Where(x=>x.UserId==id).ToListAsync());
+        }
+        [HttpGet]
+        public async Task<IActionResult> Menues(long id)
+        {
+            return View(await _context.tbl_Menus.Where(x => x.Users.Any(h=>h.Id==id)).ToListAsync());
         }
         public async Task<IActionResult> Sendsms(long id)
         {

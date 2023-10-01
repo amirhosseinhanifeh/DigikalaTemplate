@@ -35,14 +35,14 @@ namespace Ghaleb.API.Areas.Admin.Controllers
             return PartialView();
         }
         [HttpPost]
-        public async Task<JsonResult> UploadImage(IFormFile file)
+        public async Task<JsonResult> UploadImage(IFormFile file,long? Id=null)
         {
             try
             {
-                var result = await _img.UploadAsync(file, file.FileName.Split('.')[0]);
+                var result = await _img.UploadAsync(file, null);
                 if (result != null)
                 {
-                    var data = await _img.CreateAsync(result.model);
+                    var data = await _img.CreateAsync(result.model,Id);
                     return Json(new {Data= data.model.Id, message = "با موفقیت ثبت شد", Status = Status.Success, NotificationType = NotificationType.success });
                 }
                 else
@@ -68,7 +68,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers
                 List<long> ids = new List<long>();
                 foreach (var item in files)
                 {
-                    var result = await _img.UploadAsync(item, item.FileName);
+                    var result = await _img.UploadAsync(item,null);
                     if (result != null)
                     {
                         var data = await _img.CreateAsync(result.model);

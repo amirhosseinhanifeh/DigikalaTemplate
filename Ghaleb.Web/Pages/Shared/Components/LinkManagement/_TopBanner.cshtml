@@ -1,0 +1,20 @@
+﻿@model IEnumerable<ALO.DomainClasses.Entity.LinkManagement.tbl_LinkManagement>
+
+<section class="hero-slider">
+    <div class="post-top">
+        <div class="container-fluid">
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="col-12 col-md-6">
+                        <div class="box">
+                            <a href="@Url.Content(item.Link)">
+                                <img src="@item.Image.BindImage(Configuration)" alt="@item.Title">
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

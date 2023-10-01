@@ -18,7 +18,7 @@
         border-bottom-right-radius: 0;
     }
 </style>
-<div class="row d-flex justify-content-between">
+@*<div class="row d-flex justify-content-between">
     @if (Model.ProductTag != null)
     {
         ViewData["Seo"] = new
@@ -234,5 +234,396 @@
                 <p>@Model.SubProductCategory.MetaDescription</p>
             </div>
         }
+    </div>
+</div>*@
+
+
+
+
+<div class="container">
+    <div class="position-relative">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">خانه</a></li>
+                <li class="breadcrumb-item active" aria-current="page">دسته بندی</li>
+            </ol>
+        </nav>
+        <div class="title-page"><strong>دسته بندی</strong></div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="sidebar-blog">
+                <div class="side-card">
+                    <div class="side-card-main">
+                        <div class="block-title"><span>خرید با دسته بندی</span></div>
+                        <div class="block-content">
+                            <div class="panel-group" id="accordionGroupOpen" role="tablist"
+                                 aria-multiselectable="true">
+                                <div class="panel panel-default">
+                                    @foreach (var item in Model.ProductCategories)
+                                    {
+                                        <div class="panel-heading" role="tab" id="headingOne">
+                                            <h4 class="panel-title">
+                                                <a role="button" data-toggle="collapse"
+                                                   data-parent="#accordionGroupOpen" href="#collapseOpenOne"
+                                                   aria-expanded="true" aria-controls="collapseOpenOne">
+                                                    @item.Title
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapseOpenOne" class="panel-collapse collapse show" role="tabpanel"
+                                             aria-labelledby="headingOne">
+                                            <div class="panel-body">
+                                                <ul>
+                                                    @foreach (var item2 in item.SubProductCategories)
+                                                    {
+
+                                                        <li>
+                                                            <a href="/Search/Subcategory/@item2.Id/@item2.Url">@item2.Title</a>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="side-card">
+                    <div class="side-card-main">
+                        <div class="block-title"><span>خرید با برند</span></div>
+                        <div class="block-content">
+                            @foreach (var item in Model.Brands)
+                            {
+                                <div class="panel-group" id="accordionGroupOpen" role="tablist"
+                                     aria-multiselectable="true">
+                                    <div class="panel panel-default">
+
+                                        <a href="/Search?brandIds=@item.Id">
+                                            @item.Name
+                                        </a>
+
+                                    </div>
+
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="side-card">
+                    <div class="side-card-main">
+                        <div class="block-title"><span>فیلتر با قیمت</span></div>
+                        <div class="block-content">
+                            <input type="text" class="js-range-slider" name="my_range" value="" data-skin="round"
+                                   data-type="double" data-min="0" data-max="1000" data-grid="false" />
+                            <input type="number" maxlength="4" value="0" hidden class="from" />
+                            <input type="number" maxlength="4" value="1000" hidden class="to" />
+                            <div class="text-center">
+                                <button class="btn btn-default mt-3 py-2 px-3">فیلتر</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="side-card">
+                    <div class="side-card-main">
+                        <div class="block-title">
+                            <span>
+                                فیلتر با سایز
+                            </span>
+                        </div>
+                        <div class="block-content">
+                            <div class="form-group">
+                                <select class="form-control" id="">
+                                    <option>همه</option>
+                                    <option>سایز بزرگ</option>
+                                    <option>سایز کوچک</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="side-card">
+                    <div class="left-banner">
+                        <a href="#">
+                            <img src="./assets/img/left-banner.jpg" class="img-fluid" alt="">
+                        </a>
+                    </div>
+                </div>
+                <div class="side-card">
+                    <div class="side-card-main">
+                        <div class="block-title">
+                            <span>
+                                تگ محصولات
+                            </span>
+                        </div>
+                        <div class="block-content">
+                            <ul class="d-flex flex-wrap product-tags">
+                                <li><a href="#">میز</a></li>
+                                <li><a href="#">دوچرخه</a></li>
+                                <li><a href="#">گلوله ها</a></li>
+                                <li><a href="#">اسلحه</a></li>
+                                <li><a href="#">جوراب</a></li>
+                                <li><a href="#">تبلت</a></li>
+                                <li><a href="#">میز</a></li>
+                                <li><a href="#">دوچرخه</a></li>
+                                <li><a href="#">گلوله ها</a></li>
+                                <li><a href="#">اسلحه</a></li>
+                                <li><a href="#">جوراب</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="side-card">
+                    <div class="side-card-main">
+                        <div class="block-title"><span>پر فروش ترین محصولات</span></div>
+                        <div class="block-content">
+                            <ul class="top-rated-products">
+                                <li class="">
+                                    <div class="d-flex">
+                                        <div class="img-hover-zoom">
+                                            <a href="#" class="">
+                                                <img src="./assets/img/cms-banner-3.jpg" alt="Image 1"
+                                                     class="img-fluid w-100 mx-auto d-block" blank="true">
+                                            </a>
+                                        </div>
+                                        <div class="item-container">
+                                            <a href="#" class="">
+                                                <h4 class="twolinetxt">
+                                                    لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ
+                                                </h4>
+                                            </a>
+                                            <div class="star-rating">
+
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </div>
+                                            <div class="d-flex flex-wrap price-offer justify-content-center">
+                                                <!-- <div class="pre-price">£<span>130,000</span></div>
+                                                    <div class="new-price">£<span>100,000</span></div> -->
+                                                <!-- <div class="current-price">£<span>100,000</span></div> -->
+                                                <div class="unavailable">ناموجد</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="">
+                                    <div class="d-flex">
+                                        <div class="img-hover-zoom">
+                                            <a href="#" class="">
+                                                <img src="./assets/img/cms-banner-3.jpg" alt="Image 1"
+                                                     class="img-fluid w-100 mx-auto d-block" blank="true">
+                                            </a>
+                                        </div>
+                                        <div class="item-container">
+                                            <a href="#" class="">
+                                                <h4 class="twolinetxt">
+                                                    لورم ایپسوم
+                                                </h4>
+                                            </a>
+                                            <div class="star-rating">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </div>
+                                            <div class="d-flex flex-wrap price-offer justify-content-center">
+                                                <div class="pre-price">ریال<span>130,000</span></div>
+                                                <div class="new-price">ريال<span>100,000</span></div>
+                                                <!-- <div class="current-price">£<span>100,000</span></div> -->
+                                                <!-- <div class="unavailable">unavailable</div> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="">
+                                    <div class="d-flex">
+                                        <div class="img-hover-zoom">
+                                            <a href="#" class="">
+                                                <img src="./assets/img/cms-banner-3.jpg" alt="Image 1"
+                                                     class="img-fluid w-100 mx-auto d-block" blank="true">
+                                            </a>
+                                        </div>
+                                        <div class="item-container">
+                                            <a href="#" class="">
+                                                <h4 class="twolinetxt">
+                                                    لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ
+                                                </h4>
+                                            </a>
+                                            <div class="star-rating">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </div>
+                                            <div class="d-flex flex-wrap price-offer justify-content-center">
+                                                <!-- <div class="pre-price">£<span>130,000</span></div>
+                                                    <div class="new-price">£<span>100,000</span></div> -->
+                                                <div class="current-price">ريال<span>100,000</span></div>
+                                                <!-- <div class="unavailable">unavailable</div> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-9">
+            @if (Model.MainProductCategory != null)
+            {
+                <div class="">
+                    <div class="">
+                        <img src="@Model.MainProductCategory.Logo.BindImage(Configuration)" alt="@Model.MainProductCategory.Name" style="width:200px" class="img-fluid mb-2">
+                        <p>
+                            @Html.Raw(Model.MainProductCategory.MetaDescription)
+                        </p>
+                    </div>
+                </div>
+            }
+
+            @if (Model.ProductCategory != null)
+            {
+                <div class="">
+                    <div class="">
+                        <p>
+                            @Html.Raw(Model.ProductCategory.MetaDescription)
+                        </p>
+                    </div>
+                </div>
+            }
+
+            @if (Model.SubProductCategory != null)
+            {
+                <div class="">
+                    <div class="">
+                        <p>
+                            @Html.Raw(Model.SubProductCategory.MetaDescription)
+                        </p>
+                    </div>
+                </div>
+            }
+            <div class=" d-flex justify-content-between flex-wrap align-items-center">
+                <div class="dark-color search-result"><b>نمایش 1-9 از 17 نتیجه</b></div>
+                <div class="form-group">
+                    <select class="form-control" id="exampleFormControlSelect1">
+                        <option>مرتب سازی پیشرفض</option>
+                        <option value="New">جدیدترین</option>
+                        <option value="cheap">ارزانترین</option>
+                        <option value="expensive">گرانترین</option>
+                        <option value="moreSell">پرفروش ترین</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="">
+                <div class="row">
+                    @foreach (var item in Model.Products)
+                    {
+
+                        var average = Math.Round(item.Ratings.Select(x => x.Rating).Sum() / item.Ratings.Count());
+
+                        <div class="col-lg-4 col-md-6 col-sm-6 mb-4">
+                            <div class="product-block">
+                                <span class="onsale">-29%</span>
+                                <a href="/Product/@item.Id/@item.Url" class="img-block">
+                                    <img src="@item.Image" class="img-fluid bg-img1">
+                                    <img src="@item.Image" class="img-fluid bg-img2">
+                                </a>
+                                <div class="product-button-hover">
+                                    <a asp-page="Product" asp-page-handler="AddToBasket" asp-route-productId="@item.LastPriceId" class="btn btn-eye" class="btn btn-shopping"><i class="fa fa-shopping-cart"></i> </a>
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        <a asp-page="Product" asp-page-handler="AddToFavorite" asp-route-prId="@item.Id" class="btn btn-heart"><i class="fa fa-heart" style="@(item.IsFavourite?"color:red":"color:black")"></i> </a>
+                                    }
+                                    <a asp-page="Product" asp-route-id="@item.Id" asp-route-Url="@item.Url" class="btn btn-eye"><i class="fa fa-eye"></i> </a>
+                                </div>
+                                <div class="product-detail">
+                                    <div class="star-rating">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            if (i <= average)
+                                            {
+                                                <i class="fa fa-star"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fa fa-star" style="color:gray"></i>
+
+                                            }
+                                        }
+                                    </div>
+                                    <a href="/Product/@item.Id/@item.Url">
+                                        <h3>
+                                            @item.Title
+                                        </h3>
+                                    </a>
+                                    <div class="d-flex flex-wrap price-offer justify-content-center">
+                                        @if (item.Discount != null)
+                                        {
+                                            <div class="text-center mt-3">
+                                                <div class="pre-price"><span>@item.Cost</span> تومان</div>
+                                                <div class="new-price"><span> @item.Discount</span> تومان </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+
+                                            <div class="text-center mt-3">
+                                                @if (!item.Call)
+                                                {
+                                                    <div class="current-price"><span>@item.Cost</span> تومان</div>
+                                                }
+                                                else
+                                                {
+                                                    <span *ngIf="product?.call"> تماس بگیرید</span>
+                                                }
+                                            </div>
+                                        }
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    @{
+                        double pageCount = (double)((decimal)Model.TotalCount / Convert.ToDecimal(Model.PageSize));
+
+                    }
+                    <div class="col-12">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item">
+                                <a class="page-link" href="#">
+                                    <i class="fa fa-chevron-right"></i>
+                                </a>
+                            </li>
+
+                            @for (int i = 1; i <= (int)Math.Ceiling(pageCount); i++)
+                            {
+                                <li class="page-item">
+                                    <a asp-all-route-data="@Model.Routes" asp-route-pagenumber="@i" class="page-link">@i</a>
+                                </li>
+                            }
+                            <li class="page-item">
+                                <a class="page-link" href="#">
+                                    <i class="fa fa-chevron-left"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>

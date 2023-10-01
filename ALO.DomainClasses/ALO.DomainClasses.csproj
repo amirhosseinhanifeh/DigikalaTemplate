@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <Folder Include="Config\Product\" />
+    <Folder Include="Entity\Settings\" />
   </ItemGroup>
 
 </Project>

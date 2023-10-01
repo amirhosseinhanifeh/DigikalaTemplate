@@ -49,7 +49,6 @@ namespace Ghaleb.API.Controllers
             {
                 OrderCode = Generate.GenerateCode(5),
                 UserId = User.UserId(),
-                OrderState = OrderState.PENDING,
                 UserAddressId=userAddressId,
                 OrderDetails = new List<tbl_OrderDetails>()
             };
@@ -119,7 +118,6 @@ namespace Ghaleb.API.Controllers
             if (verification.Status == 100)
             {
 
-                order.OrderState = OrderState.PAYED;
                 await _context.SaveChangesAsync();
                 return Ok(true);
             }

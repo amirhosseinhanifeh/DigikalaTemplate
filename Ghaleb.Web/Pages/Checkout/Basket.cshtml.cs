@@ -1,4 +1,5 @@
 using ALO.DataAccessLayer.DataContext;
+using ALO.DomainClasses.Entity.Order;
 using ALO.DomainClasses.EntityHelpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -17,15 +18,16 @@ namespace Ghaleb.Web.Pages.Checkout
             _configuration = configuration;
         }
 
-        public List<ResponseGetBasketItems> List { get; set; } = new List<ResponseGetBasketItems>();
-
+        public ResponseOrder Order { get; set; }
         public async Task OnGet()
         {
             var res = Request.Cookies["basket"];
             if (res == null)
                 return;
             var list = JsonConvert.DeserializeObject<List<ResonseBasketDTO>>(res);
-            foreach (var item in list)
+
+			List<ResponseGetBasketItems> List = new List<ResponseGetBasketItems>();
+			foreach (var item in list)
             {
 
                 var pr = await _context.tbl_ProductPriceHistory.Include(x=>x.Color).Include(x => x.Product).ThenInclude(x => x.Image).FirstOrDefaultAsync(x => x.Id == item.Id);
@@ -40,7 +42,16 @@ namespace Ghaleb.Web.Pages.Checkout
                     TotalPrice = pr.GetPrice() * item.Count
                 });
             }
+            var delivery = await _context.tbl_DeliveryPrices.OrderBy(x => x.Id).LastOrDefaultAsync();
 
+            Order = new ResponseOrder()
+            {
+                DeliveryPrice = delivery.GetCost(List.Sum(h => h.TotalPrice)),
+                Items = List,
+                ProductPrices = List.Sum(h => h.TotalPrice),
+                DeliveryId= delivery.Id,
+                TotalPrice = delivery.GetCost(List.Sum(h => h.TotalPrice)) + List.Sum(h => h.TotalPrice)
+            };
         }
         public async Task<IActionResult> OnGetDelete(long id)
         {
@@ -84,5 +95,13 @@ namespace Ghaleb.Web.Pages.Checkout
         public string Image { get; set; }
         public decimal Price { get; set; }
         public decimal TotalPrice { get; set; }
+    }
+    public class ResponseOrder
+    {
+        public decimal ProductPrices { get; set; }
+        public decimal DeliveryPrice { get; set; }
+        public long DeliveryId { get; set; }
+		public decimal TotalPrice { get; set; }
+        public List<ResponseGetBasketItems> Items { get; set; }
     }
 }

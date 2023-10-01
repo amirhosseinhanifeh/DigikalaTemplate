@@ -38,24 +38,4 @@ namespace ALO.DomainClasses.Entity.Product
             return (Price).ToString("n0").toPersianNumber();
         }
     }
-    public class tbl_ProductPriceOption : BaseEntity
-    {
-        public long? ProductCategoryId { get; set; }
-        public tbl_ProductCategory ProductCategory { get; set; }
-        public long? SubProductCategoryId { get; set; }
-        public tbl_ProductCategory SubProductCategory { get; set; }
-        public string Name { get; set; }
-        public ICollection<tbl_ProductPriceOptionValue> OptionValues { get; set; }
-
-    }
-    public class tbl_ProductPriceOptionValue : BaseEntity
-    {
-        public string Value { get; set; }
-        public long? ProductId { get; set; }
-        public tbl_Product Product { get; set; }
-        public long ProductPriceOptionId { get; set; }
-        public tbl_ProductPriceOption ProductPriceOption { get; set; }
-        public ICollection<tbl_ProductPriceHistory> ProductPriceHistories { get; set; }
-
-    }
 }

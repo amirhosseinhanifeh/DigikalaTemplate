@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ALO.DomainClasses.Entity.Account;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -20,5 +21,7 @@ namespace ALO.DomainClasses.Entity.Menu
         public tbl_Menu Menu { get; set; }
 
         public ICollection<tbl_Menu> ChildMenus { get; set; }
+
+        public ICollection<tbl_Users> Users { get; set; }
     }
 }

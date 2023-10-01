@@ -1,6 +1,8 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@using Microsoft.Extensions.Configuration;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, AuthoringTagHelpers
 @model IEnumerable<ALO.ViewModels.Product.Admin.GetProductListForAdminDto>
+@inject IConfiguration Configuration
 @{
     ViewData["Title"] = "لیست محصولات";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
@@ -42,7 +44,7 @@
                             <tr>
                                 <td>@row</td>
                                 <td><img style="width:75px;height:75px" class="img-fluid" src="@item.Image" /></td>
-                                <td><a href="https://amirprinter.ir/product/@item.Id/@item.Url">@item.Title</a></td>
+                                <td><a href="@Configuration["SiteSetting:Url"]/product/@item.Id/@item.Url">@item.Title</a></td>
                                 <td>@item.SubCategory</td>
                                 <td>@item.OrderCount</td>
                                 <td>@item.Visit</td>

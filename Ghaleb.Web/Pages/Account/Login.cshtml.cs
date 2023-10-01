@@ -33,6 +33,7 @@ namespace Ghaleb.Web.Pages.Account
                 var claims = new[] {
                 new Claim("Id", result.model.Id.ToString()),
                 new Claim(ClaimTypes.Name, result.model.Profile.FirstName+" "+result.model.Profile.LastName),
+                new Claim(ClaimTypes.MobilePhone, result.model.Mobile),
                 new Claim(ClaimTypes.Role,"User"),
                 new Claim(JwtRegisteredClaimNames.Jti,result.model.Id.ToString())
                 };

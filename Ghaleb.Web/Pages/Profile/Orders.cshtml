@@ -1,0 +1,35 @@
+﻿@page
+@model Ghaleb.Web.Pages.Profile.OrdersModel
+@{
+    Layout = "~/Pages/Profile/Shared/_Layout.cshtml";
+}
+<div class="table_orders table-responsive">
+    <div class="heade-status">سفارشات</div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th> کد سفارش</th>
+                <th>مبلغ کل فاکتور</th>
+                <th>تاریخ</th>
+                <th>وضعیت</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = 1;
+            }
+            @foreach (var item in Model.Orders)
+            {
+                <tr>
+                    <td>@i</td>
+                    <td> <a asp-page="OrderDetails" asp-route-Id="@item.Id">@item.OrderCode</a></td>
+                    <td>@item.TotalPrice().ToString("n0") تومان</td>
+                    <td>@item.CreatedDate.ConvertToPesainDate()</td>
+                    <td>@item.OrderStateHistories.OrderBy(h=>h.Id).LastOrDefault().OrderState.GetDisplay()</td>
+                </tr>
+                i = i + 1;
+            }
+        </tbody>
+    </table>
+</div>
