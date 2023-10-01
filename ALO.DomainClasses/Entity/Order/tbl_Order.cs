@@ -29,7 +29,7 @@ namespace ALO.DomainClasses.Entity.Order
 
 		public decimal TotalPrice()
         {
-            return OrderDetails.Sum(x => x.Count * x.ProductPriceHistory.GetPrice()) + DeliveryPrice.GetCost(OrderDetails.Sum(x => x.Count * x.ProductPriceHistory.GetPrice()));
+            return OrderDetails.Sum(x => x.Count * x.ProductPriceHistory.GetPrice()) + (DeliveryPrice!=null? DeliveryPrice.GetCost(OrderDetails.Sum(x => x.Count * x.ProductPriceHistory.GetPrice())):0);
 
         }
 

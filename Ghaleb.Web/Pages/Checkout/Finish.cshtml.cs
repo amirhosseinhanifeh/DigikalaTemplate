@@ -23,20 +23,24 @@ namespace Ghaleb.Web.Pages.Checkout
         public bool Status { get; set; } = false;
         public string Message { get; set; }
         public string OrderCode { get; set; }
-        public async Task OnGetAsync(long id, string authority,string Status)
+        public async Task OnGetAsync(long id, string authority, string Status)
         {
             var isSandbox = Convert.ToBoolean(_configuration["PaymentSetting:IsSandbox"]);
-            var order = await _context.tbl_Orders.Include(x => x.OrderDetails).ThenInclude(x => x.ProductPriceHistory).FirstOrDefaultAsync(x => x.Id == id);
-            var price = (int)order.OrderDetails.Sum(x => x.Count * x.ProductPriceHistory.GetPrice());
+            var order = await _context.tbl_Orders.Include(x => x.OrderStateHistories).Include(x => x.DeliveryPrice).Include(x => x.OrderDetails).ThenInclude(x => x.ProductPriceHistory).FirstOrDefaultAsync(x => x.Id == id);
+            var price = (int)order.TotalPrice();
             var verification = await _payment.Verification(new DtoVerification
             {
                 MerchantId = "37b2d480-b4c0-44d6-921c-26e588592f32",
                 Authority = authority,
                 Amount = price,
-            },isSandbox==true? Payment.Mode.sandbox: Payment.Mode.zarinpal);
+            }, isSandbox == true ? Payment.Mode.sandbox : Payment.Mode.zarinpal);
             if (verification.Status == 100)
             {
-
+                order.PaymentMethod = PaymentMethod.INTERNET;
+                order.OrderStateHistories.Add(new tbl_OrderStateHistory
+                {
+                    OrderState = OrderState.PAYED
+                });
                 await _context.SaveChangesAsync();
                 this.Status = true;
                 Message = "پرداخت انجام شد";
@@ -46,15 +50,15 @@ namespace Ghaleb.Web.Pages.Checkout
                     Expires = DateTime.Now.AddDays(-1)
                 });
             }
-            else if(verification.Status==-21)
+            else if (verification.Status == -21)
             {
                 Message = "لغو پرداخت";
             }
-            else if(verification.Status==101)
+            else if (verification.Status == 101)
             {
                 Message = "شما قبلا این فاکتور را پرداخت کردید";
             }
-            else if(verification.Status==-11)
+            else if (verification.Status == -11)
             {
                 Message = "خطا در پرداخت";
             }
