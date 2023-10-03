@@ -22,7 +22,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Orders
         }
         public async Task<IActionResult> Index(long? userId)
         {
-            return View(await _context.GetAllAsync<tbl_Order>().Include(x=>x.OrderStateHistories).Include(x => x.OrderDetails).ThenInclude(x => x.ProductPriceHistory).Where(x => userId != null ? x.UserId == userId : true).ToListAsync());
+            return View(await _context.GetAllAsync<tbl_Order>().Include(x=>x.DeliveryPrice).Include(x=>x.OrderStateHistories).Include(x => x.OrderDetails).ThenInclude(x => x.ProductPriceHistory).Where(x => userId != null ? x.UserId == userId : true).ToListAsync());
         }
         public async Task<IActionResult> Details(long? Id)
         {

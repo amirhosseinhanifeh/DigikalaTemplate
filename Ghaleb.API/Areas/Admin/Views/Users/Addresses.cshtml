@@ -16,19 +16,20 @@
                 <table class="table align-items-center table-flush">
                     <thead>
                         <tr>
-                            <th>آدرس </th>
-                            <th>پلاک </th>
-                            <th>واحد </th>
+                            <th>آدرس</th>
+                            <th>کد پستی</th>
+                            <th>گیرنده</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td>@item.Address</td>
-                                <td>@item.Pelak</td>
-                                <td>@item.Vahed</td>
-
+                                <td>@item.Address پلاک @item.Pelak واحد @item.Vahed</td>
+                                <td>@item.PostalCode</td>
+                                <td>@item.ReciverName</td>
+                                <td><a class="btn btn-warning"  target="_blank" href="https://www.google.com/maps/@("@"+item.Lat+","+@item.Long),20z?entry=ttu">نمایش روی نقشه</a></td>
                             </tr>
                         }
                     </tbody>

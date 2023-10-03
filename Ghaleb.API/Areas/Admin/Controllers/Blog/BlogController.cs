@@ -37,7 +37,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Blog
 
         public async Task<IActionResult> Index()
         {
-            var Result = await _context.GetAllAsync<tbl_Blog>().Include(x=>x.BlogCategory).Include(x=>x.BlogComments).Where(x=>x.IsDelete==false).ToListAsync();
+            var Result = await _context.GetAllAsync<tbl_Blog>().Include(x=>x.Image).Include(x=>x.BlogCategory).Include(x=>x.BlogComments).Where(x=>x.IsDelete==false).ToListAsync();
             return View(Result);
         }
         public async Task<IActionResult> Create()

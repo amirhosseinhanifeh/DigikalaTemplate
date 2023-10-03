@@ -10,7 +10,19 @@
     <div class="col-xl-12">
         <div class="">
             <div class="card-header border-0">
-
+                <form method="get" class="row">
+                    <div class="form-group col-md-2">
+                        <label>نام و نام خانوادگی</label>
+                        <input class="form-control" name="fullName" />
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label>موبایل</label>
+                        <input class="form-control" name="mobile" />
+                    </div>
+                    <div class="form-group col-md-2">
+                        <button class="btn btn-dark d-block" type="submit">اعمال</button>
+                    </div>
+                </form>
             </div>
             <div class="table-responsive">
                 <table class="table align-items-center table-flush">
@@ -41,7 +53,7 @@
                                 <td>@item.Orders.Count(h=>h.OrderStateHistories.Any(f=>f.OrderState==ALO.DomainClasses.Entity.Order.OrderState.PAYED))</td>
                                 <td>
                                     <a class="btn btn-primary" asp-route-userId="@item.Id" asp-controller="Order" asp-action="Index">سفارشات</a>
-                                    <a class="btn btn-dark" asp-route-id="@item.Id" asp-action="Menu">دسترسی ها</a>
+                                    <a class="btn btn-dark" asp-route-id="@item.Id" asp-action="Menues">دسترسی ها</a>
                                     <a class="btn btn-warning" asp-route-id="@item.Id" asp-action="Addresses">آدرس ها</a>
                                     <a class="btn btn-success" asp-route-id="@item.Id" asp-action="SendSms">ارسال پیامک</a>
                                     <a class="btn btn-danger" asp-route-id="@item.Id" asp-action="Delete">حذف</a>

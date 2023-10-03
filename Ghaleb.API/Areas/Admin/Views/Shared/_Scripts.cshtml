@@ -3,9 +3,9 @@
 *@
 @{
 }
-<script src="~/AdminTemplate/assets/plugins/jquery/jquery.min.js"></script>
-<script src="~/lib/dropzone/min/dropzone.min.js"></script>
-<script type="text/javascript">
+
+
+@* <script type="text/javascript">
 
         Dropzone.autoDiscover = false;
     $(document).ready(function () {
@@ -34,13 +34,14 @@
             success: function (file,response) {
                 console.log(file);
                 console.log(response)
+                $("input[name=" + name + "]").val(data.data);
             },
             error: function (file, response) {
                 file.previewElement.classList.add("dz-error");
             }
         });
     });
-</script>
+</script> *@
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- Bootstrap js -->
 <script src="~/AdminTemplate/assets/plugins/bootstrap/js/popper.min.js"></script>

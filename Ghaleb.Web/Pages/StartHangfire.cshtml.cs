@@ -23,7 +23,7 @@ namespace Ghaleb.Web.Pages
         {
             RecurringJob.AddOrUpdate(
            "SiteMap",
-           () =>Start(),
+           () => Start(),
            Cron.Daily);
         }
         public async Task Start()
@@ -35,7 +35,42 @@ namespace Ghaleb.Web.Pages
                 list.Add(new SitemapNode { LastModified = DateTime.UtcNow, Priority = 0.8, Url = configuration["SiteSetting:Url"] + "product/" + item.Id + "/" + item.Url, Frequency = SitemapFrequency.Daily });
 
             }
+            var blogs = await _context.tbl_Blogs.Where(h => h.IsActive && !h.IsDelete).ToListAsync();
+            foreach (var item in blogs)
+            {
+                list.Add(new SitemapNode { LastModified = DateTime.UtcNow, Priority = 0.8, Url = configuration["SiteSetting:Url"] + "mag/post/" + item.Id + "/" + item.Url, Frequency = SitemapFrequency.Daily });
 
+            }
+            var pages = await _context.tbl_PageContent.Where(x => x.IsActive && !x.IsDelete).ToListAsync();
+            foreach (var item in pages)
+            {
+                list.Add(new SitemapNode { LastModified = DateTime.UtcNow, Priority = 0.8, Url = configuration["SiteSetting:Url"] + "page/" + item.Url, Frequency = SitemapFrequency.Daily });
+
+            }
+            var tags = await _context.tbl_ProductTags.Where(x => x.IsActive && !x.IsDelete).ToListAsync();
+            foreach (var item in tags)
+            {
+                list.Add(new SitemapNode { LastModified = DateTime.UtcNow, Priority = 0.8, Url = configuration["SiteSetting:Url"] + "search/tag/" + item.Id + "/" + item.Name, Frequency = SitemapFrequency.Daily });
+
+            }
+            var brands = await _context.tbl_Brands.Where(x => x.IsActive && !x.IsDelete).ToListAsync();
+            foreach (var item in brands)
+            {
+                list.Add(new SitemapNode { LastModified = DateTime.UtcNow, Priority = 0.8, Url = configuration["SiteSetting:Url"] + "search/brand/" + item.Id + "/" + item.Url, Frequency = SitemapFrequency.Daily });
+
+            }
+            var categoreis = await _context.tbl_ProductCategories.Where(x => x.IsActive && !x.IsDelete).ToListAsync();
+            foreach (var item in categoreis)
+            {
+                list.Add(new SitemapNode { LastModified = DateTime.UtcNow, Priority = 0.8, Url = configuration["SiteSetting:Url"] + "search/" + item.Id + "/" + item.Url, Frequency = SitemapFrequency.Daily });
+
+            }
+            var subcategoreis = await _context.tbl_SubProductCategories.Include(x=>x.ProductCategory).Where(x => x.IsActive && !x.IsDelete).ToListAsync();
+            foreach (var item in subcategoreis)
+            {
+                list.Add(new SitemapNode { LastModified = DateTime.UtcNow, Priority = 0.8, Url = configuration["SiteSetting:Url"] + "search/" + item.ProductCategoryId + "/" + item.ProductCategory.Url + "/" + item.Id + "/" + item.Url, Frequency = SitemapFrequency.Daily });
+
+            }
             new SitemapDocument().CreateSitemapXML(list, _env.WebRootPath);
         }
     }

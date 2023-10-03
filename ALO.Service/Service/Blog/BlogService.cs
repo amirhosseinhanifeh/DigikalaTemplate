@@ -73,7 +73,7 @@ namespace ALO.Service.Service.Blog
         {
             try
             {
-                var query = await _db.GetAsync<tbl_Blog>(x => x.Url == url, new string[] { "BlogCategory", "Image", "BlogComments","BlogComments.User","BlogComments.User.Profile" });
+                var query = await _db.GetAsync<tbl_Blog>(x => x.Url == url, new string[] { "BlogCategory", "Image", "BlogComments", "BlogComments.User", "BlogComments.User.Profile" });
                 var Result = new BlogDetailsForHomeDto
                 {
                     Abstract = query.Abstract,
@@ -154,60 +154,59 @@ namespace ALO.Service.Service.Blog
         {
             try
             {
-                if (!_db.tbl_Blogs.Any(y => y.Url == model.Url && y.IsDelete != true))
+                var response = await _db.tbl_Blogs.AsNoTracking().FirstOrDefaultAsync(y => y.Url == model.Url && y.IsDelete != true);
+                if (response != null && response.Id != model.Id)
                 {
-                    if (model.Id != null)
-                    {
-
-                        _db.UpdateBaseEntity(new tbl_Blog
-                        {
-
-                            Id = model.Id.GetValueOrDefault(),
-                            MetaDescription = model.MetaDescription,
-                            MetaKeyword = string.Join(",",model.MetaKeyword),
-                            PageTitle = model.PageTitle,
-                            Title = model.Title,
-                            Url = model.Url,
-                            Abstract = model.Abstract,
-                            ImageId = model.ImageId,
-                            Description = model.Description,
-                            Visit = model.Visit,
-                            ShowInHome = model.ShowInHome,
-                            BlogCategoryId = model.BlogCategoryId,
-
-                        });
-                    }
-                    else
-                    {
-                        _db.CreateBaseEntity<tbl_Blog>(new tbl_Blog
-                        {
-                            Abstract = model.Abstract,
-                            Description = model.Description,
-                            Url = model.Url,
-                            Title = model.Title,
-                            PageTitle = model.PageTitle,
-                            MetaKeyword = string.Join(",", model.MetaKeyword),
-                            ImageId = model.ImageId,
-                            MetaDescription = model.MetaDescription,
-                            BlogCategoryId = model.BlogCategoryId,
-                            ShowInHome = model.ShowInHome,
-                            Visit = 0,
-
-                        });
-                    }
-                    await _db.SaveChangesAsync();
                     return new ListResultViewModel<bool>
                     {
-                        model = true,
-                        Message = SuccessfullMessage,
-                        NotificationType = NotificationType.success,
-                        Status = Status.Success
+                        model = false,
+                        Message = "محتوای آدرس تکراری می باشد",
+                        NotificationType = NotificationType.warning,
+                        Status = Status.Warning
                     };
                 }
+                if (model.Id != null)
+                {
+                    _db.UpdateBaseEntity(new tbl_Blog
+                    {
+
+                        Id = model.Id.GetValueOrDefault(),
+                        MetaDescription = model.MetaDescription,
+                        MetaKeyword = string.Join(",", model.MetaKeyword),
+                        PageTitle = model.PageTitle,
+                        Title = model.Title,
+                        Url = model.Url,
+                        Abstract = model.Abstract,
+                        ImageId = model.ImageId,
+                        Description = model.Description,
+                        ShowInHome = model.ShowInHome,
+                        BlogCategoryId = model.BlogCategoryId,
+
+                    });
+                }
+                else
+                {
+                    _db.CreateBaseEntity<tbl_Blog>(new tbl_Blog
+                    {
+                        Abstract = model.Abstract,
+                        Description = model.Description,
+                        Url = model.Url,
+                        Title = model.Title,
+                        PageTitle = model.PageTitle,
+                        MetaKeyword = string.Join(",", model.MetaKeyword),
+                        ImageId = model.ImageId,
+                        MetaDescription = model.MetaDescription,
+                        BlogCategoryId = model.BlogCategoryId,
+                        ShowInHome = model.ShowInHome,
+                        Visit = 0,
+
+                    });
+                }
+                await _db.SaveChangesAsync();
                 return new ListResultViewModel<bool>
                 {
-                    model = false,
-                    Message = "محتوای آدرس تکراری می باشد",
+                    model = true,
+                    Message = SuccessfullMessage,
                     NotificationType = NotificationType.success,
                     Status = Status.Success
                 };
@@ -220,8 +219,8 @@ namespace ALO.Service.Service.Blog
                     model = false,
                     NotificationType = NotificationType.error,
                     Status = Status.Failed
-                };
-            }
+    };
+}
         }
     }
 }

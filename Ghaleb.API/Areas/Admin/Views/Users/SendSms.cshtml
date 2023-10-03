@@ -1,0 +1,18 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model IEnumerable<ALO.DomainClasses.Entity.Account.tbl_Users>
+@{
+    ViewData["Title"] = "ارسال اس ام اس";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+            <div class="form-group col-12">
+                <textarea class="form-control" rows="8" name="text" placeholder="متن پیام"></textarea>
+            </div>
+            <div class="form-group col-12">
+                <button class="btn btn-dark" type="submit">ارسال</button>
+            </div>
+    </div>
+</div>

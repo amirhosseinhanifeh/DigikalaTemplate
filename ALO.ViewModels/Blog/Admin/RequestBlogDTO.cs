@@ -20,7 +20,7 @@ namespace ALO.ViewModels.Blog.Admin
         [Display(Name = "نمایش در صفحه اول")]
         public bool ShowInHome { get; set; }
         [Display(Name = "عکس")]
-        public long ImageId { get; set; }
+        public long? ImageId { get; set; }
         [Display(Name = "دسته")]
         public long BlogCategoryId { get; set; }
     }

@@ -8,6 +8,7 @@
     ViewData["Title"] = "افزودن محصول";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
+
 <div class="row">
     <div class="col-md-12">
         <a class="btn btn-primary" asp-action="Index">بازگشت به لیست</a>
@@ -43,11 +44,6 @@
                 <div class="form-group col-6">
                     <label asp-for="Title"></label>
                     <input class="form-control" type="text" asp-for="Title" />
-                </div>
-                <div class="form-group col-6">
-                    <label asp-for="ImageId"></label>
-                    <image-upload Id="img" For="ImageId"></image-upload>
-
                 </div>
                 <div class="form-group col-6">
                     <label asp-for="ImageId"></label>

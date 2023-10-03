@@ -66,8 +66,17 @@ namespace Ghaleb.Web.Pages.Checkout
                 OrderCode = Generate.GenerateCode(5),
                 UserId = User.UserId(),
                 UserAddressId = addressId,
-                OrderDetails = new List<tbl_OrderDetails>()
+                OrderDetails = new List<tbl_OrderDetails>(),
+                OrderStateHistories = new List<tbl_OrderStateHistory>()
             };
+            data.OrderStateHistories.Add(new tbl_OrderStateHistory
+            {
+                OrderState = OrderState.CREATED
+            });
+            data.OrderStateHistories.Add(new tbl_OrderStateHistory
+            {
+                OrderState = OrderState.PENDING
+            });
             foreach (var item in list)
             {
                 data.OrderDetails.Add(new tbl_OrderDetails

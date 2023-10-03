@@ -1,6 +1,10 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, AuthoringTagHelpers
 @model IEnumerable<ALO.DomainClasses.Entity.Blog.tbl_Blog>
+@using ALO.DomainClasses.EntityHelpers
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
 @{
     ViewData["Title"] = "لیست وبلاگ ها";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
@@ -21,8 +25,10 @@
                 <table class="table align-items-center table-flush">
                     <thead>
                         <tr>
+                            <th>عکس</th>
                             <th>عنوان</th>
                             <th>دسته</th>
+                            <th>تعداد بازدید</th>
                             <th>وضعیت</th>
                             <th></th>
                         </tr>
@@ -31,9 +37,16 @@
                         @foreach (var item in Model)
                         {
                             <tr>
+                                <td><img class="img-thumbnail" style="width:75px" src="@item.Image.BindImage(Configuration)" /></td>
                                 <td>@item.Title</td>
                                 <td>@item.BlogCategory.Title</td>
-                                <td>@(item.IsActive?"فعال":"غیرفعال")</td>
+                                <td>@item.Visit</td>
+                                <td>
+                                    <div class="custom-control custom-switch" style="direction:ltr;padding:0">
+                                        <input type="checkbox" class="custom-control-input" id="customSwitch@(item.Id)" onchange="ChangeStatus(@item.Id)" @(item.IsActive ? "checked" : "")>
+                                        <label class="custom-control-label" for="customSwitch@(item.Id)"></label>
+                                    </div>
+                                </td>
                                 <td>
                                     <a class="btn btn-warning"  asp-action="Index" asp-controller="BlogComment" asp-route-blogId="@item.Id" >نظرات (@item.BlogComments.Count())</a>
                                     <a class="btn btn-dark"  asp-action="Edit" asp-route-Id="@item.Id" >ویرایش</a>
