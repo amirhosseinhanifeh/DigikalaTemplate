@@ -12,6 +12,7 @@ using ALO.DomainClasses.Entity.Blog;
 using ALO.DomainClasses.Entity.City;
 using ALO.DomainClasses.Entity.Content;
 using ALO.DomainClasses.Entity.Country;
+using ALO.DomainClasses.Entity.Discount;
 using ALO.DomainClasses.Entity.Financial;
 using ALO.DomainClasses.Entity.Forms;
 using ALO.DomainClasses.Entity.IMG;
@@ -86,6 +87,7 @@ namespace ALO.DataAccessLayer.DataContext
         public DbSet<tbl_ProductPriceOptionValue> tbl_ProductPriceOptionValues{ get; set; }
         public DbSet<tbl_ProductGuarantee> tbl_ProductGuarantees { get; set; }
         public DbSet<tbl_DeliveryPrice> tbl_DeliveryPrices { get; set; }
+        public DbSet<tbl_TorobProducts> tbl_TorobProducts { get; set; }
 
 
         #endregion
@@ -137,6 +139,7 @@ namespace ALO.DataAccessLayer.DataContext
         #region Order
         public DbSet<tbl_Order> tbl_Orders { get; set; }
         public DbSet<tbl_OrderDetails> tbl_OrderDetails { get; set; }
+        public DbSet<tbl_Discount> tbl_Discounts { get; set; }
         public DbSet<tbl_Wallet> tbl_Wallets { get; set; }
         public DbSet<tbl_WalletHistory> tbl_WalletHistories { get; set; }
 

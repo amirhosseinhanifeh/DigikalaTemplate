@@ -16,6 +16,8 @@ namespace ALO.ViewModels.Product.Admin
         public string Title { get; set; }
         [Display(Name = "نام  انگلیسی محصول")]
         public string EnTitle { get; set; }
+        [Display(Name = "لینک ترب")]
+        public string TorobLink { get; set; }
         [Display(Name = "توضیحات")]
         public string Description { get; set; }
         [Display(Name = "خلاصه")]

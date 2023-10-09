@@ -1,6 +1,8 @@
 ﻿using ALO.DomainClasses.Entity.Account;
 using ALO.DomainClasses.Entity.City;
+using ALO.DomainClasses.Entity.Content;
 using ALO.DomainClasses.Entity.IMG;
+using ALO.DomainClasses.Entity.Units;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,16 +16,25 @@ namespace ALO.DomainClasses.Entity.Product
     public class tbl_Product : BaseEntity
     {
         public string Title { get; set; }
+
         public string EnTitle { get; set; }
+
         public string Description { get; set; }
+
         public string Abstract { get; set; }
+
         public bool IsSpecial { get; set; }
         /// <summary>
         /// ایندکس شود توسط گوگل؟
         /// </summary>
         public bool DoIndex { get; set; } = false;
+
         public long Visit { get; set; }
+
         public ProductState State { get; set; }
+
+        public string TorobLink { get; set; }
+
         public long? ImageId { get; set; }
         public tbl_Image Image { get; set; }
 
@@ -42,16 +53,20 @@ namespace ALO.DomainClasses.Entity.Product
 
         public long? BrandId { get; set; }
         public tbl_Brands Brand { get; set; }
+
+        public long? UnitId { get; set; }
+        public tbl_Units Unit { get; set; }
+
         public ICollection<tbl_ProductComment> ProductComments { get; set; }
         public ICollection<tbl_Image> Images { get; set; }
         public ICollection<tbl_ProductRating> Ratings { get; set; }
-
         public ICollection<tbl_ProductCustomFieldValues> ProductCustomFieldValues { get; set; }
         public ICollection<tbl_ProductPriceOptionValue> ProductPriceOptionValues { get; set; }
         public ICollection<tbl_Users> Users { get; set; }
         public List<tbl_ProductTags> ProductTags { get; set; }
         public ICollection<tbl_ProductVisits> ProductVisits { get; set; }
         public ICollection<tbl_ProductPriceHistory> ProductPriceHistories { get; set; }
+        public ICollection<tbl_TorobProducts> TorobProducts { get; set; }
 
         #region Seo
         public string Url { get; set; }
@@ -106,9 +121,9 @@ namespace ALO.DomainClasses.Entity.Product
             if (GetDiscountPrice() != null)
             {
                 var d = GetDiscountPrice().Value - GetLastPrice();
-                
-                d= d/ GetLastPrice() * (-100);
-                return (int)Math.Round(d );
+
+                d = d / GetLastPrice() * (-100);
+                return (int)Math.Round(d);
             }
             return null;
         }

@@ -4,14 +4,16 @@ using ALO.DataAccessLayer.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ALO.DataAccessLayer.Migrations
 {
     [DbContext(typeof(ServiceContext))]
-    partial class ServiceContextModelSnapshot : ModelSnapshot
+    [Migration("20231007114446_AddUnitId")]
+    partial class AddUnitId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1291,7 +1293,7 @@ namespace ALO.DataAccessLayer.Migrations
                         new
                         {
                             Id = 3L,
-                            CreatedDate = new DateTime(2023, 10, 7, 15, 48, 57, 768, DateTimeKind.Local).AddTicks(4953),
+                            CreatedDate = new DateTime(2023, 10, 7, 15, 14, 45, 865, DateTimeKind.Local).AddTicks(7196),
                             IsActive = true,
                             IsDelete = false,
                             LanguageCode = "fa",
@@ -1955,9 +1957,6 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TorobLink")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<long?>("UnitId")
                         .HasColumnType("bigint");
 
@@ -2588,53 +2587,6 @@ namespace ALO.DataAccessLayer.Migrations
                     b.HasIndex("ProductCategoryId");
 
                     b.ToTable("tbl_SubProductCategories");
-                });
-
-            modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_TorobProducts", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("Createdby")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDelete")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastUpdate")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("Modifiedby")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Price")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("ProductId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("ShopName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("tbl_TorobProducts");
                 });
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.SpecialSell.tbl_SpecialSell", b =>
@@ -3560,17 +3512,6 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Navigation("ProductCategory");
                 });
 
-            modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_TorobProducts", b =>
-                {
-                    b.HasOne("ALO.DomainClasses.Entity.Product.tbl_Product", "Product")
-                        .WithMany("TorobProducts")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("ALO.DomainClasses.Entity.SpecialSell.tbl_SpecialSellProducts", b =>
                 {
                     b.HasOne("ALO.DomainClasses.Entity.Product.tbl_Product", "Product")
@@ -3806,8 +3747,6 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Navigation("ProductVisits");
 
                     b.Navigation("Ratings");
-
-                    b.Navigation("TorobProducts");
                 });
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_ProductCategory", b =>

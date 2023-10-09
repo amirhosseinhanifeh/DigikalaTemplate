@@ -10,6 +10,7 @@ namespace ALO.DomainClasses.Entity.Product
         public tbl_Color Color { get; set; }
         public decimal Price { get; set; }
         public int Inventory { get; set; }
+        public int? MinCanOrder { get; set; }
         public decimal? DiscountPrice { get; set; }
         public long? ProductGuaranteeId { get; set; }
         public tbl_ProductGuarantee ProductGuarantee { get; set; }

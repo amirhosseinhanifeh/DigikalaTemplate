@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{handler?}"
 @model Ghaleb.Web.Pages.Checkout.PaymentModel
 @{
 }
@@ -16,18 +16,28 @@
                     <td>هزینه حمل و نقل</td>
                     <td> @Model.DeliverPrice.ToString("n0").toPersianNumber() تومان</td>
                 </tr>
-                <!-- <tr>
-                    <td>مالیات ارزش افزوده</td>
-                    <td> 50000 تومان</td>
-                </tr> -->
+                <tr>
+                    @if (Model.DiscountPrice != null)
+                    {
+                        <td>تخفیف</td>
+                        <td> @Model.DiscountPrice.Value.ToString("n0").toPersianNumber() تومان</td>
+                    }
+                </tr>
                 <tr sty>
                     <td style="font-size:19px ;">مبلغ قابل پرداخت</td>
                     <td style="font-size:19px ;"> @Model.PaymentPrice.ToString("n0").toPersianNumber() تومان</td>
                 </tr>
             </tbody>
         </table>
-
-        <form method="post">
+        <form method="post" asp-page-handler="Discount">
+            <input name="code" value="" placeholder="enter discount code" />
+            <button type="submit" class="btn btn-primary">اعمال</button>
+        </form>
+        <form method="post" asp-page-handler="Post">
+            @if (Model.Discount != null)
+            {
+                <input name="discountId" value="@Model.Discount.Id" />
+            }
             <button type="submit" class=" col-12 btn btn-success " style="height:50px ;font-size:15px ;">
                 پرداخت
             </button>
@@ -90,7 +100,7 @@
                 <tbody>
                     <tr style="vertical-align:middle ;">
                         <td>
-                        @Model.Address.Address پلاک @Model.Address.Pelak.ToString().toPersianNumber() واحد @Model.Address.Vahed.ToString().toPersianNumber()
+                            @Model.Address.Address پلاک @Model.Address.Pelak.ToString().toPersianNumber() واحد @Model.Address.Vahed.ToString().toPersianNumber()
                         </td>
                         <td>
                             @Model.Address.Phone.ToString().toPersianNumber()

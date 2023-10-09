@@ -1,6 +1,7 @@
 using ALO.Common.Utilities.Generate;
 using ALO.DataAccessLayer.DataContext;
 using ALO.DomainClasses.Entity.Account;
+using ALO.DomainClasses.Entity.Discount;
 using ALO.DomainClasses.Entity.Order;
 using ALO.DomainClasses.EntityHelpers;
 using Dto.Payment;
@@ -29,33 +30,63 @@ namespace Ghaleb.Web.Pages.Checkout
         public decimal TotalPrice { get; set; }
         public decimal DeliverPrice { get; set; } = 0;
         public decimal PaymentPrice { get; set; } = 0;
+        public decimal? DiscountPrice { get; set; }
         public tbl_UserAddresses Address { get; set; }
+        public tbl_Discount Discount { get; set; }
+
         public async Task OnGetAsync()
         {
+            await LoadDataAsync();
+        }
+        public async Task LoadDataAsync()
+        {
+            List = new List<ResponseGetBasketItems>();
             var res = Request.Cookies["basket"];
             var addressId = long.Parse(Request.Cookies["address"]);
             var useraddress = await _context.tbl_UserAddresses.FirstOrDefaultAsync(x => x.Id == addressId);
             Address = useraddress;
             var list = JsonConvert.DeserializeObject<List<ResonseBasketDTO>>(res);
-            foreach (var item in list)
+            var ids = list.Select(h => h.Id);
+            var prs = await _context.tbl_ProductPriceHistory.Include(x => x.Product).ThenInclude(x => x.Image).Where(h => ids.Contains(h.Id)).ToListAsync();
+            foreach (var item in prs)
             {
-
-                var pr = await _context.tbl_ProductPriceHistory.Include(x => x.Product).ThenInclude(x => x.Image).FirstOrDefaultAsync(x => x.Id == item.Id);
-
+                var count = list.FirstOrDefault(h => h.Id == item.Id);
                 List.Add(new ResponseGetBasketItems
                 {
-                    Count = item.Count,
-                    Price = pr.GetPrice(),
+                    Count = count.Count,
+                    Price = item.GetPrice(),
                     Id = item.Id,
-                    Image = pr.Product.Image.BindImage(_configuration),
-                    Name = pr.Product.Title,
-                    TotalPrice = pr.GetPrice() * item.Count
+                    Image = item.Product.Image.BindImage(_configuration),
+                    Name = item.Product.Title,
+                    TotalPrice = item.GetPrice() * count.Count
                 });
             }
             TotalPrice = List.Sum(x => x.Price * x.Count);
-            PaymentPrice = TotalPrice + DeliverPrice;
+
+            if (Discount != null)
+            {
+                var prev = (TotalPrice + DeliverPrice);
+                DiscountPrice = (prev * (decimal)Discount.Percent) / 100;
+                PaymentPrice = prev - DiscountPrice.Value;
+            }
+            else
+            {
+                PaymentPrice = TotalPrice + DeliverPrice;
+            }
         }
-        public async Task<IActionResult> OnPostAsync()
+        public async Task OnPostDiscountAsync(string code)
+        {
+            if (!string.IsNullOrEmpty(code))
+            {
+                var discount = await _context.tbl_Discounts.AsNoTracking().Include(x => x.Orders).FirstOrDefaultAsync(h => h.Code == code && h.UseCount > h.Orders.Count());
+                if (discount != null)
+                {
+                    Discount = discount;
+                }
+            }
+            await LoadDataAsync();
+        }
+        public async Task<IActionResult> OnPostAsync(long? discountId)
         {
             var addressId = long.Parse(Request.Cookies["address"]);
 
@@ -66,6 +97,7 @@ namespace Ghaleb.Web.Pages.Checkout
                 OrderCode = Generate.GenerateCode(5),
                 UserId = User.UserId(),
                 UserAddressId = addressId,
+                DiscountId = discountId,
                 OrderDetails = new List<tbl_OrderDetails>(),
                 OrderStateHistories = new List<tbl_OrderStateHistory>()
             };

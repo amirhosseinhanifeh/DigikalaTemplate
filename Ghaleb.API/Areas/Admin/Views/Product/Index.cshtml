@@ -61,6 +61,7 @@
                                     <a class="btn btn-warning" asp-route-productId="@item.Id" asp-controller="ProductComment" asp-action="Index" data-toggle="tooltip" data-placement="top" title="نظرات"><i class="fa-regular fa-comment"></i> (@item.CommentCount)</a>|
                                     <a class="btn btn-success" asp-route-productId="@item.Id" asp-controller="ProductTag" asp-action="Index" data-toggle="tooltip" data-placement="top" title="برچسب ها"><i class="fa-regular fa-tag"></i> (@item.TagCount)</a>|
                                     <a class="btn btn-primary" asp-route-productId="@item.Id" asp-controller="ProductPriceHistory" asp-action="Index" data-toggle="tooltip" data-placement="top" title="قیمت گذاری"><i class="fa-regular fa-square-dollar"></i></a>|
+                                    <a class="btn btn-primary" asp-route-id="@item.Id" asp-controller="Torob" asp-action="Index" data-toggle="tooltip" data-placement="top" title="فروشنده های تروب"><i class="fa-regular fa-square-dollar"></i></a>|
                                     <a class="btn btn-dark" asp-route-id="@item.Id" asp-action="Edit" data-toggle="tooltip" data-placement="top" title="ویرایش"><i class="fa-regular fa-pen-to-square"></i></a>|
                                     <a class="btn btn-danger" asp-action="Delete" asp-area="Admin" asp-controller="Product" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="حذف"><i class="fa-regular fa-trash"></i></a>
                                 </td>

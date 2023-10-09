@@ -29,6 +29,7 @@ namespace Ghaleb.Web.Pages.Checkout
                 .Include(x => x.OrderStateHistories)
                 .Include(x => x.DeliveryPrice)
                 .Include(x => x.User)
+                .Include(x=>x.Discount)
                 .Include(x => x.UserAddress)
                 .Include(x => x.OrderDetails)
                 .ThenInclude(x => x.ProductPriceHistory)
