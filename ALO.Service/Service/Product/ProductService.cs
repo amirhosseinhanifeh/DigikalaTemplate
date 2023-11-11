@@ -267,7 +267,7 @@ namespace ALO.Service.Service.Product
             }
         }
 
-        public async Task<ListResultViewModel<ProductDetailsForHomeDto>> GetProductDetails(long url, long? UserId = null)
+        public async Task<ListResultViewModel<ProductDetailsForHomeDto>> GetProductDetails(long id,string url, long? UserId = null)
         {
 
             try
@@ -292,7 +292,7 @@ namespace ALO.Service.Service.Product
                     .ThenInclude(x => x.ProductCustomFieldsOptionValues)
                     .Include(x => x.ProductPriceHistories)
                     .ThenInclude(x => x.Color)
-                    .FirstOrDefaultAsync(x => x.Id == url);
+                    .FirstOrDefaultAsync(x => x.Id == id && x.Url==url);
                 if (query == null)
                     return new ListResultViewModel<ProductDetailsForHomeDto>
                     {

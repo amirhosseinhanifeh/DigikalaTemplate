@@ -1,0 +1,45 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@using ALO.Common.Utilities.ConvertDt
+@using ALO.Common.Extentions
+@model IEnumerable<ALO.DomainClasses.Entity.Order.tbl_Order>
+@{
+    ViewData["Title"] = "لیست سفارشات";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                    <thead>
+                        <tr>
+                            <th>کد سفارش</th>
+                            <th>مبلغ فاکتور</th>
+                            <th>تاریخ سفارش</th>
+                            <th>وضعیت</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.OrderCode</td>
+                                <td>@item.OrderDetails.Sum(x=>x.Count * x.ProductPriceHistory.GetPrice()).ToString("n0") تومان</td>
+                                <td>@item.CreatedDate.ConvertToPesainDate()</td>
+                                <td>@item.OrderStateHistories.OrderBy(x=>x.Id).LastOrDefault().OrderState.GetDisplay()</td>
+                                <td>
+                                    <a class="btn btn-dark" asp-route-addressid="@item.UserAddressId" asp-action="UserDetail">اطلاعات خریدار</a>
+                                    <a class="btn btn-info" asp-route-id="@item.Id" asp-action="Details">مشاهده جزییات</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

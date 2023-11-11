@@ -3,6 +3,11 @@
 @{
     ViewData["Seo"] = Model.Product;
 }
+
+@section Tags
+    {
+    <link rel="canonical" href="@Configuration["SiteSetting:Url"]Product/@Model.Product.Id/@Model.Product.Url">
+}
 <style>
     .zoomWindow {
         right: 400px;
@@ -32,7 +37,7 @@
                 @foreach (var item in Model.Product.Images)
                 {
                     <img src="@item.Url"
-                     style="margin-left: 5px; width: 85px;border-radius:
+                         style="margin-left: 5px; width: 85px;border-radius:
                     5px;border:1px solid rgb(201, 201, 201) ;">
                 }
 
@@ -58,8 +63,8 @@
                         {
                             <span style="font-size: 13px;">
                                 برند : <a href="/Search/Brand/@Model.Product.Brand.Id/@Model.Product.Brand.Name"
-                                      [routerLink]="['/brand/'+data?.brand?.id+'/'+data?.brand?.name]"
-                                      style="font-size: 13px; color: #19bfd3;">
+                                          [routerLink]="['/brand/'+data?.brand?.id+'/'+data?.brand?.name]"
+                                          style="font-size: 13px; color: #19bfd3;">
                                     @Model.Product.Brand.Name
                                 </a>
                             </span>
@@ -71,8 +76,8 @@
                         <div class="col-6">
                             <span style="font-size: 13px;">
                                 دسته بندی : <a href=""
-                                           [routerLink]="['/search/category/'+data?.category.id+'/'+data?.category.url]"
-                                           style="font-size: 13px;color: #19bfd3;">
+                                               [routerLink]="['/search/category/'+data?.category.id+'/'+data?.category.url]"
+                                               style="font-size: 13px;color: #19bfd3;">
                                     @Model.Product.Category.Name
                                 </a>
                             </span>
@@ -96,7 +101,7 @@
                         {
                             <a asp-route-color="@item.Id" class="color d-flex justify-content-center align-items-center" style="border-radius: 50px;border: 2px
                     solid gray;margin-right:15px; width: 35px;height: 35px;background-color:@item.Hex"
-                       data-bs-toggle="tooltip" data-bs-placement="top" title="@item.Name">
+                               data-bs-toggle="tooltip" data-bs-placement="top" title="@item.Name">
                                 @if (item.Id == Model.Color)
                                 {
                                     <i class="fa-regular fa-check"></i>
@@ -184,24 +189,24 @@
         @if (Model.Product.Abstract != null)
         {
             <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
-                data-bs-target="#nav-home" type="button" role="tab"
-                aria-controls="nav-home" aria-selected="false">
+                    data-bs-target="#nav-home" type="button" role="tab"
+                    aria-controls="nav-home" aria-selected="false">
                 معرفی
             </button>
         }
         @if (Model.Product.Description != null)
         {
             <button class="nav-link" id="nav-description-tab" data-bs-toggle="tab"
-                data-bs-target="#nav-description" type="button" role="tab"
-                aria-controls="nav-description" aria-selected="false">
+                    data-bs-target="#nav-description" type="button" role="tab"
+                    aria-controls="nav-description" aria-selected="false">
                 توضیحات
             </button>
         }
         @if (Model.Product.Values.Any())
         {
             <button class="nav-link" id="nav-attr-tab" data-bs-toggle="tab"
-                data-bs-target="#nav-attr" type="button" role="tab"
-                aria-controls="nav-attr" aria-selected="false">
+                    data-bs-target="#nav-attr" type="button" role="tab"
+                    aria-controls="nav-attr" aria-selected="false">
                 مشخصات فنی
             </button>
         }

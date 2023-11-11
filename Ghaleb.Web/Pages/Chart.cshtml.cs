@@ -26,11 +26,20 @@ namespace Ghaleb.Web.Pages
         public long? ColorId { get; set; }
         public string ChartJson { get; set; }
         public string Title { get; set; }
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
+            if (Id == null)
+                return Redirect("~/");
+
             var data = await _context.tbl_Products.Include(x => x.ProductPriceHistories).ThenInclude(x=>x.Color).FirstOrDefaultAsync(x => x.Id == Id);
+            if (data == null)
+                return Redirect("~/");
+
+            if (!data.ProductPriceHistories.Any())
+                return Redirect("~/");
+
             Title = data.Title;
-            if(ColorId==null)
+            if(ColorId==null && data.ProductPriceHistories.Any())
             {
                 ColorId = data.ProductPriceHistories.First().ColorId;
             }
@@ -58,14 +67,17 @@ namespace Ghaleb.Web.Pages
             line.Caption.Text = "نمودار قیمت " + data.Title;
             line.Caption.Bold = true;
             line.Caption.FontName = "iranyekan";
-            line.SubCaption.Text =data.ProductPriceHistories.FirstOrDefault(h=>h.ColorId==ColorId)?.Color?.Name;
+            if (data.ProductPriceHistories.Count > 0)
+            {
+                line.SubCaption.Text = data.ProductPriceHistories.FirstOrDefault(h => h.ColorId == ColorId)?.Color?.Name;
+            }
             line.XAxis.Text = "تاریخ";
             line.YAxis.Text = "قیمت";
             line.Legend.Show = false;
-            line.ThemeName = FusionChartsTheme.ThemeName.FUSION;
 
             // set chart rendering json
             ChartJson = line.Render();
+            return Page();
         }
     }
 }

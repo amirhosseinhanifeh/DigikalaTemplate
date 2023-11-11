@@ -21,6 +21,7 @@ namespace Ghaleb.Web.Pages.Checkout
         public ResponseOrder Order { get; set; }
         public async Task OnGet()
         {
+            
             var res = Request.Cookies["basket"];
             if (res == null)
                 return;
@@ -46,11 +47,10 @@ namespace Ghaleb.Web.Pages.Checkout
 
             Order = new ResponseOrder()
             {
-                DeliveryPrice = delivery.GetCost(List.Sum(h => h.TotalPrice)),
+                DeliveryPrice =delivery!=null? delivery.GetCost(List.Sum(h => h.TotalPrice)):0,
                 Items = List,
                 ProductPrices = List.Sum(h => h.TotalPrice),
-                DeliveryId = delivery.Id,
-                TotalPrice = delivery.GetCost(List.Sum(h => h.TotalPrice)) + List.Sum(h => h.TotalPrice)
+                TotalPrice =(delivery !=null? delivery.GetCost(List.Sum(h => h.TotalPrice)):0) + List.Sum(h => h.TotalPrice)
             };
         }
         public async Task<IActionResult> OnGetDelete(long id)

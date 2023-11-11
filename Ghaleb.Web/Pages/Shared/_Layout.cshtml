@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="~/lib/Swiper/swiper-bundle.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
+    @RenderSection("Tags",false)
     @await Component.InvokeAsync("FavIcon")
 
 </head>
@@ -38,7 +39,7 @@
                     <form method="get" asp-page="/Search" class="col-xl-4 col-7 mt-md-0 top-search-input me-2 me-xl-0 d-flex align-items-center position-relative rounded" style="height:47px;">
                         <i class="fa-regular fa-magnifying-glass" style="font-size: 16px;color: #9f9f9f;"></i>
                         <input class="form-control d-inline w-75"
-                               placeholder="کالای مورد نظر را جستجو کنید..." name="q" id="search-input" >
+                               placeholder="کالای مورد نظر را جستجو کنید..." name="q" id="search-input">
 
                         <ul id="search-items" class="position-absolute w-100" style="
                                 right: 0;
@@ -52,38 +53,38 @@
                         </ul>
                     </form>
                     <div class="col-4 col-xl-7 col-lg-2 me-2 me-sm-0">
-                                <div class="row justify-content-end">
+                        <div class="row justify-content-end">
 
 
-                                    @if (User.Identity.IsAuthenticated)
-                                    {
-                                        <div class="col-6 col-xl-3 col-lg-5 border-start">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <div class="col-6 col-xl-3 col-lg-5 border-start">
 
-                                            <a href=""  [routerLink]="['dashboard']" style="border-radius: 25px;
+                                    <a href="" [routerLink]="['dashboard']" style="border-radius: 25px;
                                                 " *ngIf="isLogin">
-                                                <i class="fa-regular fa-user" style="font-size:18px
+                                        <i class="fa-regular fa-user" style="font-size:18px
                                                  ;margin-left:5px ;"></i>
-                                                @User.Identity.Name
-                                            </a>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <div class="col-6 col-xl-3 col-lg-5 border-start">
-                                            <a href="/account/login" class=" rounded border p-2 text-center w-100 d-none d-xl-flex align-items-center justify-content-center" style="color:#080a38;font-weight:700">
-                                                <i class="fa-regular fa-right-to-bracket ms-3" style="font-size:20px"></i>
-                                                ورود | ثبت نام
-                                            </a>
-                                             <a href="/account/login" class="text-center w-100 d-flex d-xl-none justify-content-center" style="color:#080a38;font-weight:700">
-                                                     <i class="fa-regular fa-right-to-bracket ms-1" style="font-size:20px"></i>
-                                                ورود
-                                            </a>
-                                        </div>
-                                    }
-                                    <div class="col-6 col-xl-1 col-lg-4 d-flex align-items-center justify-content-center" style="color:#080a38;font-weight:700">
-                                        @await Component.InvokeAsync("TopBasket")
-                                    </div>
+                                        @User.Identity.Name
+                                    </a>
                                 </div>
+                            }
+                            else
+                            {
+                                <div class="col-6 col-xl-3 col-lg-5 border-start">
+                                    <a href="/account/login" class=" rounded border p-2 text-center w-100 d-none d-xl-flex align-items-center justify-content-center" style="color:#080a38;font-weight:700">
+                                        <i class="fa-regular fa-right-to-bracket ms-3" style="font-size:20px"></i>
+                                        ورود | ثبت نام
+                                    </a>
+                                    <a href="/account/login" class="text-center w-100 d-flex d-xl-none justify-content-center" style="color:#080a38;font-weight:700">
+                                        <i class="fa-regular fa-right-to-bracket ms-1" style="font-size:20px"></i>
+                                        ورود
+                                    </a>
+                                </div>
+                            }
+                            <div class="col-6 col-xl-1 col-lg-4 d-flex align-items-center justify-content-center" style="color:#080a38;font-weight:700">
+                                @await Component.InvokeAsync("TopBasket")
+                            </div>
+                        </div>
 
                     </div>
                     <div class="col-12 mx-auto">
@@ -208,7 +209,7 @@
                     <div class="col-8 text-center mt-3 mx-auto">
 
                         <span style="line-height:4">
-                            تمامی حقوق برای @Configuration["SiteSetting:SiteName"] | فروشگاه اینترنتی لوازم اداری محفوظ میباشد.
+                            تمامی حقوق برای @Configuration["SiteSetting:SiteName"] |  محفوظ میباشد.
                             Copyright © @DateTime.Now.Year
                         </span>
                     </div>
@@ -284,19 +285,19 @@
     <script>
 
 
-        $("#search-input").keyup(function() {
+        $("#search-input").keyup(function () {
             $("#search-items").children().remove();
             $.ajax({
                 url: "@(Configuration.GetSection("SiteSetting:ApiUrl").Value)/api/Product/Search?name=" + $(this).val(),
                 method: "GET"
-            }).done(function(res) {
+            }).done(function (res) {
                 console.log(res);
                 res.model.map(x => {
                     $("#search-items").append("<li style='padding:20px'><a href=/Product/" + x.id + "/" + x.url + "><img style='width:75px;margin-left:5px' src=" + x.image + ">" + x.title + "</a></li>");
                 });
             });
         });
-        $(".btn-menu").click(function(event) {
+        $(".btn-menu").click(function (event) {
             event.stopPropagation();
             if ($(".mobile-menu").hasClass("show")) {
 

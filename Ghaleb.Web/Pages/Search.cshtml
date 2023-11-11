@@ -2,6 +2,7 @@
 @model Ghaleb.Web.Pages.SearchModel
 @{
 }
+
 <style>
     .page-item:first-child .page-link {
         border-top-right-radius: 0.25rem;
@@ -21,6 +22,10 @@
 <div class="row d-flex justify-content-between">
     @if (Model.ProductTag != null)
     {
+        @section Tags
+        {
+        <link rel="canonical" href="@Configuration["SiteSetting:Url"]Search/Tag/@Model.ProductTag.Id/@Model.ProductTag.Name">
+    }
         ViewData["Seo"] = new
         {
             PageTitle = Model.ProductTag.Name,
@@ -31,6 +36,10 @@
     }
     @if (Model.Brand != null)
     {
+        @section Tags
+        {
+        <link rel="canonical" href="@Configuration["SiteSetting:Url"]Search/Brand/@Model.Brand.Id/@Model.Brand.Name">
+    }
             ViewData["Seo"] = new
             {
                 PageTitle = Model.Brand.Name,
@@ -203,6 +212,10 @@
         </div>
         @if (Model.ProductCategory != null && Model.SubProductCategory == null)
         {
+            @section Tags
+            {
+            <link rel="canonical" href="@Configuration["SiteSetting:Url"]Search/Category/@Model.ProductCategory.Id/@Model.ProductCategory.Url">
+        }
             ViewData["Seo"] = new
             {
                 PageTitle = Model.ProductCategory.Title,
@@ -218,8 +231,12 @@
             </div>
 
         }
-        @if (Model.SubProductCategory != null)
+        @if (Model.SubProductCategory != null && Model.ProductCategory !=null)
         {
+            @section Tags
+            {
+            <link rel="canonical" href="@Configuration["SiteSetting:Url"]Search/Category/@Model.ProductCategory.Id/@Model.ProductCategory.Url/SubCategory/@Model.SubProductCategory.Id/@Model.SubProductCategory.Url">
+        }
             ViewData["Seo"] = new
             {
                 PageTitle = Model.SubProductCategory.Title,

@@ -33,13 +33,15 @@ using System.Text.Unicode;
 using Hangfire;
 using AspNetCore.ReCaptcha;
 using Microsoft.AspNetCore.HttpOverrides;
+using Ghaleb.Web.Helpers;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation().AddRazorPagesOptions(options =>
 {
-    options.Conventions.AddPageRoute("/Search", "Search/SubCategory/{subCategoryId?}/{subCategoryUrl?}");
+    options.Conventions.AddPageRoute("/Search", "Search/Category/{CategoryId?}/{CategoryUrl?}");
     options.Conventions.AddPageRoute("/Search", "Search/Brand/{brandId?}/{brandName?}");
     options.Conventions.AddPageRoute("/Search", "Search/Tag/{tagId}/{tagName}");
     options.Conventions.AddPageRoute("/Search", "Search/Category/{categoryId?}/{categoryUrl?}/SubCategory/{subCategoryId?}/{subCategoryUrl?}");
@@ -57,9 +59,22 @@ builder.Services.AddSingleton<HtmlEncoder>(
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+        options.ExpireTimeSpan = TimeSpan.FromDays(365);
         options.SlidingExpiration = true;
         options.AccessDeniedPath = "/Forbidden/";
+        options.Events.OnRedirectToLogin = context =>
+        {
+            if (IsAdminContext(context))
+            {
+                var redirectPath = new Uri(context.RedirectUri);
+                context.Response.Redirect("/admin/login" + redirectPath.Query);
+            }
+            else
+            {
+                context.Response.Redirect(context.RedirectUri);
+            }
+            return Task.CompletedTask;
+        };
     });
 var config = new MapperConfiguration(cfg =>
 {
@@ -92,6 +107,9 @@ builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IBlogCategoryService, BlogCategoryService>();
 builder.Services.AddScoped<ISeoService, SeoService>();
 builder.Services.AddReCaptcha(builder.Configuration.GetSection("ReCaptcha"));
+
+builder.Services.AddScoped<CookieHelper>();
+builder.Services.AddScoped<WebsiteBase>();
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 //if (!app.Environment.IsDevelopment())
@@ -117,8 +135,17 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();
 app.UseHangfireDashboard();
+app.MapControllerRoute(
+    name: "MyArea",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 });
 app.Run();
+
+static bool IsAdminContext(RedirectContext<CookieAuthenticationOptions> context)
+{
+    return context.Request.Path.StartsWithSegments("/admin");
+}

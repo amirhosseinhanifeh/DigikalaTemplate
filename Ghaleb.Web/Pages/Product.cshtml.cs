@@ -29,6 +29,10 @@ namespace Ghaleb.Web.Pages
         public ProductDetailsForHomeDto Product { get; set; }
         [BindProperty(SupportsGet = true)]
         public long? Id { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string Url { get; set; }
+
         [BindProperty(SupportsGet = true)]
         public long? Color { get; set; }
         [BindProperty(SupportsGet = true)]
@@ -36,12 +40,12 @@ namespace Ghaleb.Web.Pages
         public List<ProductListForHomeDto> RelatedProducts { get; set; }
         public async Task<IActionResult> OnGetAsync(long[] attrIds)
         {
-            if (Id == null)
+            if (Id == null || Url == null)
                 return RedirectToPage("NotFound");
 
             if (User.Identity.IsAuthenticated)
             {
-                Product = (await _product.GetProductDetails(Id.GetValueOrDefault(), User.UserId())).model;
+                Product = (await _product.GetProductDetails(Id.GetValueOrDefault(), Url, User.UserId())).model;
                 if (Product != null)
                 {
                     await _product.AddProductVisit(Product.Id, User.UserId());
@@ -49,17 +53,17 @@ namespace Ghaleb.Web.Pages
             }
             else
             {
-                Product = (await _product.GetProductDetails(Id.GetValueOrDefault())).model;
+                Product = (await _product.GetProductDetails(Id.GetValueOrDefault(), Url)).model;
             }
             if (Product == null)
-                return RedirectToPage("Error");
+                return Redirect("~/");
 
             if (!attrIds.Any())
             {
-                AttrIds = Product.Options.Where(x=>x.Options.Any()).Select(h => h.Options.FirstOrDefault().Id).ToArray();
+                AttrIds = Product.Options.Where(x => x.Options.Any()).Select(h => h.Options.FirstOrDefault().Id).ToArray();
             }
-            
-            RelatedProducts = await _context.tbl_Products.Where(h => h.IsDelete == false && h.IsActive == true && h.Id != Id && (Product.Category!=null? h.ProductCategory.Id == Product.Category.Id:true) && (Product.Brand !=null? h.BrandId == Product.Brand.Id:true)).Select(y => new ProductListForHomeDto
+
+            RelatedProducts = await _context.tbl_Products.Where(h => h.IsDelete == false && h.IsActive == true && h.Id != Id && (Product.Category != null ? h.ProductCategory.Id == Product.Category.Id : true) && (Product.Brand != null ? h.BrandId == Product.Brand.Id : true)).Select(y => new ProductListForHomeDto
             {
                 Id = y.Id,
                 Abstract = y.Abstract,

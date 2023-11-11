@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32602.215
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ghaleb.API", "Ghaleb.API\Ghaleb.API.csproj", "{53CF022D-33C4-490F-96D9-86EF075403A9}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ALO.Common", "ALO.Common\ALO.Common.csproj", "{CF5CC2ED-0164-49F4-B92C-1F26155E8881}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ALO.DataAccessLayer", "ALO.DataAccessLayer\ALO.DataAccessLayer.csproj", "{143CB3E3-291C-4DEE-A1D9-D7BA40E472D1}"
@@ -25,10 +23,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{53CF022D-33C4-490F-96D9-86EF075403A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{53CF022D-33C4-490F-96D9-86EF075403A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{53CF022D-33C4-490F-96D9-86EF075403A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{53CF022D-33C4-490F-96D9-86EF075403A9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CF5CC2ED-0164-49F4-B92C-1F26155E8881}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CF5CC2ED-0164-49F4-B92C-1F26155E8881}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF5CC2ED-0164-49F4-B92C-1F26155E8881}.Release|Any CPU.ActiveCfg = Release|Any CPU
