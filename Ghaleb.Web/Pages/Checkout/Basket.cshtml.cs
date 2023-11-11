@@ -18,7 +18,7 @@ namespace Ghaleb.Web.Pages.Checkout
             _configuration = configuration;
         }
 
-        public ResponseOrder Order { get; set; }
+        public ResponseOrder Order { get; set; } = new();
         public async Task OnGet()
         {
             
@@ -102,6 +102,6 @@ namespace Ghaleb.Web.Pages.Checkout
         public decimal DeliveryPrice { get; set; }
         public long DeliveryId { get; set; }
         public decimal TotalPrice { get; set; }
-        public List<ResponseGetBasketItems> Items { get; set; }
+        public List<ResponseGetBasketItems> Items { get; set; } = new();
     }
 }
