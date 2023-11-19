@@ -101,7 +101,9 @@
 @section Scripts{
     <script src="https://cdn.ckeditor.com/4.16.1/full-all/ckeditor.js"></script>
     <script>
-        CKEDITOR.replace('editor1');
+        CKEDITOR.replace('editor1', {
+            filebrowserUploadUrl: '/Admin/Upload/UploadImageFromCk'
+        });
     </script>
     <script>
 

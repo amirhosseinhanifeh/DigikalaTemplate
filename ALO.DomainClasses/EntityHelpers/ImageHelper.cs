@@ -25,7 +25,7 @@ namespace ALO.DomainClasses.EntityHelpers
             if (model != null)
             {
                
-                return configuration["SiteSetting:ApiUrl"] + "/Uploads/Images/" + model.Image_thumb;
+                return configuration["SiteSetting:Url"] + "/Uploads/Images/" + model.Image_thumb;
 
             }
             return "/images/no-image.jpg";
@@ -35,7 +35,7 @@ namespace ALO.DomainClasses.EntityHelpers
             if (model != null)
             {
 
-                return configuration["SiteSetting:ApiUrl"] + "/Uploads/Videos/" + model.Image_thumb;
+                return configuration["SiteSetting:Url"] + "/Uploads/Videos/" + model.Image_thumb;
 
             }
             return "/images/no-image.jpg";
