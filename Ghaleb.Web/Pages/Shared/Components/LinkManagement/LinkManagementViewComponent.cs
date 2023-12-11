@@ -1,7 +1,4 @@
-﻿using ALO.Common.Utilities.ConvertTo;
-using ALO.DataAccessLayer.DataContext;
-using ALO.DomainClasses.EntityHelpers;
-using ALO.Service.Interface.Product;
+﻿using ALO.DataAccessLayer.DataContext;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -20,13 +17,13 @@ namespace Ghaleb.Web.Pages.ViewComponents.TopMenu
             this.configuration = configuration;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(string routeName,string viewName)
+        public async Task<IViewComponentResult> InvokeAsync(string routeName, string viewName)
         {
             var res = await _memoryCache.GetOrCreateAsync("LinkManagement_" + routeName, async cachEntry =>
             {
-                return await _context.tbl_LinkManagements.Include(x=>x.Image).Where(x => x.IsActive && x.IsDelete != true && x.GroupLinkManagement.RouteName == routeName).ToListAsync();
+                return await _context.tbl_LinkManagements.Include(x => x.Image).Where(x => x.IsActive && x.IsDelete != true && x.GroupLinkManagement.RouteName == routeName).ToListAsync();
             });
-            return View(viewName,res);
+            return View(viewName, res);
         }
     }
 }

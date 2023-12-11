@@ -3,12 +3,11 @@ using ALO.Common.Utilities.ConvertDt;
 using ALO.Common.Utilities.ConvertTo;
 using ALO.DataAccessLayer.DataContext;
 using ALO.DomainClasses.Entity.Blog;
-using ALO.DomainClasses.EntityHelpers;
+using ALO.DomainClasses.Entity.Image.EntityHelpers;
 using ALO.Service.Interface.Blog;
 using ALO.ViewModels.Blog;
 using ALO.ViewModels.Blog.Admin;
 using ALO.ViewModels.Result;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -24,7 +23,7 @@ namespace ALO.Service.Service.Blog
     {
         private readonly ServiceContext _db;
         private readonly IConfiguration _configuration;
-        public BlogService(ServiceContext db, IMapper mapper, IConfiguration configuration) : base(db, mapper)
+        public BlogService(ServiceContext db, IConfiguration configuration) : base(db)
         {
             _db = db;
             _configuration = configuration;
@@ -154,8 +153,9 @@ namespace ALO.Service.Service.Blog
         {
             try
             {
-                var response = await _db.tbl_Blogs.FirstOrDefaultAsync(y => y.Url == model.Url && y.IsDelete != true);
-                if (response != null && response.Id != model.Id)
+                
+                var exists = await _db.tbl_Blogs.AsNoTracking().FirstOrDefaultAsync(y => y.Url ==model.Url && y.Id !=model.Id && y.IsDelete != true);
+                if (exists != null)
                 {
                     return new ListResultViewModel<bool>
                     {
@@ -167,6 +167,8 @@ namespace ALO.Service.Service.Blog
                 }
                 if (model.Id != null)
                 {
+                    var response = await _db.tbl_Blogs.FirstOrDefaultAsync(y =>  y.Id == model.Id && y.IsDelete != true);
+
                     response.MetaDescription = model.MetaDescription;
                     response.MetaKeyword = string.Join(",", model.MetaKeyword);
                     response.PageTitle = model.PageTitle;

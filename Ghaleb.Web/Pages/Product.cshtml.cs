@@ -1,8 +1,8 @@
 
 using ALO.Common.Utilities.ConvertTo;
 using ALO.DataAccessLayer.DataContext;
+using ALO.DomainClasses.Entity.Image.EntityHelpers;
 using ALO.DomainClasses.Entity.Product;
-using ALO.DomainClasses.EntityHelpers;
 using ALO.Service.Interface.Product;
 using ALO.ViewModels.Product;
 using ALO.ViewModels.Result;

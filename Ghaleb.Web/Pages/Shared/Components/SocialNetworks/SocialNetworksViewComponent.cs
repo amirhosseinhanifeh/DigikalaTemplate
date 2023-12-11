@@ -1,7 +1,4 @@
-﻿using ALO.Common.Utilities.ConvertTo;
-using ALO.DataAccessLayer.DataContext;
-using ALO.DomainClasses.EntityHelpers;
-using ALO.Service.Interface.Product;
+﻿using ALO.DataAccessLayer.DataContext;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -23,7 +20,7 @@ namespace Ghaleb.Web.Pages.ViewComponents.SocialNetworks
             var res = await _memoryCache.GetOrCreateAsync("SocialNetworks", async cachEntry =>
             {
 
-               return await _context.tbl_SocialNetworks.Where(x => x.IsActive && x.IsDelete != true ).ToListAsync();
+                return await _context.tbl_SocialNetworks.Where(x => x.IsActive && x.IsDelete != true).ToListAsync();
             });
             return View(res);
         }

@@ -29,7 +29,7 @@ const products = new Swiper('.products', {
             spaceBetween: 40,
         },
         1024: {
-            slidesPerView: 5,
+            slidesPerView: 3,
             spaceBetween: 50,
         },
         1440: {

@@ -1,6 +1,4 @@
 ﻿using ALO.DataAccessLayer.DataContext;
-using ALO.DomainClasses.EntityHelpers;
-using ALO.Service.Interface.Product;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -22,7 +20,7 @@ namespace Ghaleb.Web.Pages.ViewComponents.Blog
             var res = await _memoryCache.GetOrCreateAsync("Blogs", async cachEntry =>
             {
 
-               return await _context.tbl_Blogs.Include(x => x.Image).Where(x => x.IsDelete == false && x.IsActive).OrderByDescending(x => x.Id).Take(4).ToListAsync();
+                return await _context.tbl_Blogs.Include(x => x.Image).Where(x => x.IsDelete == false && x.IsActive).OrderByDescending(x => x.Id).Take(4).ToListAsync();
             });
             return View(res);
         }

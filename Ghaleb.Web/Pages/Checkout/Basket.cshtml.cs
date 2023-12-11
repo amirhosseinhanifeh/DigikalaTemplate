@@ -1,6 +1,6 @@
 using ALO.DataAccessLayer.DataContext;
+using ALO.DomainClasses.Entity.Image.EntityHelpers;
 using ALO.DomainClasses.Entity.Order;
-using ALO.DomainClasses.EntityHelpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;

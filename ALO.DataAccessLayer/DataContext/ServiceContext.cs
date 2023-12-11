@@ -1,14 +1,10 @@
 ﻿using ALO.DataAccessLayer.Convention;
 using ALO.DataAccessLayer.UnitOfWork;
 using ALO.DomainClasses;
-using ALO.DomainClasses.Config.Account;
-using ALO.DomainClasses.Config.City;
-using ALO.DomainClasses.Config.Country;
-using ALO.DomainClasses.Config.Financial;
-using ALO.DomainClasses.Config.Profile;
 using ALO.DomainClasses.Entity.Account;
 using ALO.DomainClasses.Entity.Basket;
 using ALO.DomainClasses.Entity.Blog;
+using ALO.DomainClasses.Entity.Cache;
 using ALO.DomainClasses.Entity.City;
 using ALO.DomainClasses.Entity.Content;
 using ALO.DomainClasses.Entity.Country;
@@ -31,6 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -155,7 +152,10 @@ namespace ALO.DataAccessLayer.DataContext
         public DbSet<tbl_Language> tbl_Languages { get; set; }
 
         #endregion
+
+        public DbSet<tbl_Cache> tbl_Caches { get; set; }
         #endregion
+
 
 
 
@@ -316,39 +316,9 @@ namespace ALO.DataAccessLayer.DataContext
 
 
             modelBuilder.Seed();
-            //foreach (var entityType in modelBuilder.Model.GetEntityTypes()
-            //    .SelectMany(x => x.GetProperties())
-            //    .Where(x => x.Name == "Id"))
-            //{
-            //    entityType.SetDefaultValue(Guid.NewGuid());
-            //}
 
-            //foreach (var entityType in modelBuilder.Model.GetEntityTypes()
-            //    .SelectMany(x => x.GetProperties())
-            //    .Where(x => x.Name == "CreatedDate"))
-            //{
-            //    entityType.SetDefaultValue(DateTime.Now);
-            //}
-            //foreach (var entityType in modelBuilder.Model.GetEntityTypes()
-            //    .SelectMany(x => x.GetProperties())
-            //    .Where(x => x.ClrType == typeof(decimal) || x.ClrType == typeof(decimal?)))
-            //{
-            //    entityType.Relational().ColumnType = "decimal(18, 0)";
-            //}
-            //var typesToRegister = Assembly.GetExecutingAssembly().GetTypes()
-            //             .Where(t => t.GetInterfaces().Any(gi => gi.IsGenericType && gi.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>))).ToList();
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-            //foreach (var type in typesToRegister)
-            //{
-            //    dynamic configurationInstance = Activator.CreateInstance(type);
-            //    modelBuilder.ApplyConfiguration(configurationInstance);
-            //}
-            modelBuilder.ApplyConfiguration(new UserConfig());
-            modelBuilder.ApplyConfiguration(new CityConfig());
-            modelBuilder.ApplyConfiguration(new ProfileConfig());
-            modelBuilder.ApplyConfiguration(new CountryConfig());
-            modelBuilder.ApplyConfiguration(new FinancialAccountConfig());
-            //modelBuilder.ApplyConfiguration(new CourtConfig());
 
             base.OnModelCreating(modelBuilder);
         }

@@ -17,15 +17,14 @@ using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Webp;
-using Microsoft.AspNetCore.Http.Internal;
 
 namespace ALO.Service.Service.ImageService
 {
     public class ImageService : IImageService
     {
-        private readonly IHostingEnvironment _webHostEnvironment;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ServiceContext _db;
-        public ImageService(IHostingEnvironment webHostEnvironment,
+        public ImageService(IWebHostEnvironment webHostEnvironment,
             ServiceContext db)
         {
             _webHostEnvironment = webHostEnvironment;

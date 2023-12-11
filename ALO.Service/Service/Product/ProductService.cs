@@ -4,7 +4,6 @@ using ALO.DomainClasses.Entity.Product;
 using ALO.Service.Interface.Product;
 using ALO.ViewModels.Product;
 using ALO.ViewModels.Result;
-using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +14,6 @@ using static ALO.Common.Messages.Message;
 using Binbin.Linq;
 using ALO.ViewModels.ProductComment;
 using ALO.ViewModels.Product.Admin;
-using ALO.DomainClasses.EntityHelpers;
 using Microsoft.EntityFrameworkCore;
 using ALO.Common.Utilities.ConvertTo;
 using ALO.Common.Utilities.ConvertDt;
@@ -28,6 +26,7 @@ using System.Security.Principal;
 using System.Threading;
 using ALO.ViewModels.Order;
 using Microsoft.AspNetCore.Http;
+using ALO.DomainClasses.Entity.Image.EntityHelpers;
 
 namespace ALO.Service.Service.Product
 {

@@ -1,44 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup Label="Globals">
-    <SccProjectName>SAK</SccProjectName>
-    <SccProvider>SAK</SccProvider>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccLocalPath>SAK</SccLocalPath>
-  </PropertyGroup>
-
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="bin\Debug\netcoreapp2.2\ALO.ViewModels.deps.json" />
-    <Content Include="bin\Release\netcoreapp2.2\ALO.ViewModels.deps.json" />
-  </ItemGroup>
 
   <ItemGroup>
-    <None Include="bin\Debug\netcoreapp2.2\ALO.Common.dll" />
-    <None Include="bin\Debug\netcoreapp2.2\ALO.Common.pdb" />
-    <None Include="bin\Debug\netcoreapp2.2\ALO.ViewModels.dll" />
-    <None Include="bin\Debug\netcoreapp2.2\ALO.ViewModels.pdb" />
-    <None Include="bin\Release\netcoreapp2.2\ALO.Common.dll" />
-    <None Include="bin\Release\netcoreapp2.2\ALO.Common.pdb" />
-    <None Include="bin\Release\netcoreapp2.2\ALO.ViewModels.dll" />
-    <None Include="bin\Release\netcoreapp2.2\ALO.ViewModels.pdb" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.6" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ALO.Common\ALO.Common.csproj" />
     <ProjectReference Include="..\ALO.DomainClasses\ALO.DomainClasses.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Product\Admin\SubCategory\" />
   </ItemGroup>
 
 </Project>

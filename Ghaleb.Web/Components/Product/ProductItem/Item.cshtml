@@ -2,18 +2,17 @@
 @{
 }
 <style>
-    .product{
+    .product {
         transition: all 0.5s;
     }
-    .product:hover{
 
-        transform: translate(0px, -9px);
-    }
+        .product:hover {
+            transform: translate(0px, -9px);
+        }
 
 </style>
-<div class="col-12">
-    <div class="card shadow product mt-5 mb-5 m-1">
-        <img src="@Model.Image" class="card-img-top" alt="@Model.Title" style="width:100%;height:200px">
+    <div class="card shadow-lg product mt-5 mb-5">
+            <img src="@Model.Image" class="card-img-top" alt="@Model.Title" style="width:100%;height:250px;padding:20px">
         <div class="card-body">
             <div>
                 <a href="@Url.Page("product",new{id=Model.Id,url=Model.Url})" style="font-size:14px" class="d-block card-title text-end">@Model.Title</a>
@@ -34,7 +33,7 @@
                 {
 
                     <div class="text-start mt-3 " style="font-size:15px">
-                        @if (!Model.Call)
+                    @if (!Model.Call && Model.Cost != "۰")
                         {
                             <span *ngIf="!product?.call">تومان @Model.Cost  </span>
                         }
@@ -49,7 +48,6 @@
             </div>
         </div>
     </div>
-</div>
 @* <a target="_blank" >
     <img class="card-img-top mx-auto"
          src="@Model.Image"

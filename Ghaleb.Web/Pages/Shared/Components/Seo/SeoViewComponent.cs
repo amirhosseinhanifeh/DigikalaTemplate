@@ -1,10 +1,4 @@
-﻿using ALO.Common.Utilities.ConvertTo;
-using ALO.DataAccessLayer.DataContext;
-using ALO.DomainClasses.EntityHelpers;
-using ALO.Service.Interface.Product;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Ghaleb.Web.Pages.ViewComponents.Seo
 {

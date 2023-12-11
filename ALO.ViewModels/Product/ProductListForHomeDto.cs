@@ -1,10 +1,6 @@
-﻿using ALO.Common.Utilities.Methods;
+﻿
 using ALO.DomainClasses.Entity.Product;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ALO.ViewModels.Product
 {

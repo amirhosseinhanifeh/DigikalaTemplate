@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ALO.DomainClasses.Config.Profile
+namespace ALO.DataAccessLayer.Config.Profile
 {
     public class ProfileConfig : IEntityTypeConfiguration<tbl_Profile>
     {

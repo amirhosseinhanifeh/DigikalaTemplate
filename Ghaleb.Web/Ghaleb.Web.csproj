@@ -4,15 +4,11 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	  <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ALO.Common\ALO.Common.csproj" />
-    <ProjectReference Include="..\ALO.DataAccessLayer\ALO.DataAccessLayer.csproj" />
-    <ProjectReference Include="..\ALO.DomainClasses\ALO.DomainClasses.csproj" />
-    <ProjectReference Include="..\ALO.MappingProfile\ALO.MappingProfile.csproj" />
     <ProjectReference Include="..\ALO.Service\ALO.Service.csproj" />
-    <ProjectReference Include="..\ALO.ViewModels\ALO.ViewModels.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,19 +16,10 @@
     <PackageReference Include="AspNetCore.SEOHelper" Version="1.0.1" />
     <PackageReference Include="EPPlus" Version="7.0.1" />
     <PackageReference Include="FusionCharts.Visualization" Version="1.0.9" />
-    <PackageReference Include="Hangfire" Version="1.7.32" />
+    <PackageReference Include="Hangfire" Version="1.8.6" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.54" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.20" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.5">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.5">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="PersianDateTime" Version="1.1.5082.36395" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.14" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.14" />
     <PackageReference Include="Zarinpal" Version="3.0.1" />
   </ItemGroup>
 

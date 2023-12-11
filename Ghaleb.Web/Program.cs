@@ -1,11 +1,8 @@
 using ALO.DataAccessLayer.DataContext;
 using ALO.DomainClasses;
-using ALO.MappingProfile.Account;
-using ALO.MappingProfile.Financial;
 using ALO.Service.Interface.Account;
 using ALO.Service.Interface.Basket;
 using ALO.Service.Interface.Blog;
-using ALO.Service.Interface.FinancialAccount;
 using ALO.Service.Interface.Forms;
 using ALO.Service.Interface.Image;
 using ALO.Service.Interface.Order;
@@ -16,7 +13,6 @@ using ALO.Service.Interface.SpecialSell;
 using ALO.Service.Service.Account;
 using ALO.Service.Service.Basket;
 using ALO.Service.Service.Blog;
-using ALO.Service.Service.FinancialAccount;
 using ALO.Service.Service.Forms;
 using ALO.Service.Service.ImageService;
 using ALO.Service.Service.Order;
@@ -25,18 +21,16 @@ using ALO.Service.Service.Product;
 using ALO.Service.Service.Profile;
 using ALO.Service.Service.SpecialSell;
 using ALO.ViewModels;
-using AutoMapper;
+using AspNetCore.ReCaptcha;
+using Ghaleb.Web.Helpers;
+using Hangfire;
+using Hangfire.Dashboard;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
-using Hangfire;
-using AspNetCore.ReCaptcha;
-using Microsoft.AspNetCore.HttpOverrides;
-using Ghaleb.Web.Helpers;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.Options;
-using Hangfire.Dashboard;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -78,19 +72,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
             return Task.CompletedTask;
         };
     });
-var config = new MapperConfiguration(cfg =>
-{
-    cfg.AddProfile(new RegisterProfile());
 
-    cfg.AddProfile(new FinancialProfile());
-    cfg.CreateMap(typeof(BaseSeo), typeof(BaseEntity));
-});
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddAutoMapper();
-builder.Services.AddSingleton(config);
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
-builder.Services.AddScoped<IFinancialService, FinancialService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductCommentService, ProductCommentService>();
 builder.Services.AddScoped<IBasketOrderService, BasketOrderService>();
@@ -126,7 +111,7 @@ app.Use(async (context, next) =>
     if (context.Response.StatusCode == 404)
     {
         context.Request.Path = "/notfound";
-        await next();   
+        await next();
     }
 });
 app.UseHttpsRedirection();

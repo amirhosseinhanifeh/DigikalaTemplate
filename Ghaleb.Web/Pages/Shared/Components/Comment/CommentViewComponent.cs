@@ -1,12 +1,5 @@
-﻿using ALO.Common.Utilities.ConvertTo;
-using ALO.DataAccessLayer.DataContext;
-using ALO.DomainClasses.Entity.Product;
-using ALO.DomainClasses.EntityHelpers;
-using ALO.Service.Interface.Product;
+﻿using ALO.DataAccessLayer.DataContext;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
-using Ghaleb.Web.Helpers;
 
 namespace Ghaleb.Web.Pages.ViewComponents.Comment
 {
@@ -20,7 +13,7 @@ namespace Ghaleb.Web.Pages.ViewComponents.Comment
 
         public async Task<IViewComponentResult> InvokeAsync(long prId)
         {
-            ViewData["ProductID"]= prId;
+            ViewData["ProductID"] = prId;
             return View();
         }
 

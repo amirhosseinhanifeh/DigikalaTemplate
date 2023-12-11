@@ -2,7 +2,7 @@
 using ALO.Common.Utilities.ConvertTo;
 using ALO.DataAccessLayer.DataContext;
 using ALO.DomainClasses.Entity.Basket;
-using ALO.DomainClasses.EntityHelpers;
+using ALO.DomainClasses.Entity.Image.EntityHelpers;
 using ALO.Service.Interface.Basket;
 using ALO.ViewModels.Basket;
 using ALO.ViewModels.Result;

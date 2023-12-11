@@ -1,47 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup Label="Globals">
-    <SccProjectName>SAK</SccProjectName>
-    <SccProvider>SAK</SccProvider>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccLocalPath>SAK</SccLocalPath>
-  </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="bin\Debug\netcoreapp2.2\ALO.DomainClasses.deps.json" />
-    <Content Include="bin\Release\netcoreapp2.2\ALO.DomainClasses.deps.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.NetTopologySuite" Version="5.0.5" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.30" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.14" />
+	  <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="bin\Debug\netcoreapp2.2\ALO.Common.dll" />
-    <None Include="bin\Debug\netcoreapp2.2\ALO.Common.pdb" />
-    <None Include="bin\Debug\netcoreapp2.2\ALO.DomainClasses.dll" />
-    <None Include="bin\Debug\netcoreapp2.2\ALO.DomainClasses.pdb" />
-    <None Include="bin\Release\netcoreapp2.2\ALO.Common.dll" />
-    <None Include="bin\Release\netcoreapp2.2\ALO.Common.pdb" />
-    <None Include="bin\Release\netcoreapp2.2\ALO.DomainClasses.dll" />
-    <None Include="bin\Release\netcoreapp2.2\ALO.DomainClasses.pdb" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ALO.Common\ALO.Common.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Config\Product\" />
-    <Folder Include="Entity\Settings\" />
   </ItemGroup>
 
 </Project>

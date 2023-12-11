@@ -121,6 +121,13 @@
                     )
                     $('#exampleModal').modal('hide');
                 }
+                else {
+                    Swal.fire(
+                        'خطا',
+                        result.message,
+                        'danger'
+                    )
+                }
 
             }).fail(function () {
 

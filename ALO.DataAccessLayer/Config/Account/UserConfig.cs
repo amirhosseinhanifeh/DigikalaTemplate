@@ -6,14 +6,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ALO.DomainClasses.Config.Account
+namespace ALO.DataAccessLayer.Config.Account
 {
     public class UserConfig : IEntityTypeConfiguration<tbl_Users>
     {
         public void Configure(EntityTypeBuilder<tbl_Users> builder)
         {
             builder.HasOne(a => a.Profile)
-            .WithOne(b => b.User).HasForeignKey<tbl_Profile>(x=>x.Id).OnDelete(DeleteBehavior.Cascade);
+            .WithOne(b => b.User).HasForeignKey<tbl_Profile>(x => x.Id).OnDelete(DeleteBehavior.Cascade);
 
             builder.Property(x => x.Mobile).IsRequired().HasMaxLength(11);
             builder.HasMany(x => x.Roles).WithMany(x => x.Users).UsingEntity(options =>

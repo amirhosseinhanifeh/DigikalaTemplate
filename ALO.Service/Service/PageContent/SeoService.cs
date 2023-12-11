@@ -1,7 +1,7 @@
 ﻿using ALO.Common.Enums;
 using ALO.DataAccessLayer.DataContext;
 using ALO.DomainClasses.Entity.Content;
-using ALO.DomainClasses.EntityHelpers;
+using ALO.DomainClasses.Entity.Image.EntityHelpers;
 using ALO.Service.Interface.PageContent;
 using ALO.ViewModels.PageContent;
 using ALO.ViewModels.Result;

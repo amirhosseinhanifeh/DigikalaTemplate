@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ALO.DomainClasses.EntityHelpers
+namespace ALO.DomainClasses.Entity.Image.EntityHelpers
 {
     public static class ImageHelper
     {
@@ -20,11 +20,11 @@ namespace ALO.DomainClasses.EntityHelpers
             _httpContextAccessor = new HttpContextAccessor();
 
         }
-        public static string BindImage(this tbl_Image model,IConfiguration configuration)
+        public static string BindImage(this tbl_Image model, IConfiguration configuration)
         {
             if (model != null)
             {
-               
+
                 return configuration["SiteSetting:Url"] + "/Uploads/Images/" + model.Image_thumb;
 
             }

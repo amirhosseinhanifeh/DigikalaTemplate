@@ -6,7 +6,6 @@ using ALO.Service.Interface.Blog;
 using ALO.ViewModels.Blog;
 using ALO.ViewModels.BlogCategory;
 using ALO.ViewModels.Result;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -21,9 +20,8 @@ namespace ALO.Service.Service.Blog
     public class BlogCategoryService :RepositoryService<tbl_BlogCategory>, IBlogCategoryService
     {
         private readonly ServiceContext _db;
-        private readonly IMapper _mapper;
 
-        public BlogCategoryService(ServiceContext db,IMapper mapper) :base(db,mapper)
+        public BlogCategoryService(ServiceContext db) :base(db)
         {
             _db = db;
         }

@@ -1,5 +1,6 @@
 ﻿@page "{id}/{url?}"
 @using Microsoft.AspNetCore.Http.Extensions;
+
 @model Ghaleb.Web.Pages.Mag.PostModel
 @{
     Layout = "~/Pages/Shared/_Layout.cshtml";
@@ -13,7 +14,7 @@
 }
 
 @section Tags
-    {
+{
     <link rel="canonical" href="@Configuration["SiteSetting:Url"]blog/post/@Model.Blog.Id/@Model.Blog.Url">
 }
 <div class="col-12 p-3">
@@ -84,14 +85,13 @@
             </div>
         </div>
         <div class="col-12 col-lg-3">
-
         </div>
 
     </div>
 </div>
 
         }
-@section Modal{
+@section Modal {
     <div class="modal  fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -126,4 +126,4 @@
             </div>
         </div>
     </div>
-        }
+}
