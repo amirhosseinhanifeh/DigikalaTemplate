@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Ghaleb.Web.Pages.Mag
+namespace Ghaleb.Web.Pages.Shared
 {
-    public class IndexModel : PageModel
+    public class NotFoundModel : PageModel
     {
         public void OnGet()
         {

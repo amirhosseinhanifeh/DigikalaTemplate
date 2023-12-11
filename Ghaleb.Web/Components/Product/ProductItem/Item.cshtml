@@ -1,7 +1,56 @@
 ﻿@model ALO.ViewModels.Product.ProductListForHomeDto
 @{
 }
-<a target="_blank" href="@Url.Page("product",new{id=Model.Id,url=Model.Url})">
+<style>
+    .product{
+        transition: all 0.5s;
+    }
+    .product:hover{
+
+        transform: translate(0px, -9px);
+    }
+
+</style>
+<div class="col-12">
+    <div class="card shadow product mt-5 mb-5 m-1">
+        <img src="@Model.Image" class="card-img-top" alt="@Model.Title" style="width:100%;height:200px">
+        <div class="card-body">
+            <div>
+                <a href="@Url.Page("product",new{id=Model.Id,url=Model.Url})" style="font-size:14px" class="d-block card-title text-end">@Model.Title</a>
+            </div>
+            <hr class="mt-4" style="background-color:gray">
+            <div style="min-height:50px">
+
+                @if (Model.Discount != null)
+                {
+                    <div class="text-start mt-3" style="font-size:15px">
+                        <s style="color: rgb(182, 182, 182);">تومان @Model.Cost  </s>
+                        <br>
+                        تومان  @Model.Discount
+
+                    </div>
+                }
+                else
+                {
+
+                    <div class="text-start mt-3 " style="font-size:15px">
+                        @if (!Model.Call)
+                        {
+                            <span *ngIf="!product?.call">تومان @Model.Cost  </span>
+                        }
+                        else
+                        {
+                            <span style="    color: #1a18a5;
+    font-weight: 700;"> تماس بگیرید</span>
+                        }
+                    </div>
+                }
+                <div class="text-start mt-3"><span>تحویل اکسپرس</span><i style="font-size:15px;margin-right:3px" class="fal fa-shipping-fast"></i>  </div>
+            </div>
+        </div>
+    </div>
+</div>
+@* <a target="_blank" >
     <img class="card-img-top mx-auto"
          src="@Model.Image"
          alt="Card image
@@ -33,4 +82,4 @@
         </div>
     }
 
-</a>
+</a> *@

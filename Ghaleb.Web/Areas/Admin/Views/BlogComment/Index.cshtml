@@ -18,6 +18,7 @@
                             <th>نام و نام خانوادگی</th>
                             <th>موبایل</th>
                             <th>ایمیل</th>
+                            <th>وضعیت</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -30,6 +31,12 @@
                                 <td>@item.User.Mobile</td>
                                 <td>@item.User.Email</td>
                                 <td>
+                                    <div class="custom-control custom-switch" style="direction:ltr;padding:0">
+                                        <input type="checkbox" class="custom-control-input" id="customSwitch@(item.Id)" onchange="ChangeStatus(@item.Id)" @(item.IsActive ? "checked" : "")>
+                                        <label class="custom-control-label" for="customSwitch@(item.Id)"></label>
+                                    </div>
+                                </td>
+                                <td>
                                     <a class="btn btn-info" asp-route-id="@item.Id" asp-action="Details">پاسخ</a> (@item.BlogComments.Count(x=>x.IsActive==true))
                                 </td>
                             </tr>
@@ -40,3 +47,22 @@
         </div>
     </div>
 </div>
+
+@section scripts{
+
+    <script>
+        function ChangeStatus(id) {
+            $.ajax({
+                url: "@Url.Action("ChangeStatus")?id=" + id,
+                method: "GET",
+            }).done(function (data) {
+                Swal.fire(
+                    'تبریک !',
+                    data.message,
+                    'success'
+                )
+
+            });
+        }
+    </script>
+}

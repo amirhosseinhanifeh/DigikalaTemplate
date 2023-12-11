@@ -288,12 +288,12 @@
         $("#search-input").keyup(function () {
             $("#search-items").children().remove();
             $.ajax({
-                url: "@(Configuration.GetSection("SiteSetting:ApiUrl").Value)/api/Product/Search?name=" + $(this).val(),
+                url: "@(Configuration.GetSection("SiteSetting:ApiUrl").Value)/api/product/Search?name=" + $(this).val(),
                 method: "GET"
             }).done(function (res) {
                 console.log(res);
                 res.model.map(x => {
-                    $("#search-items").append("<li style='padding:20px'><a href=/Product/" + x.id + "/" + x.url + "><img style='width:75px;margin-left:5px' src=" + x.image + ">" + x.title + "</a></li>");
+                    $("#search-items").append("<li style='padding:20px'><a href=/product/" + x.id + "/" + x.url + "><img style='width:75px;margin-left:5px' src=" + x.image + ">" + x.title + "</a></li>");
                 });
             });
         });

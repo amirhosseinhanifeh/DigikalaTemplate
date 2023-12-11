@@ -49,7 +49,7 @@
     <div class="col-12 col-lg-4 mt-5">
         <div class="row">
             <div class="col-12">
-                <a href="/Product/@Model.Product.Id/@Model.Product.Url"><h1 class="h4 fw-bold">@Model.Product.Title</h1></a>
+                <a href="/product/@Model.Product.Id/@Model.Product.Url"><h1 class="h4 fw-bold">@Model.Product.Title</h1></a>
                 <div class=" d-flex align-items-center">
                     <span style="color: rgb(189, 189, 189);font-family: sans-serif;margin-left:5px;font-size: 14px;">@Model.Product.EnTitle</span>
                     <div style="height:1px;flex-grow:1;background:#e0e0e6"></div>
@@ -160,7 +160,7 @@
                     <h6 style="font-weight:bold ;">برچسب ها</h6>
                     @foreach (var item in Model.Product.Tags)
                     {
-                        <a href="/Search/Tag/@item.Id/@item.Name">
+                        <a href="/search/tag/@item.Id/@item.Name">
                             <span class="ms-1" style="background: #f1f1f1;
     padding-left: 9px;
     border-radius: 44px;
@@ -328,7 +328,29 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    @await Component.InvokeAsync("Comment",new {prId=Model.Product.Id})
+                    <div class="container-fluid">
+                        <div class="row">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <form method="post">
+                                    <input name="Id" value="@Model.Id" hidden />
+                                    <input name="Url" value="@Model.Url" hidden />
+                                    <input name="ProductId" hidden value="@Model.Id" />
+                                    <div class="col-12">
+                                        <label>متن نظر</label>
+                                        <textarea name="Body" class="form-control" rows="8" placeholder="متن نظر خود را وارد نمایید"></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-danger">ثبت نظر</button>
+                                    </div>
+                                </form>
+                            }
+                            else
+                            {
+                                <h6>شما اول باید وارد حساب کاربری خود شوید</h6>
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

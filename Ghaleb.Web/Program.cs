@@ -35,6 +35,8 @@ using AspNetCore.ReCaptcha;
 using Microsoft.AspNetCore.HttpOverrides;
 using Ghaleb.Web.Helpers;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Options;
+using Hangfire.Dashboard;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -124,17 +126,20 @@ app.Use(async (context, next) =>
     if (context.Response.StatusCode == 404)
     {
         context.Request.Path = "/notfound";
-        await next();
+        await next();   
     }
 });
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseHangfireDashboard(options: new DashboardOptions
+{
+    Authorization = new[] { new DashboardNoAuthorizationFilter() }
+});
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();
-app.UseHangfireDashboard();
+
 app.MapControllerRoute(
     name: "MyArea",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
@@ -148,4 +153,11 @@ app.Run();
 static bool IsAdminContext(RedirectContext<CookieAuthenticationOptions> context)
 {
     return context.Request.Path.StartsWithSegments("/admin");
+}
+public class DashboardNoAuthorizationFilter : IDashboardAuthorizationFilter
+{
+    public bool Authorize(DashboardContext dashboardContext)
+    {
+        return true;
+    }
 }

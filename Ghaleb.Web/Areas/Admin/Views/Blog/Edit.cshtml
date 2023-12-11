@@ -68,7 +68,7 @@
                 </div>
                 <div class="form-group col-6">
                     <label asp-for="MetaKeyword"></label>
-                    <input class="form-control" type="text" asp-for="MetaKeyword" />
+                    <select asp-for="MetaKeyword" class="form-control" asp-items="new SelectList(Model.MetaKeyword)" multiple="multiple"></select>
                 </div>
                 <div class="form-group col-6">
                     <label asp-for="MetaDescription"></label>
@@ -85,7 +85,14 @@
     </div>
 
 </form>
-@section Scripts{
+@section Scripts {
+    <script src="~/lib/select2/dist/js/select2.min.js"></script>
+
+    <script>
+        $("#MetaKeyword").select2({
+            tags: true
+        });
+    </script>
     <script src="https://cdn.ckeditor.com/4.16.1/full-all/ckeditor.js"></script>
     <script>
         CKEDITOR.replace('editor1', {
@@ -94,37 +101,37 @@
     </script>
     <script>
 
-    $("#btnSave").click(function (e) {
+        $("#btnSave").click(function (e) {
 
-        e.preventDefault();
-        for (instance in CKEDITOR.instances) {
-            CKEDITOR.instances[instance].updateElement();
-        }
-        $.ajax({
-            url: "@Url.Action("Edit")",
-            method: "POST",
-            data: $("#frmValues").serialize(),
-
-        }).done(function (result) {
-            if (result.status == 0) {
-                Swal.fire(
-                    'تبریک !',
-                    result.message,
-                    'success'
-                )
-                $('#exampleModal').modal('hide');
+            e.preventDefault();
+            for (instance in CKEDITOR.instances) {
+                CKEDITOR.instances[instance].updateElement();
             }
+            $.ajax({
+                url: "@Url.Action("Edit")",
+                method: "POST",
+                data: $("#frmValues").serialize(),
 
-        }).fail(function () {
+            }).done(function (result) {
+                if (result.status == 0) {
+                    Swal.fire(
+                        'تبریک !',
+                        result.message,
+                        'success'
+                    )
+                    $('#exampleModal').modal('hide');
+                }
+
+            }).fail(function () {
 
 
+            });
         });
-    });
     </script>
     <script>
         $("#BlogTypeId").change(function () {
             $.ajax({
-                url: "@Url.Action("GetByType","BlogCategory")",
+                url: "@Url.Action("GetByType", "BlogCategory")",
                 method: "GET",
                 data: {
                     id: $(this).val()

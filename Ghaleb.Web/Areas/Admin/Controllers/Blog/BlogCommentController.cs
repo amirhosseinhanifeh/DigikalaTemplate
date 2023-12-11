@@ -1,9 +1,11 @@
-﻿using ALO.DataAccessLayer.DataContext;
+﻿using ALO.Common.Enums;
+using ALO.DataAccessLayer.DataContext;
 using ALO.DomainClasses.Entity.Blog;
 using Ghaleb.Web.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static ALO.Common.Messages.Message;
 
 namespace Ghaleb.API.Areas.Admin.Controllers.Blog
 {
@@ -39,6 +41,14 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Blog
             });
             await _context.SaveChangesAsync();
             return RedirectToAction("Details", new { Id });
+        }
+        [HttpGet]
+        public async Task<IActionResult> ChangeStatus(long id)
+        {
+            var data = await _context.tbl_BlogComments.FindAsync(id);
+            data.IsActive = !data.IsActive;
+            await _context.SaveChangesAsync();
+            return Json(new { message = SuccessfullMessage, Status = Status.Success, NotificationType.success });
         }
     }
 }

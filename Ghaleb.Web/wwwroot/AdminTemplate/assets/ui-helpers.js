@@ -14,7 +14,7 @@
     $("#MainProuctCategoryId").change(function () {
         $("#BrandId").find("option").remove();
         $("#BrandId").append("<option value=''>انتخاب نمایید</option>");
-        $.get("/Admin/Product/GetBrands?mainProductCategoryId=" + $(this).val(), function (res) {
+        $.get("/Admin/product/GetBrands?mainProductCategoryId=" + $(this).val(), function (res) {
             for (var i = 0; i < res.length; i++) {
 
                 $("#BrandId").append("<option value=" + res[i].id + ">" + res[i].value + "</option>");

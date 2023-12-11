@@ -16,12 +16,13 @@ namespace ALO.ViewModels.Blog.Admin
         public string Description { get; set; }
         [Display(Name = "خلاصه")]
         public string Abstract { get; set; }
-        public int Visit { get; set; } = 0;
         [Display(Name = "نمایش در صفحه اول")]
         public bool ShowInHome { get; set; }
         [Display(Name = "عکس")]
         public long? ImageId { get; set; }
         [Display(Name = "دسته")]
         public long BlogCategoryId { get; set; }
+        [Display(Name = "امکان کامنت گزاشتن")]
+        public bool CanComment { get; set; }
     }
 }

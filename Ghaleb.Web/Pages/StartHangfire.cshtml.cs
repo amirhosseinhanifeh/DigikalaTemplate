@@ -91,7 +91,7 @@ Cron.Daily);
             var blogs = await _context.tbl_Blogs.Where(h => h.IsActive && !h.IsDelete).ToListAsync();
             foreach (var item in blogs)
             {
-                list.Add(new SitemapNode { LastModified = DateTime.UtcNow, Priority = 0.8, Url = configuration["SiteSetting:Url"] + "mag/post/" + item.Id + "/" + item.Url, Frequency = SitemapFrequency.Daily });
+                list.Add(new SitemapNode { LastModified = DateTime.UtcNow, Priority = 0.8, Url = configuration["SiteSetting:Url"] + "blog/post/" + item.Id + "/" + item.Url, Frequency = SitemapFrequency.Daily });
 
             }
             var pages = await _context.tbl_PageContent.Where(x => x.IsActive && !x.IsDelete).ToListAsync();

@@ -45,11 +45,12 @@ namespace Ghaleb.Web.Pages
         public int PageSize { get; set; } = 16;
         public Dictionary<string, string> Routes{ get; set; }
 
-        public async Task OnGetAsync(
+        public async Task<IActionResult> OnGetAsync(
             long? mainCategoryId = null,
             long? categoryId = null,
             long? subcategoryId = null,
             long? tagId = null,
+            string? tagName = null,
             bool? myposts = null,
             string? q = null,
             string order = "NEW"
@@ -75,12 +76,16 @@ namespace Ghaleb.Web.Pages
             }
             if (tagId != null)
             {
-                ProductTag = await _context.tbl_ProductTags.FindAsync(tagId);
+                ProductTag = await _context.tbl_ProductTags.FirstOrDefaultAsync(x=>x.Id==tagId && x.Name==tagName);
+                if (ProductTag == null)
+                    return Redirect("~/");
             }
             var res = _product.GetProductList(mainCategoryId, categoryId, subcategoryId, CategoryIds, BrandIds, tagId, OptionIds, q, order, PageNumber, PageSize, null, isExists:IsExists).model;
             TotalCount = await res.CountAsync();
             Routes = RouteBuiler(BrandId, categoryId,subcategoryId, BrandIds, CategoryIds, OptionIds, IsExists);
             Products = await _product.GetProductList(mainCategoryId, categoryId, subcategoryId, CategoryIds, BrandIds, tagId, OptionIds, q, order, PageNumber, PageSize, null, isExists: IsExists).model.Skip((PageNumber - 1) * PageSize).Take(PageSize).ToListAsync();
+
+            return Page();
         }
         public Dictionary<string, string> RouteBuiler(long? brandId,long? categoryId,long? subcategoryId, long[] brandIds, long[] categoryIds, long[] optionIds, bool isExists)
         {

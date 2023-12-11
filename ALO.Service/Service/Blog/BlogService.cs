@@ -154,7 +154,7 @@ namespace ALO.Service.Service.Blog
         {
             try
             {
-                var response = await _db.tbl_Blogs.AsNoTracking().FirstOrDefaultAsync(y => y.Url == model.Url && y.IsDelete != true);
+                var response = await _db.tbl_Blogs.FirstOrDefaultAsync(y => y.Url == model.Url && y.IsDelete != true);
                 if (response != null && response.Id != model.Id)
                 {
                     return new ListResultViewModel<bool>
@@ -167,22 +167,19 @@ namespace ALO.Service.Service.Blog
                 }
                 if (model.Id != null)
                 {
-                    _db.UpdateBaseEntity(new tbl_Blog
-                    {
-
-                        Id = model.Id.GetValueOrDefault(),
-                        MetaDescription = model.MetaDescription,
-                        MetaKeyword = string.Join(",", model.MetaKeyword),
-                        PageTitle = model.PageTitle,
-                        Title = model.Title,
-                        Url = model.Url,
-                        Abstract = model.Abstract,
-                        ImageId = model.ImageId,
-                        Description = model.Description,
-                        ShowInHome = model.ShowInHome,
-                        BlogCategoryId = model.BlogCategoryId,
-
-                    });
+                    response.MetaDescription = model.MetaDescription;
+                    response.MetaKeyword = string.Join(",", model.MetaKeyword);
+                    response.PageTitle = model.PageTitle;
+                    response.Title = model.Title;
+                    response.Url = model.Url;
+                    response.Abstract = model.Abstract;
+                    response.ImageId = model.ImageId;
+                    response.Description = model.Description;
+                    response.ShowInHome = model.ShowInHome;
+                    response.BlogCategoryId = model.BlogCategoryId;
+                    response.CanComment = model.CanComment;
+                    response.ModifiedDate = DateTime.Now;
+                    await _db.SaveChangesAsync();
                 }
                 else
                 {
@@ -199,7 +196,7 @@ namespace ALO.Service.Service.Blog
                         BlogCategoryId = model.BlogCategoryId,
                         ShowInHome = model.ShowInHome,
                         Visit = 0,
-
+                        CanComment = model.CanComment,
                     });
                 }
                 await _db.SaveChangesAsync();
@@ -219,8 +216,8 @@ namespace ALO.Service.Service.Blog
                     model = false,
                     NotificationType = NotificationType.error,
                     Status = Status.Failed
-    };
-}
+                };
+            }
         }
     }
 }

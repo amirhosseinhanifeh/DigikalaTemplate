@@ -19,10 +19,8 @@ namespace Ghaleb.Web.Pages.ViewComponents.Brand
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var res = await _memoryCache.GetOrCreateAsync("Brands", async cachEntry =>
-            {
-                return await _context.tbl_Brands.Include(x => x.Logo).Where(x => x.IsDelete == false && x.IsActive).ToListAsync();
-            });
+            var res =await _context.tbl_Brands.Include(x => x.Logo).Where(x => x.IsDelete == false && x.IsActive).ToListAsync();
+
             return View(res);
         }
     }

@@ -24,7 +24,7 @@
     {
         @section Tags
         {
-        <link rel="canonical" href="@Configuration["SiteSetting:Url"]Search/Tag/@Model.ProductTag.Id/@Model.ProductTag.Name">
+        <link rel="canonical" href="@Configuration["SiteSetting:Url"]search/tag/@Model.ProductTag.Id/@Model.ProductTag.Name">
     }
         ViewData["Seo"] = new
         {
@@ -38,7 +38,7 @@
     {
         @section Tags
         {
-        <link rel="canonical" href="@Configuration["SiteSetting:Url"]Search/Brand/@Model.Brand.Id/@Model.Brand.Name">
+        <link rel="canonical" href="@Configuration["SiteSetting:Url"]search/brand/@Model.Brand.Id/@Model.Brand.Name">
     }
             ViewData["Seo"] = new
             {
@@ -147,7 +147,7 @@
                         @foreach (var item in Model.Products)
                         {
                             <a class="col-6 col-sm-3 p-2 ml-1 d-flex justify-content-center align-items-center " style="flex-direction:column ;" *ngFor="let item of products" target="_blank"
-                       href="/Product/@item.Id/@item.Url">
+                       href="/product/@item.Id/@item.Url">
                                 <img class="card-img-top mx-auto"
                              src="@item.Image"
                              alt="@item.Title" style="width:200px;max-height:150px ;">

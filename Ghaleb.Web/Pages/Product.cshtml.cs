@@ -56,7 +56,9 @@ namespace Ghaleb.Web.Pages
                 Product = (await _product.GetProductDetails(Id.GetValueOrDefault(), Url)).model;
             }
             if (Product == null)
-                return Redirect("~/");
+            {
+                return NotFound();
+            }
 
             if (!attrIds.Any())
             {
@@ -79,16 +81,21 @@ namespace Ghaleb.Web.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(tbl_ProductComment model)
+        public async Task<IActionResult> OnPostAsync(long Id, string body, string url)
         {
             if (User.Identity.IsAuthenticated)
             {
-                model.UserId = User.UserId();
-                model.IsActive = false;
-                _context.tbl_ProductComments.Add(model);
+                _context.tbl_ProductComments.Add(new tbl_ProductComment
+                {
+                    Body = body,
+                    IsActive = false,
+                    IsDelete = false,
+                    UserId = User.UserId(),
+                    ProductId = Id
+                });
                 await _context.SaveChangesAsync();
             }
-            return RedirectToPage("Product", new { id = model.ProductId });
+            return RedirectToPage("Product", new { id = Id, Url = url });
         }
         public IActionResult OnPostAddToBasket()
         {
