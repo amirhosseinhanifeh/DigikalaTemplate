@@ -51,7 +51,10 @@ builder.Services.AddHangfireServer();
 builder.Services.AddSingleton<HtmlEncoder>(
   HtmlEncoder.Create(allowedRanges: new[] { UnicodeRanges.BasicLatin,
                                             UnicodeRanges.Arabic}));
-
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(1); // Set session timeout
+});
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -128,7 +131,7 @@ app.MapRazorPages();
 app.MapControllerRoute(
     name: "MyArea",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-
+app.UseSession();
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
