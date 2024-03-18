@@ -38,12 +38,13 @@ Cron.Daily);
         }
         public async Task StartTorob()
         {
-            var products = await _context.tbl_Products.Where(h => h.IsActive && !h.IsDelete && h.TorobLink != null).ToListAsync();
+            var products = await _context.tbl_Products.Include(x=>x.TorobProducts).Where(h => h.IsActive && !h.IsDelete && h.TorobLink != null).ToListAsync();
             var client = _httpClientFactory.CreateClient();
             List<tbl_TorobProducts> torobs = new List<tbl_TorobProducts>();
             foreach (var product in products)
             {
-
+                product.TorobProducts.Clear();
+                product.TorobProducts = new List<tbl_TorobProducts>();
                 using (var response = await client.GetAsync(product.TorobLink))
                 {
                     using (var content = response.Content)

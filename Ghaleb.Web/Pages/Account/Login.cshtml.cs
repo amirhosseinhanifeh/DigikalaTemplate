@@ -71,7 +71,7 @@ namespace Ghaleb.Web.Pages.Account
                     new ClaimsPrincipal(claimsIdentity),
                     authProperties);
                 if (ReturnUrl == null)
-                    return Redirect("~/");
+                    return Redirect("~/Client/Orders");
                 return Redirect(ReturnUrl);
             }
             else

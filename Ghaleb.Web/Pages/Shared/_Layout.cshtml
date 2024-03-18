@@ -59,13 +59,15 @@
                             @if (User.Identity.IsAuthenticated)
                             {
                                 <div class="col-6 col-xl-3 col-lg-5 border-start">
-
-                                    <a href="" [routerLink]="['dashboard']" style="border-radius: 25px;
-                                                " *ngIf="isLogin">
-                                        <i class="fa-regular fa-user" style="font-size:18px
-                                                 ;margin-left:5px ;"></i>
-                                        @User.Identity.Name
-                                    </a>
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                            @User.Identity.Name
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                            <li><a class="dropdown-item" asp-page="client/orders">سفارشات</a></li>
+                                            <li><a class="dropdown-item" asp-page="client/logout">خروج</a></li>
+                                        </ul>
+                                    </div>
                                 </div>
                             }
                             else

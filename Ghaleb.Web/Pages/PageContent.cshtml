@@ -38,6 +38,8 @@
         }
 </style>
 @await Component.InvokeAsync("BreadCrumps",Model.Data)
-<div class="col-12 col-lg-8 mx-auto">
+<div class="col-12 col-lg-12 mx-auto">
+    <div class="row">
     @Html.Raw(Model.Data.Description)
+    </div>
 </div>
