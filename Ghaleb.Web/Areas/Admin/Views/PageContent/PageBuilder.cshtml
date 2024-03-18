@@ -1,0 +1,119 @@
+﻿@{
+    ViewData["Title"] = "افزودن محصول";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+
+    <div class="col-12 col-lg-12">
+        <div class="row">
+            <div>
+                <button id="createRow">ساختن ردیف</button>
+                <button id="createCol">ساختن پاراگراف</button>
+                <button id="createHeader">ساخت Head Tag</button>
+                <button id="remove">حذف</button>
+                <input value="" id="height" placeholder="ارتفاع" />
+                <select id="marginTop">
+                    <option value="">انتخاب فاصله تا بالا</option>
+                    <option value="mt-5">5</option>
+                    <option value="mt-4">4</option>
+                    <option value="mt-3">3</option>
+                    <option value="mt-2">2</option>
+                    <option value="mt-1">1</option>
+                </select>
+                <select id="grid">
+                    <option value="">انتخاب سایز ستون</option>
+
+                    <option value="col-lg-12">12</option>
+                    <option value="col-lg-11">11</option>
+                    <option value="col-lg-10">10</option>
+                    <option value="col-lg-9">9</option>
+                    <option value="col-lg-8">8</option>
+                    <option value="col-lg-7">7</option>
+                    <option value="col-lg-6">6</option>
+                    <option value="col-lg-5">5</option>
+                    <option value="col-lg-4">4</option>
+                    <option value="col-lg-3">3</option>
+                    <option value="col-lg-2">2</option>
+                    <option value="col-lg-1">1</option>
+                </select>
+                <textarea id="text" rows="8"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-12 mt-4" style="min-height:500px" id="page">
+    </div>
+
+</div>
+@section Scripts {
+
+
+    <script>
+
+        var elem = null;
+        $("#page").click(function (event) {
+            elem = event.target;
+            $(this).find("*").removeClass("border");
+            $(elem).toggleClass("border");
+            if (event.target.tagName != "DIV") {
+                $("#createRow").add("#createHeader").add("#createCol").hide();
+                $("#text").show();
+            }
+            else {
+                $("#createRow").add("#createHeader").add("#createCol").show();
+                $("#text").hide();
+            }
+            if (event.target.textContent != undefined) {
+                $("#text").attr("sourceElem", $(elem).attr("id")).val(event.target.textContent);
+                $("#height").attr("sourceElem", $(elem).attr("id"));
+
+            }
+        });
+        $("#createRow").click(function () {
+            $(elem).append('<div class="row" style="min-height:150px"></div>');
+        });
+        $("#createCol").click(function () {
+            $(elem).append('<p id="' + random() + '">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز، و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و سه درصد گذشته حال و آینده، شناخت فراوان جامعه و متخصصان را می طلبد، تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی، و فرهنگ پیشرو در زبان فارسی ایجاد کرد، در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها، و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی، و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.</p>');
+        });
+        $("#grid").change(function () {
+
+            $(elem).removeClass(function (index, className) {
+                return (className.match(/(^|\s)col-\S+/g) || []).join(' ');
+            });
+            $(elem).addClass($(this).val());
+        });
+        $("#createHeader").click(function () {
+            $(elem).append('<h1 id=' + random() + '>H1 Title</h1>');
+
+        });
+        $("#remove").click(function () {
+            $(elem).remove();
+
+        });
+        $("#marginTop").change(function () {
+
+            if (elem.classList.contains("mt")) {
+                $(elem).removeClass(function (index, className) {
+                    return (className.match(/(^|\s)mt-\S+/g) || []).join(' ');
+                });
+            }
+            $(elem).addClass($(this).val());
+        });
+        $("#text").keyup(function () {
+            var id = $(this).attr("sourceelem");
+            $("[id=" + id + "]").text($(this).val());
+        });
+        $("#height").keyup(function () {
+            var id = $(this).attr("sourceelem");
+            $("[id=" + id + "]").css("height", $(this).val());
+        });
+
+
+        function random() {
+            return Math.floor((Math.random() * 50000) + 1);
+        }
+        function hasClass(element, className) {
+            return (' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1;
+        }
+    </script>
+}

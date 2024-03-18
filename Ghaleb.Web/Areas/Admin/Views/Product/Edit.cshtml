@@ -120,21 +120,21 @@
 
 </form>
 @section Scripts{
-    @*    <script src="https://cdn.ckeditor.com/4.16.1/full-all/ckeditor.js"></script>
+       <script src="https://cdn.ckeditor.com/4.16.1/full-all/ckeditor.js"></script>
     <script>
         CKEDITOR.replace('editor1', {
             filebrowserUploadUrl: '/Admin/Upload/UploadImageFromCk'
         });
-    </script>*@
+    </script>
 
     <script>
 
         $("#btnSave").click(function(e) {
 
             e.preventDefault();
-            //for (instance in CKEDITOR.instances) {
-            //    CKEDITOR.instances[instance].updateElement();
-            //}
+            for (instance in CKEDITOR.instances) {
+                CKEDITOR.instances[instance].updateElement();
+            }
             $.ajax({
                 url: "@Url.Action("Edit")",
                 method: "POST",

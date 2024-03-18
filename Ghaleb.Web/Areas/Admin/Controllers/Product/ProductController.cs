@@ -12,9 +12,11 @@ using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using static ALO.Common.Messages.Message;
+using static Azure.Core.HttpHeader;
 
 namespace Ghaleb.API.Areas.Admin.Controllers.Product
 {
@@ -37,9 +39,9 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
             _context = context;
         }
 
-        public async Task<IActionResult> Index(long? brandId,long? subcategoryId, int page=1,int pageSize=6)
+        public async Task<IActionResult> Index(long? brandId, long? subcategoryId, int page = 1, int pageSize = 6)
         {
-            var res =  _productService.GetProductListForAdmin(brandId,subcategoryId);
+            var res = _productService.GetProductListForAdmin(brandId, subcategoryId);
 
             ViewBag.TotalCount = await res.model.CountAsync();
             ViewBag.PageSize = pageSize;
@@ -104,11 +106,11 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
             {
                 list = await _context.tbl_ProductCustomFields.Include(x => x.ProductCustomFieldValues).Include(x => x.ProductCustomFieldsOptionValues).Where(x => categoryId != null ? x.ProductCategoryId == categoryId : true).ToListAsync();
             }
-            if(subcategoryId !=null)
+            if (subcategoryId != null)
             {
                 List<tbl_ProductCustomFields> list2 = new List<tbl_ProductCustomFields>();
 
-                list2 = await _context.tbl_ProductCustomFields.Include(x => x.ProductCustomFieldValues).Include(x => x.ProductCustomFieldsOptionValues).Where(x =>  subcategoryId != null ? x.SubProductCategoryId == subcategoryId : true).ToListAsync();
+                list2 = await _context.tbl_ProductCustomFields.Include(x => x.ProductCustomFieldValues).Include(x => x.ProductCustomFieldsOptionValues).Where(x => subcategoryId != null ? x.SubProductCategoryId == subcategoryId : true).ToListAsync();
                 list = list.Union(list2);
             }
             return PartialView(list.ToList());
@@ -190,7 +192,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
 
 
                                         };
-;
+                                        ;
                                         data.ProductPriceHistories = new List<tbl_ProductPriceHistory>();
                                         var color = await _context.tbl_Colors.FirstOrDefaultAsync(h => h.Name == Color);
                                         if (color != null)
@@ -205,7 +207,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
                                         }
                                         await _context.tbl_Products.AddAsync(data);
                                         await _context.SaveChangesAsync();
-                                       
+
                                     }
 
 
@@ -232,10 +234,85 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
         [HttpGet]
         public async Task<IActionResult> ChangeStatus(long id)
         {
-            var data =await _context.tbl_Products.FindAsync(id);
+            var data = await _context.tbl_Products.FindAsync(id);
             data.IsActive = !data.IsActive;
             await _context.SaveChangesAsync();
             return Json(new { message = SuccessfullMessage, Status = Status.Success, NotificationType.success });
+        }
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> GetSampleExcel()
+        {
+            var prices = await _context.tbl_ProductPriceHistory.Include(x => x.ProductPriceOptionValues).ThenInclude(x => x.ProductPriceOption).Include(x => x.Color).Include(c => c.Product).ToListAsync();
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            var stream = new MemoryStream();
+            using (ExcelPackage package = new ExcelPackage(stream))
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Inventory");
+                //Add the headers
+                worksheet.View.RightToLeft = true;
+
+                worksheet.Cells[1, 1].Value = "کد قیمت";
+                worksheet.Cells[1, 2].Value = "نام محصول";
+                worksheet.Cells[1, 2].AutoFitColumns();
+                worksheet.Cells[1, 3].Value = "رنگ";
+                worksheet.Cells[1, 4].Value = "قیمت";
+                int i = 2;
+                foreach (var item in prices)
+                {
+                    worksheet.Cells[i, 1].Value = item.Id;
+                    worksheet.Cells[i, 2].Value = item.Product.Title + " " + string.Join(" ", item.ProductPriceOptionValues.Select(x => x.ProductPriceOption.Name + " " + x.Value).ToList());
+                    worksheet.Cells[i, 2].AutoFitColumns();
+                    worksheet.Cells[i, 3].Value = item.Color.Name;
+                    worksheet.Cells[i, 4].Value = (int)item.Price;
+                    i++;
+                }
+                package.Save();
+
+            }
+            stream.Position = 0;
+            string excelName = $"ProductPrices-{DateTime.Now.ToString("yyyyMMddHHmmssfff")}.xlsx";
+            return File(
+        stream,
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        excelName);
+        }
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> UpdatePriceByExcel(IFormFile excel)
+        {
+            if (excel?.Length > 0)
+            {
+                var stream = excel.OpenReadStream();
+                List<tbl_Product> users = new List<tbl_Product>();
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                using (var package = new ExcelPackage(stream))
+                {
+                    var worksheet = package.Workbook.Worksheets.First();//package.Workbook.Worksheets[0];
+                    var rowCount = worksheet.Dimension.Rows;
+
+                    for (var row = 2; row <= rowCount; row++)
+                    {
+                        try
+                        {
+
+                            var Id = Convert.ToInt32(worksheet.Cells[row, 1].Value);
+                            var Price = Convert.ToDecimal(worksheet.Cells[row, 4].Value);
+
+                            var productPrice = await _context.tbl_ProductPriceHistory.FirstOrDefaultAsync(x => x.Id == Id);
+                            if (productPrice != null)
+                                productPrice.Price = Price;
+                            await _context.SaveChangesAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Something went wrong");
+                        }
+                    }
+                }
+
+            }
+            return View("Index");
         }
     }
 }

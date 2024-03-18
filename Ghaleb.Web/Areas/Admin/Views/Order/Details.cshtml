@@ -1,18 +1,45 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, AuthoringTagHelpers
-@model IEnumerable<ALO.DomainClasses.Entity.Order.tbl_OrderDetails>
+@model ALO.DomainClasses.Entity.Order.tbl_Order
 
     @{
         ViewData["Title"] = "جزییات سفارش";
         Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     }
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                    <thead>
+                        <tr>
+                            <th>نام گیرنده</th>
+                            <th>آدرس</th>
+                            <th>تلفن</th>
+                            <th>موبایل</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@Model.User.Profile.FirstName @Model.User.Profile.LastName</td>
+                            <td>@Model.UserAddress.Address پلاک @Model.UserAddress.Pelak واحد @Model.UserAddress.Vahed</td>
+                            <td>@Model.UserAddress.Phone</td>
+                            <td>@Model.UserAddress.Mobile</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
     <div class="row">
         <div class="col-xl-12">
             <div class="card">
 
                 <div class="table-responsive">
-                    <table class="table align-items-center table-flush">
+                    <table class="table align-items-center table-flush table-striped">
                         <thead>
                             <tr>
                                 <th>نام محصول</th>
@@ -21,7 +48,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model)
+                            @foreach (var item in Model.OrderDetails)
                             {
                                 <tr>
                                     <td>@item.ProductPriceHistory.Product.Title</td>
@@ -36,3 +63,13 @@
         </div>
     </div>
 
+<div class="row">
+    <form method="post">
+        <select name="state" class="form-control">
+            <option value="3">آماده برای ارسال</option>
+            <option value="4">تحویل داده شد</option>
+        </select>
+        <button type="submit" class="btn btn-primary">ثبت</button>
+        @ViewBag.Message
+    </form>
+</div>

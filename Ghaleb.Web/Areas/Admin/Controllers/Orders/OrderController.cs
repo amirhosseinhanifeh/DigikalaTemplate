@@ -26,7 +26,43 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Orders
         }
         public async Task<IActionResult> Details(long? Id)
         {
-            return View(await _context.GetAllAsync<tbl_OrderDetails>(x => x.OrderId == Id).Include(x => x.ProductPriceHistory).ThenInclude(x => x.Product).ToListAsync());
+            var result =await _context.tbl_Orders
+                .Include(x=>x.OrderDetails)
+                .ThenInclude(x=>x.ProductPriceHistory)
+                .ThenInclude(x=>x.Product)
+                .Include(x=>x.UserAddress)
+                .ThenInclude(x=>x.User)
+                .ThenInclude(x=>x.Profile)
+                .FirstOrDefaultAsync(x => x.Id == Id);
+            return View(result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Details(long? Id, OrderState state)
+        {
+            var result = await _context.tbl_Orders
+                .Include(x=>x.OrderStateHistories)
+                .Include(x => x.OrderDetails)
+                .ThenInclude(x => x.ProductPriceHistory)
+                .ThenInclude(x => x.Product)
+                .Include(x => x.UserAddress)
+                .ThenInclude(x => x.User)
+                .ThenInclude(x => x.Profile)
+                .FirstOrDefaultAsync(x => x.Id == Id);
+            if(!result.OrderStateHistories.Any(x=>x.OrderState==state))
+            {
+                result.OrderStateHistories.Add(new tbl_OrderStateHistory
+                {
+                    OrderState = state
+                });
+                await _context.SaveChangesAsync();
+                ViewBag.Message = "وضعیت تغییر کرد";
+            }
+            else
+            {
+            ViewBag.Message = "قبلا این وضعیت انتخاب شده";
+
+            }
+            return View(result);
         }
         public async Task<IActionResult> UserDetail(long addressId)
         {
