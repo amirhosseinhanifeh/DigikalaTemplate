@@ -312,11 +312,11 @@ namespace ALO.Service.Service.Product
                         Name = query.SubProductCategory.Title,
                         Url = query.SubProductCategory.Url
                     } : null,
-                    Colors = query.ProductPriceHistories.Where(x => x.Color != null).Select(x => x.Color).Select(h => new ProductBrandDto
+                    Colors = query.ProductPriceHistories.Where(x => x.Color != null).GroupBy(h=>h.Color).Select(h => new ProductBrandDto
                     {
-                        Id = h.Id,
-                        Name = h.Name,
-                        Hex = h.Hex,
+                        Id = h.Key.Id,
+                        Name = h.Key.Name,
+                        Hex = h.Key.Hex,
 
                     }).ToList(),
                     Tags = query.ProductTags.Select(x => new ProductBrandDto { Id = x.Id, Name = x.Name }).ToList(),

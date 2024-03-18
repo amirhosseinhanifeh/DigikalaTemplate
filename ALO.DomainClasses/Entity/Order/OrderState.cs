@@ -10,11 +10,9 @@ namespace ALO.DomainClasses.Entity.Order
         PENDING,
         [Display(Name = "پرداخت شده")]
         PAYED,
-        [Display(Name = "در حال بسته بندی")]
-        PACKING,
         [Display(Name = "آماده برای ارسال")]
         READYTODELIVERY,
-        [Display(Name = "ارسال شد")]
+        [Display(Name = "تحویل داده شد")]
         DELIVERED,
     }
 }
