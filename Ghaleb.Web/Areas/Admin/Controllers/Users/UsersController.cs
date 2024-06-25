@@ -27,9 +27,11 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Users
                 .Include(x => x.Profile)
                 .Include(x => x.Orders)
                 .ThenInclude(x => x.OrderStateHistories)
+                .Where(x => !x.IsDelete)
                 .Where(x => roleId != null ? x.Roles.Any(h => h.Id == roleId) : true)
                 .Where(x => fullName != null ? (x.Profile.FirstName + " " + x.Profile.LastName).Contains(fullName) : true)
                 .Where(x => mobile != null ? x.Mobile.Contains(mobile) : true)
+                .OrderByDescending(x => x.Id)
                 .ToListAsync());
         }
         [HttpGet]
@@ -47,11 +49,29 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Users
             //send sms
             return View();
         }
+
+        public async Task<IActionResult> Edit()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Edit(object model)
+        {
+            return View();
+        }
+        public async Task<IActionResult> Delete(long Id)
+        {
+            var user = await _context.tbl_Users.FirstOrDefaultAsync(x => x.Id == Id);
+            user.IsDelete = true;
+            user.IsActive = false;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
         [HttpPost]
         public async Task<IActionResult> Sendsms(long id, string message)
         {
             //send sms
-            return Redirect("~/");
+            return View();
         }
     }
 }

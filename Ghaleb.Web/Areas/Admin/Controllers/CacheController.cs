@@ -1,4 +1,6 @@
 ﻿using ALO.DataAccessLayer.DataContext;
+using ALO.DomainClasses.Entity.Account;
+using ALO.DomainClasses.Entity.Cache;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,10 +30,38 @@ namespace Ghaleb.Web.Areas.Admin.Controllers
 
             return View(await _serviceContext.tbl_Caches.AsNoTracking().ToListAsync());
         }
-        public IActionResult Remove(string cacheName)
+
+        public async Task<IActionResult> Create(long? Id)
+        {
+            return View(await _serviceContext.tbl_Caches.FirstOrDefaultAsync(x => x.Id == Id));
+        }
+        [HttpPost]
+        public async Task<IActionResult> Create(long? Id, tbl_Cache model)
+        {
+            var role = await _serviceContext.tbl_Caches.FirstOrDefaultAsync(x => x.Id == Id);
+            if (role == null)
+            {
+                await _serviceContext.tbl_Caches.AddAsync(model);
+
+            }
+            else
+            {
+                role.CacheName = model.CacheName;
+                role.ModifiedDate = DateTime.UtcNow;
+                role.IsActive = model.IsActive;
+
+            }
+            await _serviceContext.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+        public async Task<IActionResult> RemoveAsync(string cacheName)
         {
             _memoryCache.Remove(cacheName);
-            return View();
+            var role = await _serviceContext.tbl_Caches.FirstOrDefaultAsync(x => x.CacheName == cacheName);
+            role.ModifiedDate = DateTime.Now;
+            await _serviceContext.SaveChangesAsync();
+
+            return RedirectToAction("Index");
         }
     }
 }

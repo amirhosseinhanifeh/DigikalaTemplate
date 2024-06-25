@@ -26,6 +26,7 @@ namespace ALO.DomainClasses
 
         public bool IsDelete { get; set; } = false;
 
+        [Display(Name = "وضعیت")]
         public bool IsActive { get; set; } = true;
 
 

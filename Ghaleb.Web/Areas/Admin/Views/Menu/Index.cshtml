@@ -28,14 +28,19 @@
         </li>
 
     }
-        <li class="slide">
+    <li class="slide">
 
-        <a class="side-menu__item" href="@Url.Content("~/Admin/Menu/List")">
+        <a class="side-menu__item" href="#" data-toggle="slide">
             <i class="fa fa-folder ml-3">
 
             </i>
-            <span class="side-menu__label">تنظیمات منو</span>
+            <span class="side-menu__label">تنظیمات</span>
+            <i class="angle fa fa-chevron-down"></i>
         </a>
+        <ul class="slide-menu">
+            <li><a class="slide-item" href="@Url.Content("~/Admin/Menu/List")">تنظیمات منو</a></li>
+            <li><a class="slide-item" href="@Url.Content("~/Admin/Cache")">تنظیمات کش سیستم</a></li>
+        </ul>
     </li>
     <li class="slide">
 

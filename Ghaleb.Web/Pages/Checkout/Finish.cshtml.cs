@@ -1,10 +1,12 @@
 using ALO.DataAccessLayer.DataContext;
 using ALO.DomainClasses.Entity.Order;
-using Dto.Payment;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Text;
 using ZarinPal.Class;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Ghaleb.Web.Pages.Checkout
 {
@@ -13,12 +15,14 @@ namespace Ghaleb.Web.Pages.Checkout
         private readonly ServiceContext _context;
         private readonly Payment _payment;
         private readonly IConfiguration _configuration;
-        public FinishModel(ServiceContext context, IConfiguration configuration)
+        private readonly IHttpClientFactory _httpClientFactory;
+        public FinishModel(ServiceContext context, IConfiguration configuration, IHttpClientFactory httpClientFactory)
         {
             _context = context;
             var expose = new Expose();
             _payment = expose.CreatePayment();
             _configuration = configuration;
+            _httpClientFactory = httpClientFactory;
         }
         public bool Status { get; set; } = false;
         public string Message { get; set; }
@@ -28,13 +32,17 @@ namespace Ghaleb.Web.Pages.Checkout
             var isSandbox = Convert.ToBoolean(_configuration["PaymentSetting:IsSandbox"]);
             var order = await _context.tbl_Orders.Include(x => x.OrderStateHistories).Include(x => x.DeliveryPrice).Include(x => x.OrderDetails).ThenInclude(x => x.ProductPriceHistory).FirstOrDefaultAsync(x => x.Id == id);
             var price = (int)order.TotalPrice();
-            var verification = await _payment.Verification(new DtoVerification
+            var verification = await VerifyPaymentAsync(new VerifyZarinpalRequest
             {
-                MerchantId = "37b2d480-b4c0-44d6-921c-26e588592f32",
-                Authority = authority,
-                Amount = price,
-            }, isSandbox == true ? Payment.Mode.sandbox : Payment.Mode.zarinpal);
-            if (verification.Status == 100)
+                amount = price,
+                authority = authority,
+                merchant_id = _configuration["PaymentSetting:MerchantId"]
+            });
+            if (verification == null)
+            {
+                Message = "خطا در پرداخت";
+            }
+            else if (verification.data.code == 100)
             {
                 order.PaymentMethod = PaymentMethod.INTERNET;
                 order.OrderStateHistories.Add(new tbl_OrderStateHistory
@@ -50,17 +58,13 @@ namespace Ghaleb.Web.Pages.Checkout
                     Expires = DateTime.Now.AddDays(-1)
                 });
             }
-            else if (verification.Status == -21)
+            else if (verification.data.code == -21)
             {
                 Message = "لغو پرداخت";
             }
-            else if (verification.Status == 101)
+            else if (verification.data.code == 101)
             {
                 Message = "شما قبلا این فاکتور را پرداخت کردید";
-            }
-            else if (verification.Status == -11)
-            {
-                Message = "خطا در پرداخت";
             }
             else
             {
@@ -69,5 +73,43 @@ namespace Ghaleb.Web.Pages.Checkout
 
 
         }
+        private async Task<VerifyZarinpalResponse> VerifyPaymentAsync(VerifyZarinpalRequest model)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri("https://api.zarinpal.com/pg/v4/payment/");
+            var content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, Application.Json);
+            var response = await client.PostAsync("verify.json", content);
+            var r = await response.Content.ReadAsStringAsync();
+            var d = JToken.Parse(r)["data"];
+            if (d is JObject)
+            {
+                return JsonConvert.DeserializeObject<VerifyZarinpalResponse>(r);
+
+            }
+            return null;
+
+        }
+        public class VerifyZarinpalRequest
+        {
+            public string merchant_id { get; set; }
+            public int amount { get; set; }
+            public string authority { get; set; }
+        }
+        public class Data
+        {
+            public int code { get; set; }
+            public string message { get; set; }
+            public string card_hash { get; set; }
+            public string card_pan { get; set; }
+            public int ref_id { get; set; }
+            public string fee_type { get; set; }
+            public int fee { get; set; }
+        }
+
+        public class VerifyZarinpalResponse
+        {
+            public Data data { get; set; }
+        }
+
     }
 }

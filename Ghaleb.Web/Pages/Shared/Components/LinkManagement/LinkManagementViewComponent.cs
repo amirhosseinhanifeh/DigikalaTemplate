@@ -19,7 +19,7 @@ namespace Ghaleb.Web.Pages.ViewComponents.TopMenu
 
         public async Task<IViewComponentResult> InvokeAsync(string routeName, string viewName)
         {
-            var res = await _memoryCache.GetOrCreateAsync("LinkManagement_" + routeName, async cachEntry =>
+            var res = await _memoryCache.GetOrCreateAsync("LinkManagements", async cachEntry =>
             {
                 return await _context.tbl_LinkManagements.Include(x => x.Image).Where(x => x.IsActive && x.IsDelete != true && x.GroupLinkManagement.RouteName == routeName).ToListAsync();
             });

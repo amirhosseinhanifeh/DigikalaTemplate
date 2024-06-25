@@ -11,11 +11,18 @@ namespace ALO.Common.Utilities.ConvertDt
 
             return $"{persian.GetYear(dateTime)}/{persian.GetMonth(dateTime)}/{persian.GetDayOfMonth(dateTime)}";
         }
+        public static string ConvertToPesainDate(this DateTime? dateTime)
+        {
+            if (dateTime == null)
+                return string.Empty;
+            var persian = new PersianCalendar();
 
+            return $"{persian.GetYear(dateTime.Value)}/{persian.GetMonth(dateTime.Value)}/{persian.GetDayOfMonth(dateTime.Value)}";
+        }
         public static DateTime ConvertToDateTime(this string persianDate)
         {
-            PersianCalendar pc = new PersianCalendar();
-            return new DateTime(int.Parse(persianDate.Split('/')[0]), int.Parse(persianDate.Split("/")[1]), int.Parse(persianDate.Split("/")[2]),pc);
+            PersianCalendar pc = new();
+            return new DateTime(int.Parse(persianDate.Split('/')[0]), int.Parse(persianDate.Split("/")[1]), int.Parse(persianDate.Split("/")[2]), pc);
         }
         public static string ToTimeString(this TimeSpan span)
         {
