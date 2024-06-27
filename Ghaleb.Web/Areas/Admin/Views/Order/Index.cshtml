@@ -7,13 +7,24 @@
     ViewData["Title"] = "لیست سفارشات";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-
-<div class="row">
+<form method="get" class="row">
+    <div class="col-3">
+        <input class="form-control" name="orderCode" value="@ViewBag.OrderCode" placeholder="کد سفارش" />
+    </div>
+    <div class="col-1">
+        <button type="submit" class="btn btn-dark col-12">جستجو</button>
+    </div>
+    <div class="col-1">
+        <button type="reset" class="btn btn-danger col-12">پاک</button>
+    </div>
+</form>
+<div class="row mt-5">
     <div class="col-xl-12">
-        <div class="card">
-
+        <div class="">
+            <div class="card-header border-0">
+            </div>
             <div class="table-responsive">
-                <table class="table align-items-center table-flush">
+                <table class="table align-items-center table-flus">
                     <thead>
                         <tr>
                             <th>کد سفارش</th>

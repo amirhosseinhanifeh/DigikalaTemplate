@@ -19,7 +19,7 @@ namespace Ghaleb.Web.Pages.ViewComponents.Tools
 
         public async Task<IViewComponentResult> InvokeAsync(string type)
         {
-            var res = await _memoryCache.GetOrCreateAsync("Tools", async cachEntry =>
+            var res = await _memoryCache.GetOrCreateAsync("Tools_" + type, async cachEntry =>
             {
 
                 return await _context.tbl_Tools.Where(x => x.IsActive && x.IsDelete != true && x.Type == type).ToListAsync();

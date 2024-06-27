@@ -6,36 +6,28 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row">
-    <div class="col-xl-12">
-        <div class="card">
-            <div class="card-header border-0">
-                <div class="row align-items-center">
-                    <div class="col text-right">
-                        <a type="button" class="btn btn-primary" asp-route-GroupLinkManagementId="@ViewBag.Id" asp-action="Create">افزودن</a>
-                    </div>
-                </div>
-            </div>
-            <div class="table-responsive">
-                <table class="table align-items-center table-flush">
-                    <thead>
-                        <tr>
-                            <th>عنوان</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@item.Title</td>
-                                <td>@item.Abstract</td>
-                                <td><a class="btn btn-warning" asp-route-id="@item.Id" asp-action="Create">ویرایش</a></td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+<p>
+    <a type="button" class="btn btn-primary" asp-route-GroupLinkManagementId="@ViewBag.Id" asp-action="Create">افزودن</a>
+</p>
+@(
+        Html
+        .Grid(Model)
+        .Build(columns =>
+        {
+            columns.Add(model => model.Id);
+            columns.Add(model => model.Title);
+            columns.Add(model => model.Abstract);
+            columns.Add().Encoded(false).RenderedAs(h => Html.ActionLink("ویرایش", "Create", new { Id = h.Id }, new { @class = "btn btn-dark" }));
+        })
+        .Filterable()
+        .Sortable()
+        .Empty("موردی یافت نشد")
+        .Pageable(pager =>
+        {
+            pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 5, "5" }, { 10, "10" }, { 15, "15" }, { 20, "20" } };
+            pager.ShowPageSizes = true;
+            pager.PagesToDisplay = 5;
+            pager.CurrentPage = 1;
+            pager.RowsPerPage = 2;
+        })
+        )

@@ -29,14 +29,19 @@ namespace Ghaleb.Web.Pages.Checkout
         public string OrderCode { get; set; }
         public async Task OnGetAsync(long id, string authority, string Status)
         {
-            var isSandbox = Convert.ToBoolean(_configuration["PaymentSetting:IsSandbox"]);
-            var order = await _context.tbl_Orders.Include(x => x.OrderStateHistories).Include(x => x.DeliveryPrice).Include(x => x.OrderDetails).ThenInclude(x => x.ProductPriceHistory).FirstOrDefaultAsync(x => x.Id == id);
+            var order = await _context.tbl_Orders
+                .Include(x => x.Bank)
+                .Include(x => x.OrderStateHistories)
+                .Include(x => x.DeliveryPrice)
+                .Include(x => x.OrderDetails)
+                .ThenInclude(x => x.ProductPriceHistory)
+                .FirstOrDefaultAsync(x => x.Id == id);
             var price = (int)order.TotalPrice();
             var verification = await VerifyPaymentAsync(new VerifyZarinpalRequest
             {
                 amount = price,
                 authority = authority,
-                merchant_id = _configuration["PaymentSetting:MerchantId"]
+                merchant_id = order.Bank.MerchantId
             });
             if (verification == null)
             {

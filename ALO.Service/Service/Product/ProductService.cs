@@ -27,6 +27,7 @@ using System.Threading;
 using ALO.ViewModels.Order;
 using Microsoft.AspNetCore.Http;
 using ALO.DomainClasses.Entity.Image.EntityHelpers;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ALO.Service.Service.Product
 {
@@ -129,7 +130,7 @@ namespace ALO.Service.Service.Product
                 };
             }
         }
-        private static Random random = new Random();
+        private static Random random = new();
 
         public static string RandomString(int length)
         {
@@ -266,7 +267,7 @@ namespace ALO.Service.Service.Product
             }
         }
 
-        public async Task<ListResultViewModel<ProductDetailsForHomeDto>> GetProductDetails(long id,string url, long? UserId = null)
+        public async Task<ListResultViewModel<ProductDetailsForHomeDto>> GetProductDetails(long id, string url, long? UserId = null)
         {
 
             try
@@ -291,7 +292,7 @@ namespace ALO.Service.Service.Product
                     .ThenInclude(x => x.ProductCustomFieldsOptionValues)
                     .Include(x => x.ProductPriceHistories)
                     .ThenInclude(x => x.Color)
-                    .FirstOrDefaultAsync(x => x.Id == id && x.Url==url);
+                    .FirstOrDefaultAsync(x => x.Id == id && x.Url == url);
                 if (query == null)
                     return new ListResultViewModel<ProductDetailsForHomeDto>
                     {
@@ -312,7 +313,7 @@ namespace ALO.Service.Service.Product
                         Name = query.SubProductCategory.Title,
                         Url = query.SubProductCategory.Url
                     } : null,
-                    Colors = query.ProductPriceHistories.Where(x => x.Color != null).GroupBy(h=>h.Color).Select(h => new ProductBrandDto
+                    Colors = query.ProductPriceHistories.Where(x => x.Color != null).GroupBy(h => h.Color).Select(h => new ProductBrandDto
                     {
                         Id = h.Key.Id,
                         Name = h.Key.Name,
@@ -486,7 +487,7 @@ namespace ALO.Service.Service.Product
             string order = null,
             int page = 1,
             int pageSize = 10,
-            long? userId=null,
+            long? userId = null,
             bool? isExists = null)
         {
 
@@ -551,8 +552,8 @@ namespace ALO.Service.Service.Product
                 strQuery = strQuery.And(x => !x.ProductPriceHistories.Any(h => h.IsActive && h.OrderDetails.Count() == h.Inventory));
             }
             var result = _db.GetAllAsync<tbl_Product>(strQuery, new string[] { "Image", "ProductPriceHistories" })
-                .Include(x=>x.ProductPriceHistories)
-                .Include(x=>x.Ratings)
+                .Include(x => x.ProductPriceHistories)
+                .Include(x => x.Ratings)
                 .Where(x => x.IsActive && x.IsDelete != true)
                 .Select(x => new ProductListForHomeDto
                 {
@@ -567,9 +568,9 @@ namespace ALO.Service.Service.Product
                     Cost = x.GetLastPrice().ToString("n0").toPersianNumber(),
                     Discount = x.GetDiscountPrice() != null ? x.GetDiscountPrice().Value.ToString("n0").toPersianNumber() : null,
                     Call = x.GetLastPrice() == 0,
-                    LastPriceId=x.ProductPriceHistories.Any()?x.ProductPriceHistories.OrderBy(h=>h.Id).LastOrDefault().Id:null,
+                    LastPriceId = x.ProductPriceHistories.Any() ? x.ProductPriceHistories.OrderBy(h => h.Id).LastOrDefault().Id : null,
                     IsFavourite = x.Users.Any(x => x.Id == userId),
-                    Ratings=x.Ratings.ToList()
+                    Ratings = x.Ratings.ToList()
 
                 });
 
@@ -599,7 +600,7 @@ namespace ALO.Service.Service.Product
             };
         }
 
-        public ListResultViewModel<IQueryable<GetProductListForAdminDto>> GetProductListForAdmin(long? brandId, long? subcategoryId, int page = 1, int pageSize = 6)
+        public ListResultViewModel<IQueryable<GetProductListForAdminDto>> GetProductListForAdmin(string name = null, long? brandId = null, long? maincategoryId = null, long? categoryId = null, long? subcategoryId = null, int page = 1, int pageSize = 6)
         {
             try
             {
@@ -614,11 +615,14 @@ namespace ALO.Service.Service.Product
                     .Include(x => x.ProductPriceHistories)
                     .ThenInclude(x => x.OrderDetails)
                     .ThenInclude(x => x.Order)
-                    .ThenInclude(x=>x.OrderStateHistories)
+                    .ThenInclude(x => x.OrderStateHistories)
                     .Include(x => x.SubProductCategory)
                     .OrderByDescending(x => x.CreatedDate)
+                    .Where(x => !name.IsNullOrEmpty() ? x.Title.Contains(name) : true)
                     .Where(x => x.IsDelete == false)
                     .Where(x => brandId != null ? x.BrandId == brandId : true)
+                    .Where(x => maincategoryId != null ? x.MainProductCategoryId == maincategoryId : true)
+                    .Where(x => categoryId != null ? x.ProductCategoryId == categoryId : true)
                     .Where(x => (subcategoryId != null ? x.SubProductCategoryId == subcategoryId : true))
                     .Select((x) => new GetProductListForAdminDto
                     {
@@ -626,7 +630,7 @@ namespace ALO.Service.Service.Product
                         Id = x.Id,
                         Title = x.Title,
                         Image = x.Image.BindImage(_configuration),
-                        OrderCount = x.ProductPriceHistories.SelectMany(x => x.OrderDetails).Count(h => h.Order.OrderStateHistories.Any(g=>g.OrderState== DomainClasses.Entity.Order.OrderState.PAYED)),
+                        OrderCount = x.ProductPriceHistories.SelectMany(x => x.OrderDetails).Count(h => h.Order.OrderStateHistories.Any(g => g.OrderState == DomainClasses.Entity.Order.OrderState.PAYED)),
                         SubCategory = x.SubProductCategory.Title,
                         Status = x.IsActive ? "فعال" : "غیر فعال",
                         Cost = x.GetLastPrice().ToString("n0").toPersianNumber() + " تومان",

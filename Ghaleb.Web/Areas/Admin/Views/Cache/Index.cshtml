@@ -3,47 +3,34 @@
 @model IEnumerable<ALO.DomainClasses.Entity.Cache.tbl_Cache>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "مدیریت کش سیستم";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
-
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">افزودن</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CacheName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModifiedDate)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+
+@(
+        Html
+        .Grid(Model)
+        .Build(columns =>
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CacheName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ModifiedDate)
-                </td>
-                <td>
-                    @Html.ActionLink("Clear", "Remove", new { cacheName = item.CacheName })
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+            columns.Add(model => model.Id).Titled("Id");
+            columns.Add(model => model.CacheName).Titled("CacheName");
+            columns.Add(model => model.ModifiedDate).Titled("ModifiedDate");
+            columns.Add().Encoded(false).RenderedAs(h => Html.ActionLink("پاک کردن", "Remove", new { cacheName = h.CacheName }, new { @class = "btn btn-dark" }));
+        })
+        .Filterable()
+        .Sortable()
+        .Empty("موردی یافت نشد")
+        .Pageable(pager =>
+        {
+            pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 5, "5" }, { 10, "10" }, { 15, "15" }, { 20, "20" } };
+            pager.ShowPageSizes = true;
+            pager.PagesToDisplay = 5;
+            pager.CurrentPage = 1;
+            pager.RowsPerPage = 3;
+        })
+        )
+

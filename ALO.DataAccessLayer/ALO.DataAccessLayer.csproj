@@ -22,4 +22,10 @@
     <ProjectReference Include="..\ALO.DomainClasses\ALO.DomainClasses.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Migrations\SeedMenu.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

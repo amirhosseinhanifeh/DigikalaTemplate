@@ -1,6 +1,7 @@
 ﻿using ALO.DataAccessLayer.DataContext;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,9 +22,16 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Users
 
         public async Task<IActionResult> Index(long? roleId,
             string fullName = null,
-            string mobile = null)
+            string email = null,
+            string mobile = null
+            )
         {
+            ViewBag.Roles = new SelectList(await _context.tbl_Role.ToListAsync(), "Id", "RoleName", roleId);
+            ViewBag.FullName = fullName;
+            ViewBag.Mobile = mobile;
+            ViewBag.Email = email;
             return View(await _context.tbl_Users
+                .AsNoTracking()
                 .Include(x => x.Profile)
                 .Include(x => x.Orders)
                 .ThenInclude(x => x.OrderStateHistories)
@@ -31,18 +39,19 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Users
                 .Where(x => roleId != null ? x.Roles.Any(h => h.Id == roleId) : true)
                 .Where(x => fullName != null ? (x.Profile.FirstName + " " + x.Profile.LastName).Contains(fullName) : true)
                 .Where(x => mobile != null ? x.Mobile.Contains(mobile) : true)
+                .Where(x => email != null ? x.Email.Contains(email) : true)
                 .OrderByDescending(x => x.Id)
                 .ToListAsync());
         }
         [HttpGet]
         public async Task<IActionResult> Addresses(long id)
         {
-            return View(await _context.tbl_UserAddresses.Where(x => x.UserId == id).ToListAsync());
+            return View(await _context.tbl_UserAddresses.AsNoTracking().Where(x => x.UserId == id).ToListAsync());
         }
         [HttpGet]
         public async Task<IActionResult> Menues(long id)
         {
-            return View(await _context.tbl_Menus.Where(x => x.Users.Any(h => h.Id == id)).ToListAsync());
+            return View(await _context.tbl_Menus.AsNoTracking().Where(x => x.Users.Any(h => h.Id == id)).ToListAsync());
         }
         public async Task<IActionResult> Sendsms(long id)
         {

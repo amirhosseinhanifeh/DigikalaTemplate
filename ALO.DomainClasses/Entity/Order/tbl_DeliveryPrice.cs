@@ -1,11 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ALO.DomainClasses.Entity.Order
 {
     public class tbl_DeliveryPrice : BaseEntity
     {
+        [Display(Name = "عنوان")]
         public string Name { get; set; }
+        [Display(Name = "هزینه")]
         public decimal Cost { get; set; }
+        [Display(Name = "رایگان از")]
         public decimal? FromPrice { get; set; }
         public ICollection<tbl_Order> Orders { get; set; }
 

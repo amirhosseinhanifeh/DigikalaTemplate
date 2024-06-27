@@ -5,50 +5,44 @@
     ViewData["Title"] = "لیست نظرات";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-
-<div class="row">
-    <div class="col-xl-12">
-        <div class="card">
-
-            <div class="table-responsive">
-                <table class="table align-items-center table-flush">
-                    <thead>
-                        <tr>
-                            <th>پست</th>
-                            <th>نام و نام خانوادگی</th>
-                            <th>موبایل</th>
-                            <th>ایمیل</th>
-                            <th>وضعیت</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@item.Blog.Title</td>
-                                <td>@item.User.Profile.FirstName @item.User.Profile.LastName</td>
-                                <td>@item.User.Mobile</td>
-                                <td>@item.User.Email</td>
-                                <td>
-                                    <div class="custom-control custom-switch" style="direction:ltr;padding:0">
-                                        <input type="checkbox" class="custom-control-input" id="customSwitch@(item.Id)" onchange="ChangeStatus(@item.Id)" @(item.IsActive ? "checked" : "")>
-                                        <label class="custom-control-label" for="customSwitch@(item.Id)"></label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <a class="btn btn-info" asp-route-id="@item.Id" asp-action="Details">پاسخ</a> (@item.BlogComments.Count(x=>x.IsActive==true))
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
+@(
+                Html
+                .Grid(Model)
+                .Build(columns =>
+                {
+                    columns.Add(model => model.Blog.Title);
+                    columns.Add(model => model.User.Profile.FirstName + " " + model.User.Profile.LastName).Titled("نام و نام خانوادگی");
+                    columns.Add(model => model.User.Mobile);
+                    columns.Add(model => model.User.Email);
+                    columns.Add().RenderedAs(@<text>
+    <div class="custom-control custom-switch" style="direction:ltr;padding:0">
+        <input type="checkbox" class="custom-control-input" id="customSwitch@(item.Id)" onchange="ChangeStatus(@item.Id)" @(item.IsActive ? "checked" : "")>
+        <label class="custom-control-label" for="customSwitch@(item.Id)"></label>
     </div>
-</div>
+</text>).Titled("وضعیت");
 
-@section scripts{
+                    columns.Add().Encoded(false).RenderedAs(
+
+         @<text>
+    <a class="btn btn-info" asp-route-id="@item.Id" asp-action="Details">پاسخ ها (@item.BlogComments.Count(x=>x.IsActive==true))</a>
+</text>
+            );
+                })
+        .Filterable()
+        .Sortable()
+        .Empty("موردی یافت نشد")
+        .Pageable(pager =>
+        {
+            pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 5, "5" }, { 10, "10" }, { 15, "15" }, { 20, "20" } };
+            pager.ShowPageSizes = true;
+            pager.PagesToDisplay = 5;
+            pager.CurrentPage = 1;
+            pager.RowsPerPage = 2;
+        })
+        )
+
+
+@section scripts {
 
     <script>
         function ChangeStatus(id) {

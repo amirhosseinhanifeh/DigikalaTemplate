@@ -10,38 +10,27 @@
         <a type="button" asp-action="Create" class="btn btn-primary">افزودن</a>
     </div>
 </div>
-<div class="row">
-    <div class="col-xl-12">
-        <div class="">
-            <div class="card-header border-0">
 
-            </div>
-            <div class="table-responsive">
-                <table class="table align-items-center table-flush">
-                    <thead>
-                        <tr>
-                            <th>عنوان</th>
-                            <th>لینک</th>
-                            <th>متن روی لینک</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@item.Title</td>
-                                <td>@item.Link</td>
-                                <td>@item.LinkText</td>
-                                <td>
-                                    <a class="btn btn-warning" asp-route-id="@item.Id" asp-action="Create">ویرایش</a>
-                                    <a class="btn btn-danger" asp-route-id="@item.Id" asp-action="Delete">حذف</a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+
+@(
+        Html
+        .Grid(Model)
+        .Build(columns =>
+        {
+            columns.Add(model => model.Title);
+            columns.Add(model => model.Link);
+            columns.Add(model => model.LinkText);
+            columns.Add(model => $"<a class='btn btn-dark' href=\"/{ViewContext.RouteData.Values["area"]}/{ViewContext.RouteData.Values["controller"]}/Edit/{model.Id}\">ویرایش</a> <a class='btn btn-danger' href=\"/{ViewContext.RouteData.Values["area"]}/{ViewContext.RouteData.Values["controller"]}/Delete/{model.Id}\">حذف</a>").Encoded(false);
+        })
+        .Filterable()
+        .Sortable()
+        .Empty("موردی یافت نشد")
+        .Pageable(pager =>
+        {
+            pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 5, "5" }, { 10, "10" }, { 15, "15" }, { 20, "20" } };
+            pager.ShowPageSizes = true;
+            pager.PagesToDisplay = 5;
+            pager.CurrentPage = 1;
+            pager.RowsPerPage = 2;
+        })
+        )

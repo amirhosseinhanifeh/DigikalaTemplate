@@ -55,6 +55,12 @@ builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromHours(1); // Set session timeout
 });
+
+builder.Services.AddElmahIo(options =>
+{
+    options.ApiKey = "2b043651793c425cbe4f636535d56ead";
+    options.LogId = new Guid("1b6ab967-e5de-42ab-a698-26cb6649ea27");
+});
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -136,6 +142,8 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 });
+app.UseElmahIo();
+
 app.Run();
 
 static bool IsAdminContext(RedirectContext<CookieAuthenticationOptions> context)

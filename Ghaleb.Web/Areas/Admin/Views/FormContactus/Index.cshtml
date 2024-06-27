@@ -7,35 +7,27 @@
         Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     }
 
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="card">
-
-                <div class="table-responsive">
-                    <table class="table align-items-center table-flush">
-                        <thead>
-                            <tr>
-                                <th>نام</th>
-                                <th>ایمیل</th>
-                                <th>موبایل</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model)
-                            {
-                                <tr>
-                                    <td>@item.FullName</td>
-                                    <td>@item.Email</td>
-                                    <td>@item.Mobile</td>
-                                    <td>
-                                        <a class="btn btn-dark" asp-route-id="@item.Id" asp-action="Details">مشاهده</a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+@(
+        Html
+        .Grid(Model)
+        .Build(columns =>
+        {
+            columns.Add(model => model.Id);
+            columns.Add(model => model.FullName);
+            columns.Add(model => model.Email);
+            columns.Add(model => model.Mobile);
+            columns.Add().Encoded(false).RenderedAs(h => Html.ActionLink("مشاهده", "Details", new { Id = h.Id }, new { @class = "btn btn-dark" }));
+        })
+        .Filterable()
+        .Sortable()
+        .Empty("موردی یافت نشد")
+        .Pageable(pager =>
+        {
+            pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 5, "5" }, { 10, "10" }, { 15, "15" }, { 20, "20" } };
+            pager.ShowPageSizes = true;
+            pager.PagesToDisplay = 5;
+            pager.CurrentPage = 1;
+            pager.RowsPerPage = 2;
+        })
+        )
 

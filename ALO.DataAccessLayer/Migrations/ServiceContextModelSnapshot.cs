@@ -17,7 +17,7 @@ namespace ALO.DataAccessLayer.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.14")
+                .HasAnnotation("ProductVersion", "7.0.20")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -181,6 +181,52 @@ namespace ALO.DataAccessLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("tbl_Users");
+                });
+
+            modelBuilder.Entity("ALO.DomainClasses.Entity.BankSetting.tbl_Banks", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<int>("BankType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Createdby")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSandbox")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("MerchantId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modifiedby")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("PaymentUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SandBoxUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_Banks");
                 });
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.Basket.tbl_BasketOrder", b =>
@@ -1354,7 +1400,7 @@ namespace ALO.DataAccessLayer.Migrations
                         new
                         {
                             Id = 3L,
-                            CreatedDate = new DateTime(2023, 12, 11, 22, 42, 46, 242, DateTimeKind.Local).AddTicks(3841),
+                            CreatedDate = new DateTime(2024, 6, 27, 18, 44, 42, 348, DateTimeKind.Local).AddTicks(1955),
                             IsActive = true,
                             IsDelete = false,
                             LanguageCode = "fa",
@@ -1599,6 +1645,9 @@ namespace ALO.DataAccessLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<long?>("BankId")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -1642,6 +1691,8 @@ namespace ALO.DataAccessLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BankId");
 
                     b.HasIndex("DeliveryPriceId");
 
@@ -3305,6 +3356,10 @@ namespace ALO.DataAccessLayer.Migrations
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.Order.tbl_Order", b =>
                 {
+                    b.HasOne("ALO.DomainClasses.Entity.BankSetting.tbl_Banks", "Bank")
+                        .WithMany()
+                        .HasForeignKey("BankId");
+
                     b.HasOne("ALO.DomainClasses.Entity.Order.tbl_DeliveryPrice", "DeliveryPrice")
                         .WithMany("Orders")
                         .HasForeignKey("DeliveryPriceId");
@@ -3322,6 +3377,8 @@ namespace ALO.DataAccessLayer.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Bank");
 
                     b.Navigation("DeliveryPrice");
 

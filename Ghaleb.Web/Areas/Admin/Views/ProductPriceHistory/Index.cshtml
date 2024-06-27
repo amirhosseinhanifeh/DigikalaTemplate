@@ -9,6 +9,7 @@
 <div class="row align-items-center">
     <div class="col text-right">
         <a type="button" asp-action="Create" asp-route-productId="@ViewBag.ProductId" class="btn btn-primary">افزودن</a>
+        <a type="button" asp-action="Index" asp-controller="Product" class="btn btn-dark">بازگشت به لیست محصولات</a>
     </div>
 </div>
 <div class="row">
@@ -22,9 +23,9 @@
                 <table class="table align-items-center table-flush">
                     <thead>
                         <tr>
+                            <th>#</th>
                             <th>قیمت</th>
                             <th>تخفیف</th>
-                            <th>نام محصول</th>
                             <th>رنگ</th>
                             <th>گارانتی</th>
                             <th>موجودی</th>
@@ -35,14 +36,15 @@
                         @foreach (var item in Model)
                         {
                             <tr>
+                                <td>#@item.Id</td>
                                 <td>@item.Price.ToString("n0") تومان</td>
-                                <td>@item.DiscountPrice</td>
+                                <td>@(item.DiscountPrice??0)</td>
                                 <td>@item.Color?.Name</td>
-                                <td>@item.ProductGuarantee?.Name</td>
+                                <td>@(item.ProductGuarantee?.Name??"ندارد")</td>
                                 <td>@item.Inventory</td>
                                 <td>
-                                    <a class="btn btn-dark" asp-route-id="@item.Id" asp-action="Edit">ویرایش</a>
-                                    <a class="btn btn-danger" asp-action="Delete" asp-area="Admin" asp-controller="ProductPriceHistory" asp-route-id="@item.Id">حذف</a>
+                                    <a class="btn btn-dark" asp-route-id="@item.Id" asp-action="Edit" asp-route-productId="@ViewBag.ProductId">ویرایش</a>
+                                    <a class="btn btn-danger" asp-action="Delete" asp-area="Admin" asp-controller="ProductPriceHistory" asp-route-productId="@ViewBag.ProductId" asp-route-id="@item.Id">حذف</a>
                                 </td>
                             </tr>
                         }

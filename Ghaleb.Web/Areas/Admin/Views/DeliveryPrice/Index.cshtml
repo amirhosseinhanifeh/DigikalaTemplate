@@ -6,41 +6,26 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row">
-    <div class="col-xl-12">
-        <div class="card">
-            <div class="card-header border-0">
-                <div class="row align-items-center">
-                    <div class="col text-right">
-                        <a type="button" class="btn btn-primary" asp-action="Edit">افزودن</a>
-                    </div>
-                </div>
-            </div>
-            <div class="table-responsive">
-                <table class="table align-items-center table-flush">
-                    <thead>
-                        <tr>
-                            <th>نام</th>
-                            <th>هزینه ارسال</th>
-                            <th>رایگان برای هزینه بالای (تومان)</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@item.Name</td>
-                                <td>@item.Cost.ToString("n0") تومان</td>
-                                <td>@item.FromPrice?.ToString("n0")</td>
-                                <td>
-                                    <a class="btn btn-dark" asp-route-id="@item.Id" asp-action="Edit">ویرایش</a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+@(
+        Html
+        .Grid(Model)
+        .Build(columns =>
+        {
+            columns.Add(model => model.Id);
+            columns.Add(model => model.Name);
+            columns.Add(model => model.Cost.ToString("n0") + " تومان").Titled("هزینه ازسال");
+            columns.Add(model => model.FromPrice.GetValueOrDefault().ToString("n0") + " تومان").Titled("رایگان برای هزینه بالای (تومان)");
+            columns.Add().Encoded(false).RenderedAs(h => Html.ActionLink("ویرایش", "Edit", new { Id = h.Id }, new { @class = "btn btn-dark" }));
+        })
+        .Filterable()
+        .Sortable()
+        .Empty("موردی یافت نشد")
+        .Pageable(pager =>
+        {
+            pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 5, "5" }, { 10, "10" }, { 15, "15" }, { 20, "20" } };
+            pager.ShowPageSizes = true;
+            pager.PagesToDisplay = 5;
+            pager.CurrentPage = 1;
+            pager.RowsPerPage = 2;
+        })
+        )

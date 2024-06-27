@@ -37,7 +37,12 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Blog
 
         public async Task<IActionResult> Index()
         {
-            var Result = await _context.GetAllAsync<tbl_Blog>().Include(x=>x.Image).Include(x=>x.BlogCategory).Include(x=>x.BlogComments).Where(x=>x.IsDelete==false).ToListAsync();
+            var Result = await _context.GetAllAsync<tbl_Blog>()
+                .Include(x => x.Image)
+                .Include(x => x.BlogCategory)
+                .ThenInclude(x => x.BlogType)
+                .Include(x => x.BlogComments)
+                .Where(x => x.IsDelete == false).ToListAsync();
             return View(Result);
         }
         public async Task<IActionResult> Create()
@@ -64,11 +69,11 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Blog
         {
             if (Id == null)
                 return Redirect("~/");
-            var result = await _context.GetAsync<tbl_Blog>(x => x.Id == Id,includes:new string[] { "BlogCategory" });
+            var result = await _context.GetAsync<tbl_Blog>(x => x.Id == Id, includes: new string[] { "BlogCategory" });
             if (result == null)
                 return Redirect("~/");
-            ViewBag.BlogType = new SelectList((await _context.GetAllAsync<tbl_BlogType>().ToListAsync()), "Id", "Name",result.BlogCategory.BlogTypeId);
-            ViewBag.Categories = new SelectList((await _context.GetAllAsync<tbl_BlogCategory>(x=>x.BlogTypeId==result.BlogCategory.BlogTypeId).ToListAsync()), "Id", "Title",result.BlogCategoryId);
+            ViewBag.BlogType = new SelectList((await _context.GetAllAsync<tbl_BlogType>().ToListAsync()), "Id", "Name", result.BlogCategory.BlogTypeId);
+            ViewBag.Categories = new SelectList((await _context.GetAllAsync<tbl_BlogCategory>(x => x.BlogTypeId == result.BlogCategory.BlogTypeId).ToListAsync()), "Id", "Title", result.BlogCategoryId);
 
             var data = new RequestBlogDTO
             {

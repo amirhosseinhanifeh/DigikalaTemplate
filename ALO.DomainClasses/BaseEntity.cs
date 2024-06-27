@@ -14,6 +14,7 @@ namespace ALO.DomainClasses
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Display(Name = "شناسه")]
         public long Id { get; set; }
 
 

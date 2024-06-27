@@ -17,7 +17,7 @@ namespace ALO.DomainClasses.Entity.Account
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
-        [Display(Name ="ایمیل")]
+        [Display(Name = "ایمیل")]
         public string Email { get; set; }
         [Display(Name = "موبایل")]
         public string Mobile { get; set; }
@@ -41,8 +41,11 @@ namespace ALO.DomainClasses.Entity.Account
         /// f.new
         /// </summary>
         public bool IsActive { get; set; } = true;
+        [Display(Name = "آخرین ورود")]
 
         public DateTime LastLogin { get; set; }
+        [Display(Name = "مرورگر")]
+
         public string BrowserName { get; set; }
         public bool IsDelete { get; set; } = false;
 

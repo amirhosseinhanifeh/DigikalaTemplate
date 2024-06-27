@@ -1,16 +1,19 @@
 ﻿using ALO.DomainClasses.Entity.City;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace ALO.DomainClasses.Entity.Country
 {
-    public class tbl_Country:BaseEntity
+    public class tbl_Country : BaseEntity
     {
         #region Properties
         /// <summary>
         /// Country Name
         /// </summary>
+        /// 
+        [Display(Name = "نام")]
         public string Name { get; set; }
 
         #endregion

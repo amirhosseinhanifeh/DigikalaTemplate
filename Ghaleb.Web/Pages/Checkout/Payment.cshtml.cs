@@ -1,6 +1,7 @@
 using ALO.Common.Utilities.Generate;
 using ALO.DataAccessLayer.DataContext;
 using ALO.DomainClasses.Entity.Account;
+using ALO.DomainClasses.Entity.BankSetting;
 using ALO.DomainClasses.Entity.Discount;
 using ALO.DomainClasses.Entity.Image.EntityHelpers;
 using ALO.DomainClasses.Entity.Order;
@@ -33,6 +34,7 @@ namespace Ghaleb.Web.Pages.Checkout
         public decimal? DiscountPrice { get; set; }
         public tbl_UserAddresses Address { get; set; }
         public tbl_Discount Discount { get; set; }
+        public List<tbl_Banks> Banks { get; set; }
 
         public async Task OnGetAsync()
         {
@@ -43,11 +45,12 @@ namespace Ghaleb.Web.Pages.Checkout
             List = new List<ResponseGetBasketItems>();
             var res = Request.Cookies["basket"];
             var addressId = long.Parse(Request.Cookies["address"]);
-            var useraddress = await _context.tbl_UserAddresses.FirstOrDefaultAsync(x => x.Id == addressId);
+            var useraddress = await _context.tbl_UserAddresses.AsNoTracking().FirstOrDefaultAsync(x => x.Id == addressId);
             Address = useraddress;
             var list = JsonConvert.DeserializeObject<List<ResonseBasketDTO>>(res);
             var ids = list.Select(h => h.Id);
-            var prs = await _context.tbl_ProductPriceHistory.Include(x => x.Product).ThenInclude(x => x.Image).Where(h => ids.Contains(h.Id)).ToListAsync();
+            var prs = await _context.tbl_ProductPriceHistory.AsNoTracking().Include(x => x.Product).ThenInclude(x => x.Image).Where(h => ids.Contains(h.Id)).ToListAsync();
+            Banks = await _context.tbl_Banks.AsNoTracking().ToListAsync();
             foreach (var item in prs)
             {
                 var count = list.FirstOrDefault(h => h.Id == item.Id);
@@ -86,7 +89,7 @@ namespace Ghaleb.Web.Pages.Checkout
             }
             await LoadDataAsync();
         }
-        public async Task<IActionResult> OnPostAsync(long? discountId)
+        public async Task<IActionResult> OnPostAsync(long? discountId, long? bankId)
         {
             var addressId = long.Parse(Request.Cookies["address"]);
 
@@ -98,6 +101,7 @@ namespace Ghaleb.Web.Pages.Checkout
                 UserId = User.UserId(),
                 UserAddressId = addressId,
                 DiscountId = discountId,
+                BankId = bankId,
                 OrderDetails = new List<tbl_OrderDetails>(),
                 OrderStateHistories = new List<tbl_OrderStateHistory>()
             };

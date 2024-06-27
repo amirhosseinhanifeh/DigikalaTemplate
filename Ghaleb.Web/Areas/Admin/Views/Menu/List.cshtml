@@ -6,37 +6,66 @@
     ViewData["Title"] = "لیست منو ها";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-
+<p>
+<div class="row">
+    <form method="post">
+        <button type="submit" class="btn btn-primary col">ساخت منو ها</button>
+    </form>
+    <a asp-action="ClearCache" class="btn btn-danger col-1 text-left">پاک کردن کش</a>
+</div>
+</p>
 <div class="row">
     <div class="col-xl-12">
-        <div class="card">
-            <form method="post">
-                <button type="submit" class="btn btn-success">ساخت منو ها</button>
-            </form>
-            <div class="table-responsive">
-                <table class="table align-items-center table-flush">
-                    <thead>
+
+        <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+                <thead>
+                    <tr>
+                        <th>نام</th>
+                        <th>لینک</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.OrderBy(x=>x.Order))
+                    {
                         <tr>
-                            <th>نام</th>
-                            <th>لینک</th>
-                            <th></th>
+                            <td>@item.Name</td>
+                            <td>@item.Link</td>
+
+                            <td>
+                                <a class="btn btn-dark" asp-route-ParentId="@item.Id" asp-action="Create">افزودن زیر منو</a>
+                                <a class="btn btn-warning" asp-route-Id="@item.Id" asp-action="Create">ویرایش</a>
+                            </td>
+
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@item.Name</td>
-                                <td>@item.Link</td>
-                                <td>
-                                    <a class="btn btn-dark" asp-route-id="@item.Id" asp-action="Details">مشاهده</a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+                        <tr>
+                            <td colspan="3">
+                                <table class="table table-dark">
+                                    <tbody>
+                                        @foreach (var item2 in item.ChildMenus.OrderBy(x => x.Order))
+                                        {
+
+                                            <tr>
+                                                <td>@item2.Name</td>
+                                                <td>@item2.Link</td>
+
+                                                <td>
+                                                    <a class="btn btn-warning" asp-route-Id="@item2.Id" asp-action="Create">ویرایش</a>
+
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+
+                                </table>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
 </div>
 

@@ -22,7 +22,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Users
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.tbl_Role.Where(x => !x.IsDelete).Include(x => x.Users).ToListAsync());
+            return View(await _context.tbl_Role.AsNoTracking().Where(x => !x.IsDelete).Include(x => x.Users).ToListAsync());
         }
 
         public async Task<IActionResult> Create(long? Id)
@@ -62,7 +62,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Users
         {
             //send sms
 
-            var users = await _context.tbl_Users.Where(x => x.Roles.Any(h => h.Id == id)).ToListAsync();
+            var users = await _context.tbl_Users.AsNoTracking().Where(x => x.Roles.Any(h => h.Id == id)).ToListAsync();
             foreach (var item in users)
             {
                 //send sms

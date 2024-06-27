@@ -5,41 +5,30 @@
     ViewData["Title"] = "لیست دسته بندی ها";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-<div class="row align-items-center">
-    <div class="col text-right">
-        <a type="button" asp-action="Create" class="btn btn-primary">افزودن</a>
-    </div>
-</div>
-<div class="row">
-    <div class="col-xl-12">
-        <div class="">
-            <div class="card-header border-0">
-            </div>
-            <div class="table-responsive">
-                <table class="table align-items-center table-flush">
-                    <thead>
-                        <tr>
-                            <th>نام دسته</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@item.Name</td>
-                                <td>
+<p>
+    <a type="button" asp-action="Create" class="btn btn-primary">افزودن</a>
+</p>
 
-                                    <a class="btn btn-primary" asp-route-mainId="@item.Id" asp-action="Index" asp-controller="ProductCategory">دسته وسط (@item.ProductCategories.Count(x=>x.IsDelete==false))</a>
-                                    <a class="btn btn-warning" asp-route-id="@item.Id" asp-action="Create">ویرایش</a>
-                                    <a class="btn btn-danger" asp-route-id="@item.Id" asp-action="Delete">حذف</a>
 
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+
+@(
+        Html
+        .Grid(Model)
+        .Build(columns =>
+        {
+            columns.Add(model => model.Name);
+            
+            columns.Add(model => $"<a class='btn btn-primary' href=\"/{ViewContext.RouteData.Values["area"]}/ProductCategory/Index?mainId={model.Id}\">دسته وسط ({model.ProductCategories.Count(x => x.IsDelete == false)})</a> <a class='btn btn-dark' href=\"/{ViewContext.RouteData.Values["area"]}/{ViewContext.RouteData.Values["controller"]}/Create/{model.Id}\">ویرایش</a> <a class='btn btn-danger' href=\"/{ViewContext.RouteData.Values["area"]}/{ViewContext.RouteData.Values["controller"]}/Delete/{model.Id}\">حذف</a>").Encoded(false);
+        })
+        .Filterable()
+        .Sortable()
+        .Empty("موردی یافت نشد")
+        .Pageable(pager =>
+        {
+            pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 5, "5" }, { 10, "10" }, { 15, "15" }, { 20, "20" } };
+            pager.ShowPageSizes = true;
+            pager.PagesToDisplay = 5;
+            pager.CurrentPage = 1;
+            pager.RowsPerPage = 2;
+        })
+        )

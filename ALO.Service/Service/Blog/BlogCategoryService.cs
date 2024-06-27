@@ -17,11 +17,11 @@ using static ALO.Common.Messages.Message;
 
 namespace ALO.Service.Service.Blog
 {
-    public class BlogCategoryService :RepositoryService<tbl_BlogCategory>, IBlogCategoryService
+    public class BlogCategoryService : RepositoryService<tbl_BlogCategory>, IBlogCategoryService
     {
         private readonly ServiceContext _db;
 
-        public BlogCategoryService(ServiceContext db) :base(db)
+        public BlogCategoryService(ServiceContext db) : base(db)
         {
             _db = db;
         }
@@ -38,16 +38,17 @@ namespace ALO.Service.Service.Blog
 
                         _db.UpdateBaseEntity<tbl_BlogCategory>(new tbl_BlogCategory
                         {
-                            Id=model.Id.Value,
-                            MetaDescription=model.MetaDescription,
-                            MetaKeyword=string.Join(",",model.MetaKeyword),
-                            PageTitle=model.PageTitle,
-                            Title=model.Title,
-                            Url=model.Url,
-                            
+                            Id = model.Id.Value,
+                            MetaDescription = model.MetaDescription,
+                            MetaKeyword = string.Join(",", model.MetaKeyword),
+                            PageTitle = model.PageTitle,
+                            Title = model.Title,
+                            Url = model.Url,
+
                         });
                     }
-                    else {
+                    else
+                    {
                         _db.CreateBaseEntity<tbl_BlogCategory>(new tbl_BlogCategory
                         {
 
@@ -95,15 +96,16 @@ namespace ALO.Service.Service.Blog
             try
             {
 
-                var result = (await _db.GetAllAsync<tbl_BlogCategory>().ToListAsync())
+                var result = (await _db.GetAllAsync<tbl_BlogCategory>().AsNoTracking().ToListAsync())
                     .Select(x => new GetBlogCategoryListForAdminDTO
                     {
-                        Id=x.Id,
-                        MetaDescription=x.MetaDescription,
-                        MetaKeyword=x.MetaKeyword.Split(","),
-                        PageTitle=x.PageTitle,
-                        Title=x.Title,
-                        Url=x.Url
+                        Id = x.Id,
+                        MetaDescription = x.MetaDescription,
+                        MetaKeyword = x.MetaKeyword.Split(","),
+                        PageTitle = x.PageTitle,
+                        Title = x.Title,
+                        Url = x.Url,
+                        Status = x.IsActive ? "فعال" : "غیر فعال"
                     }).ToList();
                 return new ListResultViewModel<IEnumerable<GetBlogCategoryListForAdminDTO>>
                 {

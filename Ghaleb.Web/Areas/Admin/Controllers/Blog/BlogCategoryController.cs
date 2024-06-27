@@ -37,7 +37,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Blog
         }
         public async Task<IActionResult> Create()
         {
-            ViewBag.BlogTypes = new SelectList(await _context.GetAllAsync<tbl_BlogType>().ToListAsync(), "Id", "Name");
+            ViewBag.BlogTypes = new SelectList(await _context.GetAllAsync<tbl_BlogType>().AsNoTracking().ToListAsync(), "Id", "Name");
             return View();
         }
         [HttpPost]
@@ -58,9 +58,9 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Blog
         }
         public async Task<IActionResult> Edit(long Id)
         {
-            var result = await _context.GetAsync<tbl_Blog>(x=>x.Id==Id);
-            ViewBag.BlogTypes = new SelectList(await _context.GetAllAsync<tbl_BlogType>().ToListAsync(), "Id", "Name",result.BlogCategory.BlogTypeId);
-            ViewBag.BlogCategory = new SelectList(await _context.GetAllAsync<tbl_BlogCategory>(x=>x.BlogTypeId==result.BlogCategory.BlogTypeId).ToListAsync(), "Id", "Title", result.BlogCategoryId);
+            var result = await _context.GetAsync<tbl_Blog>(x => x.Id == Id);
+            ViewBag.BlogTypes = new SelectList(await _context.GetAllAsync<tbl_BlogType>().AsNoTracking().ToListAsync(), "Id", "Name", result.BlogCategory.BlogTypeId);
+            ViewBag.BlogCategory = new SelectList(await _context.GetAllAsync<tbl_BlogCategory>(x => x.BlogTypeId == result.BlogCategory.BlogTypeId).AsNoTracking().ToListAsync(), "Id", "Title", result.BlogCategoryId);
             return View(result);
         }
         [HttpPost]
@@ -86,7 +86,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Blog
         {
             if (Id != null)
             {
-                return Json(await _context.GetAllAsync<tbl_BlogCategory>(x => x.BlogTypeId == Id).ToListAsync());
+                return Json(await _context.GetAllAsync<tbl_BlogCategory>(x => x.BlogTypeId == Id).AsNoTracking().ToListAsync());
             }
             return Json(null);
         }

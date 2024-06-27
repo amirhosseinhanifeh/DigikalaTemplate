@@ -1,4 +1,5 @@
 ﻿using ALO.DomainClasses.Entity.Account;
+using ALO.DomainClasses.Entity.BankSetting;
 using ALO.DomainClasses.Entity.Discount;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace ALO.DomainClasses.Entity.Order
         public string OrderCode { get; set; }
 
         public PaymentMethod PaymentMethod { get; set; }
+
+        public long? BankId { get; set; }
 
         public DateTime SentDate { get; set; }
 
@@ -34,12 +37,13 @@ namespace ALO.DomainClasses.Entity.Order
 
         public ICollection<tbl_OrderDetails> OrderDetails { get; set; }
         public ICollection<tbl_OrderStateHistory> OrderStateHistories { get; set; }
+        public tbl_Banks Bank { get; set; }
 
         public decimal TotalPrice()
         {
             if (Discount != null)
             {
-               return CalculateDiscount();
+                return CalculateDiscount();
             }
             return Total();
 
@@ -50,7 +54,7 @@ namespace ALO.DomainClasses.Entity.Order
         }
         public decimal CalculateDiscount()
         {
-            return Total() -(Total() * (decimal)Discount.Percent) / 100;
+            return Total() - (Total() * (decimal)Discount.Percent) / 100;
         }
     }
 }

@@ -4,6 +4,7 @@ using ALO.DomainClasses.Entity.Product;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,8 +54,9 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
             return Json(new { message = "خطا", Status = Status.Failed, NotificationType.error });
 
         }
-        public async Task<IActionResult> Edit(long id)
+        public async Task<IActionResult> Edit(long productId, long id)
         {
+            ViewBag.ProductId = productId;
             var pr = await _context.tbl_ProductPriceHistory.FindAsync(id);
             ViewBag.Colors = new SelectList(await _context.tbl_Colors.ToListAsync(), "Id", "Name", pr.ColorId);
             ViewBag.Fields = await _context.tbl_ProductPriceOptions.Include(x => x.OptionValues).ToListAsync();

@@ -20,27 +20,25 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Orders
         {
             _context = context;
         }
-        public async Task<IActionResult> Index(long? userId)
+        public async Task<IActionResult> Index(
+            long? userId,
+            string? orderCode = null)
         {
-            return View(await _context.GetAllAsync<tbl_Order>().Include(x=>x.DeliveryPrice).Include(x=>x.OrderStateHistories).Include(x => x.OrderDetails).ThenInclude(x => x.ProductPriceHistory).Where(x => userId != null ? x.UserId == userId : true).Where(x => x.OrderStateHistories.Any(h => h.OrderState == OrderState.PAYED)).ToListAsync());
+            ViewBag.OrderCode = orderCode;
+
+            return View(await _context.GetAllAsync<tbl_Order>()
+                .Include(x => x.DeliveryPrice)
+                .Include(x => x.OrderStateHistories)
+                .Include(x => x.OrderDetails)
+                .ThenInclude(x => x.ProductPriceHistory)
+                .Where(x => orderCode != null ? x.OrderCode == orderCode : true)
+                .Where(x => userId != null ? x.UserId == userId : true)
+                .Where(x => x.OrderStateHistories.Any(h => h.OrderState == OrderState.PAYED))
+                .ToListAsync());
         }
         public async Task<IActionResult> Details(long? Id)
         {
-            var result =await _context.tbl_Orders
-                .Include(x=>x.OrderDetails)
-                .ThenInclude(x=>x.ProductPriceHistory)
-                .ThenInclude(x=>x.Product)
-                .Include(x=>x.UserAddress)
-                .ThenInclude(x=>x.User)
-                .ThenInclude(x=>x.Profile)
-                .FirstOrDefaultAsync(x => x.Id == Id);
-            return View(result);
-        }
-        [HttpPost]
-        public async Task<IActionResult> Details(long? Id, OrderState state)
-        {
             var result = await _context.tbl_Orders
-                .Include(x=>x.OrderStateHistories)
                 .Include(x => x.OrderDetails)
                 .ThenInclude(x => x.ProductPriceHistory)
                 .ThenInclude(x => x.Product)
@@ -48,7 +46,21 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Orders
                 .ThenInclude(x => x.User)
                 .ThenInclude(x => x.Profile)
                 .FirstOrDefaultAsync(x => x.Id == Id);
-            if(!result.OrderStateHistories.Any(x=>x.OrderState==state))
+            return View(result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Details(long? Id, OrderState state)
+        {
+            var result = await _context.tbl_Orders
+                .Include(x => x.OrderStateHistories)
+                .Include(x => x.OrderDetails)
+                .ThenInclude(x => x.ProductPriceHistory)
+                .ThenInclude(x => x.Product)
+                .Include(x => x.UserAddress)
+                .ThenInclude(x => x.User)
+                .ThenInclude(x => x.Profile)
+                .FirstOrDefaultAsync(x => x.Id == Id);
+            if (!result.OrderStateHistories.Any(x => x.OrderState == state))
             {
                 result.OrderStateHistories.Add(new tbl_OrderStateHistory
                 {
@@ -59,7 +71,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Orders
             }
             else
             {
-            ViewBag.Message = "قبلا این وضعیت انتخاب شده";
+                ViewBag.Message = "قبلا این وضعیت انتخاب شده";
 
             }
             return View(result);

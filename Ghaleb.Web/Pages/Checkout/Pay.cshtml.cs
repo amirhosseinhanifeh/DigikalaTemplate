@@ -15,21 +15,20 @@ namespace Ghaleb.Web.Pages.Checkout
     {
         private readonly ServiceContext _context;
         private readonly Payment _payment;
-        private readonly IConfiguration configuration;
         private readonly IHttpClientFactory _httpClientFactory;
-        public PayModel(ServiceContext context, IConfiguration configuration, IHttpClientFactory httpClientFactory)
+        public PayModel(ServiceContext context, IHttpClientFactory httpClientFactory)
         {
             _context = context;
             var expose = new Expose();
             _payment = expose.CreatePayment();
-            this.configuration = configuration;
             _httpClientFactory = httpClientFactory;
         }
         public async Task<IActionResult> OnGetAsync(long orderId)
         {
 
-            var isSandbox = Convert.ToBoolean(configuration["PaymentSetting:IsSandbox"]);
+
             var o = await _context.tbl_Orders
+                .Include(x => x.Bank)
                 .Include(x => x.OrderStateHistories)
                 .Include(x => x.DeliveryPrice)
                 .Include(x => x.User)
@@ -43,30 +42,28 @@ namespace Ghaleb.Web.Pages.Checkout
             {
                 var user = await _context.tbl_Users.FindAsync(User.UserId());
 
-                var payment = await CreatePaymentAsync(new RequestPaymentDto
+                if (o.Bank.BankType == ALO.DomainClasses.Entity.BankSetting.BankType.ZARINPAL)
                 {
-                    amount = (int)o.TotalPrice(),
-                    callback_url = string.Format("{0}://{1}/checkout/finish/" + orderId, Request.Scheme, Request.Host),
-                    description = "خرید",
-                    merchant_id = configuration["PaymentSetting:MerchantId"],
-                    metadata = new Metadata
+                    var payment = await CreatePaymentAsync(new RequestPaymentDto
                     {
-                        email = user.Email,
-                        mobile = o.UserAddress.Mobile
+                        amount = (int)o.TotalPrice(),
+                        callback_url = string.Format("{0}://{1}/checkout/finish/" + orderId, Request.Scheme, Request.Host),
+                        description = "خرید",
+                        merchant_id = o.Bank.MerchantId,
+                        metadata = new Metadata
+                        {
+                            email = user.Email,
+                            mobile = o.UserAddress.Mobile
+                        }
+                    });
+                    if (payment.data.code == 100)
+                    {
+                        return Redirect((o.Bank.IsSandbox == true ? o.Bank.SandBoxUrl : o.Bank.PaymentUrl) + payment.data.authority);
                     }
-                });
-                //var result = await _payment.Request(new DtoRequest
-                //{
-                //    Mobile = o.UserAddress.Mobile,
-                //    CallbackUrl = string.Format("{0}://{1}/checkout/finish/" + orderId, Request.Scheme, Request.Host),
-                //    Description = "خرید",
-                //    Email = user.Email,
-                //    Amount = (int)o.TotalPrice(),
-                //    MerchantId = configuration["PaymentSetting:MerchantId"],
-                //}, isSandbox == true ? ZarinPal.Class.Payment.Mode.sandbox : ZarinPal.Class.Payment.Mode.zarinpal);
-                if (payment.data.code == 100)
+                }
+                else
                 {
-                    return Redirect((isSandbox == true ? configuration["PaymentSetting:SandboxUrl"] : configuration["PaymentSetting:PaymentUrl"]) + payment.data.authority);
+                    return Redirect("~/");
                 }
             }
             else
@@ -97,7 +94,7 @@ namespace Ghaleb.Web.Pages.Checkout
             }
             return RedirectToPage("Error", new { statusCode = "-101" });
         }
-        private async Task<ZarinPalpaymentResponse> CreatePaymentAsync(RequestPaymentDto model)
+        private async Task<ZarinPalpaymentResponse?> CreatePaymentAsync(RequestPaymentDto model)
         {
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri("https://api.zarinpal.com/pg/v4/payment/");

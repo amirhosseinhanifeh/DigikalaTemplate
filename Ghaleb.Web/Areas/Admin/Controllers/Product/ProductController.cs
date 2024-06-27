@@ -6,6 +6,7 @@ using ALO.ViewModels.Product.Admin;
 using ALO.ViewModels.Result;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -39,10 +40,30 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
             _context = context;
         }
 
-        public async Task<IActionResult> Index(long? brandId, long? subcategoryId, int page = 1, int pageSize = 6)
+        public async Task<IActionResult> Index(
+            string name = null,
+            long? brandId = null,
+            long? maincategoryId = null,
+            long? categoryId = null,
+            long? subcategoryId = null,
+            int page = 1,
+            int pageSize = 6)
         {
-            var res = _productService.GetProductListForAdmin(brandId, subcategoryId);
+            var res = _productService.GetProductListForAdmin(name, brandId, maincategoryId, categoryId, subcategoryId);
 
+            ViewBag.MainCategories = new SelectList(await _context.tbl_MainProductCategory.ToListAsync(), "Id", "Name", maincategoryId);
+            ViewBag.Categories = new SelectList((await _productCategoryService.GetProductCategoriesSelect()).model, "Id", "Value", categoryId);
+            ViewBag.Brands = new SelectList((await _context.tbl_Brands.Where(h => maincategoryId != null ? h.MainProductCategoryId == maincategoryId : true).Select(h => new { Id = h.Id, Value = h.Name }).ToListAsync()), "Id", "Value", brandId);
+            if (categoryId != null || subcategoryId != null)
+            {
+                ViewBag.SubCategories = new SelectList((await _productSubCategoryService.GetSubCategorySelect(categoryId)).model, "Id", "Value", subcategoryId);
+            }
+            else
+            {
+                ViewBag.SubCategories = new SelectList(new List<DropDownListDTO>(), "Id", "Value");
+
+            }
+            ViewBag.Name = name;
             ViewBag.TotalCount = await res.model.CountAsync();
             ViewBag.PageSize = pageSize;
             ViewBag.PageNumber = page;
@@ -108,7 +129,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
             }
             if (subcategoryId != null)
             {
-                List<tbl_ProductCustomFields> list2 = new List<tbl_ProductCustomFields>();
+                List<tbl_ProductCustomFields> list2 = new();
 
                 list2 = await _context.tbl_ProductCustomFields.Include(x => x.ProductCustomFieldValues).Include(x => x.ProductCustomFieldsOptionValues).Where(x => subcategoryId != null ? x.SubProductCategoryId == subcategoryId : true).ToListAsync();
                 list = list.Union(list2);
@@ -145,7 +166,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
                 if (batchUsers?.Length > 0)
                 {
                     var stream = batchUsers.OpenReadStream();
-                    List<tbl_Product> users = new List<tbl_Product>();
+                    List<tbl_Product> users = new();
                     try
                     {
                         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -246,7 +267,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
             var prices = await _context.tbl_ProductPriceHistory.Include(x => x.ProductPriceOptionValues).ThenInclude(x => x.ProductPriceOption).Include(x => x.Color).Include(c => c.Product).ToListAsync();
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             var stream = new MemoryStream();
-            using (ExcelPackage package = new ExcelPackage(stream))
+            using (ExcelPackage package = new(stream))
             {
                 ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Inventory");
                 //Add the headers
@@ -284,7 +305,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
             if (excel?.Length > 0)
             {
                 var stream = excel.OpenReadStream();
-                List<tbl_Product> users = new List<tbl_Product>();
+                List<tbl_Product> users = new();
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
                 using (var package = new ExcelPackage(stream))
                 {

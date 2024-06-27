@@ -1,0 +1,44 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model IEnumerable<ALO.DomainClasses.Entity.Country.tbl_Country>
+
+@{
+    ViewData["Title"] = "لیست کشور ها";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<p>
+<form method="get" class="row">
+    <div class="col-3">
+        <input class="form-control" name="name" value="@ViewBag.Name" placeholder="نام کشور" />
+    </div>
+    <div class="col-1">
+        <button type="submit" class="btn btn-dark col-12">جستجو</button>
+    </div>
+    <div class="col-1">
+        <button type="reset" class="btn btn-danger col-12">پاک</button>
+    </div>
+</form>
+</p>
+<p>
+    <a type="button" asp-action="Create" class="btn btn-primary">افزودن</a>
+</p>
+@(
+        Html
+        .Grid(Model)
+        .Build(columns =>
+        {
+            columns.Add(model => model.Name);
+            columns.Add(model => $"<a class='btn btn-primary' href=\"/{ViewContext.RouteData.Values["area"]}/City?countryId={model.Id}\">شهرها</a> <a class='btn btn-dark' href=\"/{ViewContext.RouteData.Values["area"]}/{ViewContext.RouteData.Values["controller"]}/Edit/{model.Id}\">ویرایش</a> <a class='btn btn-danger' href=\"/{ViewContext.RouteData.Values["area"]}/{ViewContext.RouteData.Values["controller"]}/Delete/{model.Id}\">حذف</a>").Encoded(false);
+        })
+        .Filterable()
+        .Sortable()
+        .Empty("موردی یافت نشد")
+        .Pageable(pager =>
+        {
+            pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 5, "5" }, { 10, "10" }, { 15, "15" }, { 20, "20" } };
+            pager.ShowPageSizes = true;
+            pager.PagesToDisplay = 5;
+            pager.CurrentPage = 1;
+            pager.RowsPerPage = 2;
+        })
+        )

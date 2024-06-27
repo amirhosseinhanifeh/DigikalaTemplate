@@ -38,6 +38,16 @@
             {
                 <input name="discountId" value="@Model.Discount.Id" />
             }
+            <table class="table">
+                @foreach (var item in Model.Banks)
+                {
+                    <tr>
+                        <td><input type="radio" name="bankId" value="@item.Id" /></td>
+                        <td>@item.BankType</td>
+                    </tr>
+                }
+            </table>
+
             <button type="submit" class=" col-12 btn btn-success " style="height:50px ;font-size:15px ;">
                 پرداخت
             </button>

@@ -20,9 +20,9 @@ namespace Ghaleb.API.Areas.Admin.Controllers.City
         {
             _context = context;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(long? countryId = null)
         {
-            return View(await _context.GetAllAsync<tbl_City>().ToListAsync());
+            return View(await _context.GetAllAsync<tbl_City>().Where(x => countryId != null ? x.CountryId == countryId : true).ToListAsync());
         }
     }
 }

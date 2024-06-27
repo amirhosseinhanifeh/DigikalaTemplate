@@ -2,6 +2,7 @@
 using ALO.DataAccessLayer.UnitOfWork;
 using ALO.DomainClasses;
 using ALO.DomainClasses.Entity.Account;
+using ALO.DomainClasses.Entity.BankSetting;
 using ALO.DomainClasses.Entity.Basket;
 using ALO.DomainClasses.Entity.Blog;
 using ALO.DomainClasses.Entity.Cache;
@@ -33,7 +34,7 @@ using System.Threading.Tasks;
 
 namespace ALO.DataAccessLayer.DataContext
 {
-    public class ServiceContext : DbContext, IUnitOfWork,IDisposable
+    public class ServiceContext : DbContext, IUnitOfWork, IDisposable
     {
         public ServiceContext(DbContextOptions<ServiceContext> options) : base(options)
         {
@@ -44,6 +45,7 @@ namespace ALO.DataAccessLayer.DataContext
 
 
         public DbSet<tbl_Users> tbl_Users { get; set; }
+
         public DbSet<tbl_UserAddresses> tbl_UserAddresses { get; set; }
 
         public DbSet<tbl_Role> tbl_Role { get; set; }
@@ -79,9 +81,9 @@ namespace ALO.DataAccessLayer.DataContext
         public DbSet<tbl_ProductCustomFieldsOptionValues> tbl_ProductCustomFieldsOptionValues { get; set; }
         public DbSet<tbl_ProductVisits> tbl_ProductVisits { get; set; }
         public DbSet<tbl_ProductTags> tbl_ProductTags { get; set; }
-        public DbSet<tbl_ProductPriceHistory> tbl_ProductPriceHistory{ get; set; }
-        public DbSet<tbl_ProductPriceOption> tbl_ProductPriceOptions{ get; set; }
-        public DbSet<tbl_ProductPriceOptionValue> tbl_ProductPriceOptionValues{ get; set; }
+        public DbSet<tbl_ProductPriceHistory> tbl_ProductPriceHistory { get; set; }
+        public DbSet<tbl_ProductPriceOption> tbl_ProductPriceOptions { get; set; }
+        public DbSet<tbl_ProductPriceOptionValue> tbl_ProductPriceOptionValues { get; set; }
         public DbSet<tbl_ProductGuarantee> tbl_ProductGuarantees { get; set; }
         public DbSet<tbl_DeliveryPrice> tbl_DeliveryPrices { get; set; }
         public DbSet<tbl_TorobProducts> tbl_TorobProducts { get; set; }
@@ -141,11 +143,11 @@ namespace ALO.DataAccessLayer.DataContext
         public DbSet<tbl_WalletHistory> tbl_WalletHistories { get; set; }
 
 
-		#endregion
+        #endregion
 
-		#region Menu
-		public DbSet<tbl_Menu> tbl_Menus { get; set; }
-		public DbSet<tbl_Permission> tbl_Permissions { get; set; }
+        #region Menu
+        public DbSet<tbl_Menu> tbl_Menus { get; set; }
+        public DbSet<tbl_Permission> tbl_Permissions { get; set; }
         #endregion
 
         #region Language
@@ -154,6 +156,8 @@ namespace ALO.DataAccessLayer.DataContext
         #endregion
 
         public DbSet<tbl_Cache> tbl_Caches { get; set; }
+
+        public DbSet<tbl_Banks> tbl_Banks { get; set; }
         #endregion
 
 
@@ -249,9 +253,9 @@ namespace ALO.DataAccessLayer.DataContext
             }
             if (expression != null)
             {
-                data= data.Where(expression);
+                data = data.Where(expression);
             }
-            return  data.Where(x=> EF.Property<bool>(x, "IsDelete") == false).AsQueryable();
+            return data.Where(x => EF.Property<bool>(x, "IsDelete") == false).AsQueryable();
 
         }
 
@@ -307,7 +311,7 @@ namespace ALO.DataAccessLayer.DataContext
     .WithMany(x => x.ProductMainImages)
     .HasForeignKey(x => x.ImageId);
             modelBuilder.Entity<tbl_Product>().HasMany(x => x.Users)
-.WithMany(x => x.Products).UsingEntity(x=>x.ToTable("UserFavouriteProducts"));
+.WithMany(x => x.Products).UsingEntity(x => x.ToTable("UserFavouriteProducts"));
 
 
 

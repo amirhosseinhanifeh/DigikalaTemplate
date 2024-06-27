@@ -26,6 +26,7 @@
                         <tr>
                             <th>عکس</th>
                             <th>عنوان</th>
+                            <th>نوع</th>
                             <th>دسته</th>
                             <th>تعداد بازدید</th>
                             <th>وضعیت</th>
@@ -38,6 +39,7 @@
                             <tr>
                                 <td><img class="img-thumbnail" style="width:75px" src="@item.Image.BindImage(Configuration)" /></td>
                                 <td>@item.Title</td>
+                                <td>@item.BlogCategory?.BlogType?.Name</td>
                                 <td>@item.BlogCategory.Title</td>
                                 <td>@item.Visit</td>
                                 <td>

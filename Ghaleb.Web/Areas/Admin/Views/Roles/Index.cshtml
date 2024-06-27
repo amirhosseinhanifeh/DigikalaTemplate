@@ -1,43 +1,37 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@addTagHelper *, AuthoringTagHelpers
-@using ALO.Common.Utilities.ConvertDt
+﻿
 @model IEnumerable<ALO.DomainClasses.Entity.Account.tbl_Role>
 @{
-    ViewData["Title"] = "لیست دسته بندی ها";
+    ViewData["Title"] = "لیست نقش ها";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row">
-    <div class="col-xl-12">
-        <div class="">
-            <a asp-action="Create" class="btn btn-primary">افزودن نقش</a>
-            <div class="table-responsive mt-3">
-                <table class="table align-items-center table-flush">
-                    <thead>
-                        <tr>
-                            <th>نام </th>
-                            <th>تعداد اعضا</th>
-                            <th>آخرین بروز رسانی</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@item.RoleName</td>
-                                <td>@item.Users.Count()</td>
-                                <td>@item.ModifiedDate.ConvertToPesainDate()</td>
-                                <td>
-                                    <a class="btn btn-dark" asp-route-roleid="@item.Id" asp-action="Index" asp-controller="Users">اعضا</a>
-                                    <a class="btn btn-success" asp-route-id="@item.Id" asp-action="SendSms">ارسال پیامک</a>
-                                    <a class="btn btn-warning" asp-route-id="@item.Id" asp-action="Create">ویرایش</a>
-                                    <a class="btn btn-danger" asp-route-id="@item.Id" asp-action="Delete">حذف</a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+<p>
+    <a asp-action="Create" class="btn btn-primary">افزودن نقش</a>
+
+</p>
+@(
+Html
+        .Grid(Model)
+        .Build(columns =>
+        {
+            columns.Add(model => model.Id);
+            columns.Add(model => model.RoleName);
+            columns.Add(model => model.Users.Count()).Titled("تعداد اعضا");
+            columns.Add(model => model.ModifiedDate.ConvertToPesainDate()).Titled("آخرین بروزرسانی");
+            columns.Add().Encoded(false).RenderedAs(h => Html.ActionLink("اعضا", "Index","Users", new { roleId = h.Id }, new { @class = "btn btn-dark" }));
+            columns.Add().Encoded(false).RenderedAs(h => Html.ActionLink("ارسال پیامک", "SendSms", new { Id = h.Id }, new { @class = "btn btn-success" }));
+            columns.Add().Encoded(false).RenderedAs(h => Html.ActionLink("ویرایش", "Create", new { Id = h.Id }, new { @class = "btn btn-warning" }));
+            columns.Add().Encoded(false).RenderedAs(h => Html.ActionLink("حذف", "Delete", new { Id = h.Id }, new { @class = "btn btn-danger" }));
+        })
+        .Filterable()
+        .Sortable()
+        .Empty("موردی یافت نشد")
+        .Pageable(pager =>
+        {
+            pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 5, "5" }, { 10, "10" }, { 15, "15" }, { 20, "20" } };
+            pager.ShowPageSizes = true;
+            pager.PagesToDisplay = 5;
+            pager.CurrentPage = 1;
+            pager.RowsPerPage = 2;
+        })
+        )

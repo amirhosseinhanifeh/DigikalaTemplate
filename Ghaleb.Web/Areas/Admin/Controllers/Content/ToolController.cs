@@ -19,9 +19,9 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Content
         {
             _context = context;
         }
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.GetAllAsync<tbl_Tools>(x=>x.IsDelete !=true).ToListAsync());
+            return View(_context.GetAllAsync<tbl_Tools>(x => x.IsDelete != true));
         }
         public async Task<IActionResult> Create(long? Id)
         {
