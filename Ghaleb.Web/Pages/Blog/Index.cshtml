@@ -1,0 +1,47 @@
+﻿@page
+@model Ghaleb.Web.Pages.Mag.IndexModel
+@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+    ViewData["Seo"] = new
+    {
+        PageTitle ="وبلاگ",
+        MetaKeyword = "وبلاگ",
+        MetaDescription = "وبلاگ",
+        DoIndex = true
+    };
+
+}
+@section Tags
+    {
+    <link rel="canonical" href="@Configuration["SiteSetting:Url"]blog">
+}
+
+<div class="col-9" style="margin:0 auto">
+
+    <div class="row mt-5">
+        @foreach (var item in Model.Blogs)
+        {
+            <div class="col-4">
+                <div class="card shadow mt-5 m-1">
+                    <img src="@item.Image.BindImage(Configuration)" class="card-img-top" alt="@item.Title" style="width:100%;max-height:200px">
+                    <div class="card-body">
+                        <div>
+                            @item.CreatedDate.RelativeDate().toPersianNumber() <span>توسط : مدیریت</span>
+                        </div>
+
+                        <hr style="background-color:gray">
+                        <div>
+                            <h6 class="card-title">@item.Title</h6>
+                        </div>
+                        <hr style="background-color:gray">
+                        <a href="/blog/post/@item.Id/@item.Url" class="btn btn-danger col-12">مشاهده مطلب</a>
+                    </div>
+                </div>
+            </div>
+
+        }
+
+    </div>
+
+</div>
+

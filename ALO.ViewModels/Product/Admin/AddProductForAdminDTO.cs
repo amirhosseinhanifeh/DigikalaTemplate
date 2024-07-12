@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ALO.ViewModels.Product.Admin
@@ -16,6 +16,8 @@ namespace ALO.ViewModels.Product.Admin
         public string Title { get; set; }
         [Display(Name = "نام  انگلیسی محصول")]
         public string EnTitle { get; set; }
+        [Display(Name = "لینک ترب")]
+        public string TorobLink { get; set; }
         [Display(Name = "توضیحات")]
         public string Description { get; set; }
         [Display(Name = "خلاصه")]

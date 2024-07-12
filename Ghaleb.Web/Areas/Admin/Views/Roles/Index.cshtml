@@ -1,0 +1,37 @@
+﻿
+@model IEnumerable<ALO.DomainClasses.Entity.Account.tbl_Role>
+@{
+    ViewData["Title"] = "لیست نقش ها";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">افزودن نقش</a>
+
+</p>
+@(
+Html
+        .Grid(Model)
+        .Build(columns =>
+        {
+            columns.Add(model => model.Id);
+            columns.Add(model => model.RoleName);
+            columns.Add(model => model.Users.Count()).Titled("تعداد اعضا");
+            columns.Add(model => model.ModifiedDate.ConvertToPesainDate()).Titled("آخرین بروزرسانی");
+            columns.Add().Encoded(false).RenderedAs(h => Html.ActionLink("اعضا", "Index","Users", new { roleId = h.Id }, new { @class = "btn btn-dark" }));
+            columns.Add().Encoded(false).RenderedAs(h => Html.ActionLink("ارسال پیامک", "SendSms", new { Id = h.Id }, new { @class = "btn btn-success" }));
+            columns.Add().Encoded(false).RenderedAs(h => Html.ActionLink("ویرایش", "Create", new { Id = h.Id }, new { @class = "btn btn-warning" }));
+            columns.Add().Encoded(false).RenderedAs(h => Html.ActionLink("حذف", "Delete", new { Id = h.Id }, new { @class = "btn btn-danger" }));
+        })
+        .Filterable()
+        .Sortable()
+        .Empty("موردی یافت نشد")
+        .Pageable(pager =>
+        {
+            pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 5, "5" }, { 10, "10" }, { 15, "15" }, { 20, "20" } };
+            pager.ShowPageSizes = true;
+            pager.PagesToDisplay = 5;
+            pager.CurrentPage = 1;
+            pager.RowsPerPage = 2;
+        })
+        )

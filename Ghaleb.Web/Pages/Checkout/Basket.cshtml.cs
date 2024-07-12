@@ -1,5 +1,6 @@
 using ALO.DataAccessLayer.DataContext;
-using ALO.DomainClasses.EntityHelpers;
+using ALO.DomainClasses.Entity.Image.EntityHelpers;
+using ALO.DomainClasses.Entity.Order;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -17,18 +18,20 @@ namespace Ghaleb.Web.Pages.Checkout
             _configuration = configuration;
         }
 
-        public List<ResponseGetBasketItems> List { get; set; } = new List<ResponseGetBasketItems>();
-
+        public ResponseOrder Order { get; set; } = new();
         public async Task OnGet()
         {
+            
             var res = Request.Cookies["basket"];
             if (res == null)
                 return;
             var list = JsonConvert.DeserializeObject<List<ResonseBasketDTO>>(res);
+
+            List<ResponseGetBasketItems> List = new List<ResponseGetBasketItems>();
             foreach (var item in list)
             {
 
-                var pr = await _context.tbl_ProductPriceHistory.Include(x=>x.Color).Include(x => x.Product).ThenInclude(x => x.Image).FirstOrDefaultAsync(x => x.Id == item.Id);
+                var pr = await _context.tbl_ProductPriceHistory.Include(x => x.Color).Include(x => x.Product).ThenInclude(x => x.Image).FirstOrDefaultAsync(x => x.Id == item.Id);
 
                 List.Add(new ResponseGetBasketItems
                 {
@@ -36,11 +39,19 @@ namespace Ghaleb.Web.Pages.Checkout
                     Price = pr.GetPrice(),
                     Id = item.Id,
                     Image = pr.Product.Image.BindImage(_configuration),
-                    Name = pr.Product.Title +(pr.Color !=null? "(" + pr.Color.Name + ")" : null) ,
+                    Name = pr.Product.Title + (pr.Color != null ? "(" + pr.Color.Name + ")" : null),
                     TotalPrice = pr.GetPrice() * item.Count
                 });
             }
+            var delivery = await _context.tbl_DeliveryPrices.OrderBy(x => x.Id).LastOrDefaultAsync();
 
+            Order = new ResponseOrder()
+            {
+                DeliveryPrice =delivery!=null? delivery.GetCost(List.Sum(h => h.TotalPrice)):0,
+                Items = List,
+                ProductPrices = List.Sum(h => h.TotalPrice),
+                TotalPrice =(delivery !=null? delivery.GetCost(List.Sum(h => h.TotalPrice)):0) + List.Sum(h => h.TotalPrice)
+            };
         }
         public async Task<IActionResult> OnGetDelete(long id)
         {
@@ -58,7 +69,7 @@ namespace Ghaleb.Web.Pages.Checkout
             var list = JsonConvert.DeserializeObject<List<ResonseBasketDTO>>(res);
             foreach (var item in model)
             {
-                item.Count = item.Count == 0 || item.Count<0 ? 1 : item.Count;
+                item.Count = item.Count == 0 || item.Count < 0 ? 1 : item.Count;
                 var item3 = list.FirstOrDefault(h => h.Id == item.Id);
                 item3.Count = item.Count;
 
@@ -84,5 +95,13 @@ namespace Ghaleb.Web.Pages.Checkout
         public string Image { get; set; }
         public decimal Price { get; set; }
         public decimal TotalPrice { get; set; }
+    }
+    public class ResponseOrder
+    {
+        public decimal ProductPrices { get; set; }
+        public decimal DeliveryPrice { get; set; }
+        public long DeliveryId { get; set; }
+        public decimal TotalPrice { get; set; }
+        public List<ResponseGetBasketItems> Items { get; set; } = new();
     }
 }

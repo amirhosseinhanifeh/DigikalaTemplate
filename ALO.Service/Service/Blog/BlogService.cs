@@ -3,12 +3,11 @@ using ALO.Common.Utilities.ConvertDt;
 using ALO.Common.Utilities.ConvertTo;
 using ALO.DataAccessLayer.DataContext;
 using ALO.DomainClasses.Entity.Blog;
-using ALO.DomainClasses.EntityHelpers;
+using ALO.DomainClasses.Entity.Image.EntityHelpers;
 using ALO.Service.Interface.Blog;
 using ALO.ViewModels.Blog;
 using ALO.ViewModels.Blog.Admin;
 using ALO.ViewModels.Result;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -24,7 +23,7 @@ namespace ALO.Service.Service.Blog
     {
         private readonly ServiceContext _db;
         private readonly IConfiguration _configuration;
-        public BlogService(ServiceContext db, IMapper mapper, IConfiguration configuration) : base(db, mapper)
+        public BlogService(ServiceContext db, IConfiguration configuration) : base(db)
         {
             _db = db;
             _configuration = configuration;
@@ -73,7 +72,7 @@ namespace ALO.Service.Service.Blog
         {
             try
             {
-                var query = await _db.GetAsync<tbl_Blog>(x => x.Url == url, new string[] { "BlogCategory", "Image", "BlogComments","BlogComments.User","BlogComments.User.Profile" });
+                var query = await _db.GetAsync<tbl_Blog>(x => x.Url == url, new string[] { "BlogCategory", "Image", "BlogComments", "BlogComments.User", "BlogComments.User.Profile" });
                 var Result = new BlogDetailsForHomeDto
                 {
                     Abstract = query.Abstract,
@@ -154,60 +153,59 @@ namespace ALO.Service.Service.Blog
         {
             try
             {
-                if (!_db.tbl_Blogs.Any(y => y.Url == model.Url && y.IsDelete != true))
+                
+                var exists = await _db.tbl_Blogs.AsNoTracking().FirstOrDefaultAsync(y => y.Url ==model.Url && y.Id !=model.Id && y.IsDelete != true);
+                if (exists != null)
                 {
-                    if (model.Id != null)
-                    {
-
-                        _db.UpdateBaseEntity(new tbl_Blog
-                        {
-
-                            Id = model.Id.GetValueOrDefault(),
-                            MetaDescription = model.MetaDescription,
-                            MetaKeyword = string.Join(",",model.MetaKeyword),
-                            PageTitle = model.PageTitle,
-                            Title = model.Title,
-                            Url = model.Url,
-                            Abstract = model.Abstract,
-                            ImageId = model.ImageId,
-                            Description = model.Description,
-                            Visit = model.Visit,
-                            ShowInHome = model.ShowInHome,
-                            BlogCategoryId = model.BlogCategoryId,
-
-                        });
-                    }
-                    else
-                    {
-                        _db.CreateBaseEntity<tbl_Blog>(new tbl_Blog
-                        {
-                            Abstract = model.Abstract,
-                            Description = model.Description,
-                            Url = model.Url,
-                            Title = model.Title,
-                            PageTitle = model.PageTitle,
-                            MetaKeyword = string.Join(",", model.MetaKeyword),
-                            ImageId = model.ImageId,
-                            MetaDescription = model.MetaDescription,
-                            BlogCategoryId = model.BlogCategoryId,
-                            ShowInHome = model.ShowInHome,
-                            Visit = 0,
-
-                        });
-                    }
-                    await _db.SaveChangesAsync();
                     return new ListResultViewModel<bool>
                     {
-                        model = true,
-                        Message = SuccessfullMessage,
-                        NotificationType = NotificationType.success,
-                        Status = Status.Success
+                        model = false,
+                        Message = "محتوای آدرس تکراری می باشد",
+                        NotificationType = NotificationType.warning,
+                        Status = Status.Warning
                     };
                 }
+                if (model.Id != null)
+                {
+                    var response = await _db.tbl_Blogs.FirstOrDefaultAsync(y =>  y.Id == model.Id && y.IsDelete != true);
+
+                    response.MetaDescription = model.MetaDescription;
+                    response.MetaKeyword = string.Join(",", model.MetaKeyword);
+                    response.PageTitle = model.PageTitle;
+                    response.Title = model.Title;
+                    response.Url = model.Url;
+                    response.Abstract = model.Abstract;
+                    response.ImageId = model.ImageId;
+                    response.Description = model.Description;
+                    response.ShowInHome = model.ShowInHome;
+                    response.BlogCategoryId = model.BlogCategoryId;
+                    response.CanComment = model.CanComment;
+                    response.ModifiedDate = DateTime.Now;
+                    await _db.SaveChangesAsync();
+                }
+                else
+                {
+                    _db.CreateBaseEntity<tbl_Blog>(new tbl_Blog
+                    {
+                        Abstract = model.Abstract,
+                        Description = model.Description,
+                        Url = model.Url,
+                        Title = model.Title,
+                        PageTitle = model.PageTitle,
+                        MetaKeyword = string.Join(",", model.MetaKeyword),
+                        ImageId = model.ImageId,
+                        MetaDescription = model.MetaDescription,
+                        BlogCategoryId = model.BlogCategoryId,
+                        ShowInHome = model.ShowInHome,
+                        Visit = 0,
+                        CanComment = model.CanComment,
+                    });
+                }
+                await _db.SaveChangesAsync();
                 return new ListResultViewModel<bool>
                 {
-                    model = false,
-                    Message = "محتوای آدرس تکراری می باشد",
+                    model = true,
+                    Message = SuccessfullMessage,
                     NotificationType = NotificationType.success,
                     Status = Status.Success
                 };

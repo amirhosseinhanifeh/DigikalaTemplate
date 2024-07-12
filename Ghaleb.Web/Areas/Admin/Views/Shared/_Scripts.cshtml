@@ -1,0 +1,100 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+@* <script type="text/javascript">
+
+        Dropzone.autoDiscover = false;
+    $(document).ready(function () {
+        //Simple Dropzonejs
+        $(".uploader").dropzone({
+            init:function(){
+                myDropzone=this;
+                var file = {
+                    name: "slam",
+                    size: 1000,
+                    status: Dropzone.ADDED,
+                    accepted: true
+                };
+                myDropzone.emit("addedfile", file);
+                myDropzone.emit("thumbnail", file, "salam.png");
+                myDropzone.emit("complete", file);
+                myDropzone.files.push(file);
+            },
+            url: "/Admin/Upload/UploadImage",
+            addRemoveLinks: true,
+            maxFiles: 1,
+            maxfilesexceeded: function (file) {
+                this.removeAllFiles();
+                this.addFile(file);
+            },
+            success: function (file,response) {
+                console.log(file);
+                console.log(response)
+                $("input[name=" + name + "]").val(data.data);
+            },
+            error: function (file, response) {
+                file.previewElement.classList.add("dz-error");
+            }
+        });
+    });
+</script> *@
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Bootstrap js -->
+<script src="~/AdminTemplate/assets/plugins/bootstrap/js/popper.min.js"></script>
+<script src="~/AdminTemplate/assets/plugins/bootstrap/js/bootstrap-rtl.js"></script>
+<script src="~/lib/select2/dist/js/select2.min.js"></script>
+<!-- Ionicons js -->
+<script src="~/AdminTemplate/assets/plugins/ionicons/ionicons.js"></script>
+
+<!-- Moment js -->
+<script src="~/AdminTemplate/assets/plugins/moment/moment.js"></script>
+
+<!-- P-scroll js -->
+<script src="~/AdminTemplate/assets/plugins/perfect-scrollbar/perfect-scrollbar.min-rtl.js"></script>
+<script src="~/AdminTemplate/assets/plugins/perfect-scrollbar/p-scroll-rtl.js"></script>
+
+<!-- Sticky js -->
+<script src="~/AdminTemplate/assets/js/sticky.js"></script>
+
+<!-- Horizontalmenu js-->
+<script src="~/AdminTemplate/assets/plugins/horizontal-menu/horizontal-menu-2/horizontal-menu.js"></script>
+
+<!-- eva-icons js -->
+<script src="~/AdminTemplate/assets/js/eva-icons.min.js"></script>
+
+<!-- Rating js-->
+<script src="~/AdminTemplate/assets/plugins/rating/jquery.rating-stars.js"></script>
+<script src="~/AdminTemplate/assets/plugins/rating/jquery.barrating.js"></script>
+
+<!-- Sidebar js -->
+<!-- Right-sidebar js -->
+<script src="~/AdminTemplate/assets/plugins/sidebar/sidebar-rtl.js"></script>
+<script src="~/AdminTemplate/assets/plugins/sidebar/sidebar-custom.js"></script>
+
+
+<!--Internal  Datepicker js -->
+<script src="~/AdminTemplate/assets/plugins/jquery-ui/ui/widgets/datepicker.js"></script>
+
+<!--Internal  Clipboard js-->
+<script src="~/AdminTemplate/assets/plugins/clipboard/clipboard.min.js"></script>
+<script src="~/AdminTemplate/assets/plugins/clipboard/clipboard.js"></script>
+
+<!-- Internal Prism js-->
+<script src="~/AdminTemplate/assets/plugins/prism/prism.js"></script>
+
+
+<!-- custom js -->
+<script src="~/AdminTemplate/assets/js/custom.js"></script>
+
+<!-- Switcher js -->
+<script src="~/AdminTemplate/assets/switcher/js/switcher-rtl.js"></script>
+<script src="~/AdminTemplate/assets/ui-helpers.js"></script>
+<script src="~/AdminTemplate/assets/plugins/side-menu/sidemenu.js"></script>
+<script src="~/admintemplate/assets/mvc-grid.js"></script>
+<script>
+    document.querySelectorAll(".mvc-grid").forEach(element => new MvcGrid(element));
+</script>

@@ -1,0 +1,33 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model IEnumerable<ALO.DomainClasses.Entity.Forms.tbl_FormContantUs>
+
+    @{
+        ViewData["Title"] = "فرم های تماس با ما";
+        Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    }
+
+@(
+        Html
+        .Grid(Model)
+        .Build(columns =>
+        {
+            columns.Add(model => model.Id);
+            columns.Add(model => model.FullName);
+            columns.Add(model => model.Email);
+            columns.Add(model => model.Mobile);
+            columns.Add().Encoded(false).RenderedAs(h => Html.ActionLink("مشاهده", "Details", new { Id = h.Id }, new { @class = "btn btn-dark" }));
+        })
+        .Filterable()
+        .Sortable()
+        .Empty("موردی یافت نشد")
+        .Pageable(pager =>
+        {
+            pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 5, "5" }, { 10, "10" }, { 15, "15" }, { 20, "20" } };
+            pager.ShowPageSizes = true;
+            pager.PagesToDisplay = 5;
+            pager.CurrentPage = 1;
+            pager.RowsPerPage = 2;
+        })
+        )
+

@@ -1,16 +1,12 @@
 ﻿using ALO.Common.Enums;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace ALO.ViewModels.Account
 {
     public class RegisterViewModel
     {
 
-        [Required(ErrorMessage ="اجباری")]
+        [Required(ErrorMessage = "اجباری")]
         public string FirstName { get; set; }
         [Required(ErrorMessage = "اجباری")]
 

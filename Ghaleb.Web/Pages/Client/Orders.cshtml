@@ -1,0 +1,41 @@
+﻿@page
+@using ALO.Common.Extentions
+@model Ghaleb.Web.Pages.Client.OrdersModel
+@{
+    ViewData["Title"] = "سفارشات";
+    Layout = "~/Pages/Client/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                    <thead>
+                        <tr>
+                            <th>کد سفارش</th>
+                            <th>مبلغ فاکتور</th>
+                            <th>تاریخ سفارش</th>
+                            <th>وضعیت</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Order)
+                        {
+                            <tr>
+                                <td>#@item.OrderCode.toPersianNumber()</td>
+                                <td>@item.OrderDetails.Sum(x => x.Count * x.ProductPriceHistory.GetPrice()).ToString("n0").toPersianNumber() تومان</td>
+                                <td>@item.CreatedDate.ConvertToPesainDate().toPersianNumber()</td>
+                                <td>@item.OrderStateHistories.OrderBy(x => x.Id).LastOrDefault().OrderState.GetDisplay()</td>
+                                <td>
+                                    <a class="btn btn-info" href="~/client/orderdetail?Id=@item.Id">مشاهده جزییات</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

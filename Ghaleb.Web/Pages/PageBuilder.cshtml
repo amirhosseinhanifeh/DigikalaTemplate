@@ -1,0 +1,172 @@
+﻿@page
+@model Ghaleb.Web.Pages.PageBuilderModel
+@{
+}
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@functions {
+    public string GetAntiXsrfRequestToken()
+    {
+        return Xsrf.GetAndStoreTokens(Model.HttpContext).RequestToken;
+    }
+}
+<div class="row">
+    <div class="col-lg-2">
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        بلوک بندی
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <button id="createCol">ساختن پاراگراف</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Accordion Item #2
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+
+                        <button id="createHeader">ساخت Head Tag</button>
+                        <button id="remove">حذف</button>
+                        <input value="" id="height" placeholder="ارتفاع" />
+                        <select id="marginTop">
+                            <option value="">انتخاب فاصله تا بالا</option>
+                            <option value="mt-5">5</option>
+                            <option value="mt-4">4</option>
+                            <option value="mt-3">3</option>
+                            <option value="mt-2">2</option>
+                            <option value="mt-1">1</option>
+                        </select>
+                        <select id="grid">
+                            <option value="">انتخاب سایز ستون</option>
+
+                            <option value="col-lg-12">12</option>
+                            <option value="col-lg-11">11</option>
+                            <option value="col-lg-10">10</option>
+                            <option value="col-lg-9">9</option>
+                            <option value="col-lg-8">8</option>
+                            <option value="col-lg-7">7</option>
+                            <option value="col-lg-6">6</option>
+                            <option value="col-lg-5">5</option>
+                            <option value="col-lg-4">4</option>
+                            <option value="col-lg-3">3</option>
+                            <option value="col-lg-2">2</option>
+                            <option value="col-lg-1">1</option>
+                        </select>
+                        <textarea id="text" rows="8"></textarea>
+
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Accordion Item #3
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-lg-10 mt-4 ">
+        <div class="row border" id="page" >
+            @Html.Raw(Model.Raw)
+        </div>
+
+    </div>
+    <button type="submit" id="btnSave">save</button>
+</div>
+@section Scripts {
+
+
+    <script>
+        $(document).ready(function () { 
+            $("#page").click();
+        })
+        var elem = null;
+        $("#page").click(function (event) {
+            elem = event.target;
+            $(this).find("*").removeClass("border");
+            $(elem).toggleClass("border");
+            if (event.target.tagName != "DIV") {
+                $("#createRow").add("#createHeader").add("#createCol").hide();
+                $("#text").show();
+            }
+            else {
+                $("#createRow").add("#createHeader").add("#createCol").show();
+                $("#text").hide();
+            }
+            if (event.target.textContent != undefined) {
+                $("#text").attr("sourceElem", $(elem).attr("id")).val(event.target.textContent);
+                $("#height").attr("sourceElem", $(elem).attr("id"));
+
+            }
+        });
+        $("#createCol").click(function () {
+            $(elem).append('<p class="col-12" id="' + random() + '">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز، و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و سه درصد گذشته حال و آینده، شناخت فراوان جامعه و متخصصان را می طلبد، تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی، و فرهنگ پیشرو در زبان فارسی ایجاد کرد، در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها، و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی، و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.</p>');
+        });
+        $("#grid").change(function () {
+            $(elem).removeClass(function (index, className) {
+                return (className.match(/(^|\s)col-\S+/g) || []).join(' ');
+            });
+            $(elem).addClass($(this).val()).addClass("col-12");
+        });
+        $("#createHeader").click(function () {
+            $(elem).append('<h1 id=' + random() + '>H1 Title</h1>');
+
+        });
+        $("#remove").click(function () {
+            $(elem).remove();
+
+        });
+        $("#marginTop").change(function () {
+            $(elem).removeClass(function (index, className) {
+                return (className.match(/(^|\s)mt-\S+/g) || []).join(' ');
+            });
+            $(elem).addClass($(this).val());
+        });
+        $("#text").keyup(function () {
+            var id = $(this).attr("sourceelem");
+            $("[id=" + id + "]").text($(this).val());
+        });
+        $("#height").keyup(function () {
+            var id = $(this).attr("sourceelem");
+            $("[id=" + id + "]").css("height", $(this).val());
+        });
+
+
+        function random() {
+            return Math.floor((Math.random() * 50000) + 1);
+        }
+        function hasClass(element, className) {
+            return (' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1;
+        }
+        $("#btnSave").click(function () {
+            $.ajax({
+                method: 'POST',
+                url: "PageBuilder/?handler=SaveRaw&id=3",
+                data: {
+
+                    raw: $("#page").html()
+                },
+                headers:
+                {
+                    "RequestVerificationToken": '@GetAntiXsrfRequestToken()'
+                },
+            })
+        })
+    </script>
+}

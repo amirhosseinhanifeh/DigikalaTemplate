@@ -1,8 +1,8 @@
 ﻿using ALO.Common.Utilities.ConvertTo;
 using ALO.DataAccessLayer.DataContext;
 using ALO.DomainClasses.Entity.Content;
+using ALO.DomainClasses.Entity.Image.EntityHelpers;
 using ALO.DomainClasses.Entity.Product;
-using ALO.DomainClasses.EntityHelpers;
 using ALO.Service.Interface.Image;
 using ALO.Service.Interface.PageContent;
 using ALO.Service.Interface.Product;
@@ -75,7 +75,7 @@ namespace Ghaleb.Web.Pages
                 Url = h.Url
             }).ToListAsync();
 
-            MoreSell = await _context.tbl_ProductPriceHistory.Where(h => h.IsDelete == false && h.IsActive == true && h.Product.IsActive && h.OrderDetails.Any(g => g.Order.OrderState == ALO.DomainClasses.Entity.Order.OrderState.PAYED)).OrderByDescending(x => x.OrderDetails.Count()).Select(h => new ProductListForHomeDto
+            MoreSell = await _context.tbl_ProductPriceHistory.Where(h => h.IsDelete == false && h.IsActive == true && h.Product.IsActive).OrderByDescending(x => x.OrderDetails.Count()).Select(h => new ProductListForHomeDto
             {
                 Id = h.Product.Id,
                 Cost = h.Product.GetLastPrice().ToString("n0").toPersianNumber(),

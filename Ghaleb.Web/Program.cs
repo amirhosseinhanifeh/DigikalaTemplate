@@ -1,11 +1,8 @@
 using ALO.DataAccessLayer.DataContext;
 using ALO.DomainClasses;
-using ALO.MappingProfile.Account;
-using ALO.MappingProfile.Financial;
 using ALO.Service.Interface.Account;
 using ALO.Service.Interface.Basket;
 using ALO.Service.Interface.Blog;
-using ALO.Service.Interface.FinancialAccount;
 using ALO.Service.Interface.Forms;
 using ALO.Service.Interface.Image;
 using ALO.Service.Interface.Order;
@@ -16,7 +13,6 @@ using ALO.Service.Interface.SpecialSell;
 using ALO.Service.Service.Account;
 using ALO.Service.Service.Basket;
 using ALO.Service.Service.Blog;
-using ALO.Service.Service.FinancialAccount;
 using ALO.Service.Service.Forms;
 using ALO.Service.Service.ImageService;
 using ALO.Service.Service.Order;
@@ -25,24 +21,27 @@ using ALO.Service.Service.Product;
 using ALO.Service.Service.Profile;
 using ALO.Service.Service.SpecialSell;
 using ALO.ViewModels;
-using AutoMapper;
+using AspNetCore.ReCaptcha;
+using Ghaleb.Web.Helpers;
+using Hangfire;
+using Hangfire.Dashboard;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
-using Hangfire;
-using AspNetCore.ReCaptcha;
-using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages().AddRazorPagesOptions(options =>
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation().AddRazorPagesOptions(options =>
 {
-    options.Conventions.AddPageRoute("/Search", "Search/Category/{subCategoryId?}/{subCategoryUrl?}");
+    options.Conventions.AddPageRoute("/Search", "Search/Category/{CategoryId?}/{CategoryUrl?}");
     options.Conventions.AddPageRoute("/Search", "Search/Brand/{brandId?}/{brandName?}");
     options.Conventions.AddPageRoute("/Search", "Search/Tag/{tagId}/{tagName}");
-    options.Conventions.AddPageRoute("/Search", "Search/{categoryId?}/{categoryUrl?}/{subCategoryId?}/{subCategoryUrl?}");
+    options.Conventions.AddPageRoute("/Search", "Search/Category/{categoryId?}/{categoryUrl?}/SubCategory/{subCategoryId?}/{subCategoryUrl?}");
+    options.Conventions.AddPageRoute("/Search", "Search/Maincategory/{maincategoryId?}/{maincategoryUrl?}");
 }); ;
 builder.Services.AddDbContext<ServiceContext>
     (options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -52,27 +51,40 @@ builder.Services.AddHangfireServer();
 builder.Services.AddSingleton<HtmlEncoder>(
   HtmlEncoder.Create(allowedRanges: new[] { UnicodeRanges.BasicLatin,
                                             UnicodeRanges.Arabic}));
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(1); // Set session timeout
+});
 
+builder.Services.AddElmahIo(options =>
+{
+    options.ApiKey = "2b043651793c425cbe4f636535d56ead";
+    options.LogId = new Guid("1b6ab967-e5de-42ab-a698-26cb6649ea27");
+});
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+        options.ExpireTimeSpan = TimeSpan.FromDays(365);
         options.SlidingExpiration = true;
         options.AccessDeniedPath = "/Forbidden/";
+        options.Events.OnRedirectToLogin = context =>
+        {
+            if (IsAdminContext(context))
+            {
+                var redirectPath = new Uri(context.RedirectUri);
+                context.Response.Redirect("/admin/login" + redirectPath.Query);
+            }
+            else
+            {
+                context.Response.Redirect(context.RedirectUri);
+            }
+            return Task.CompletedTask;
+        };
     });
-var config = new MapperConfiguration(cfg =>
-{
-    cfg.AddProfile(new RegisterProfile());
 
-    cfg.AddProfile(new FinancialProfile());
-    cfg.CreateMap(typeof(BaseSeo), typeof(BaseEntity));
-});
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddAutoMapper();
-builder.Services.AddSingleton(config);
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
-builder.Services.AddScoped<IFinancialService, FinancialService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductCommentService, ProductCommentService>();
 builder.Services.AddScoped<IBasketOrderService, BasketOrderService>();
@@ -91,6 +103,9 @@ builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IBlogCategoryService, BlogCategoryService>();
 builder.Services.AddScoped<ISeoService, SeoService>();
 builder.Services.AddReCaptcha(builder.Configuration.GetSection("ReCaptcha"));
+
+builder.Services.AddScoped<CookieHelper>();
+builder.Services.AddScoped<WebsiteBase>();
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 //if (!app.Environment.IsDevelopment())
@@ -110,15 +125,35 @@ app.Use(async (context, next) =>
 });
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseHangfireDashboard(options: new DashboardOptions
+{
+    Authorization = new[] { new DashboardNoAuthorizationFilter() }
+});
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapRazorPages();
-app.UseHangfireDashboard();
+
+app.MapControllerRoute(
+    name: "MyArea",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+app.UseSession();
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 });
+app.UseElmahIo();
+
 app.Run();
+
+static bool IsAdminContext(RedirectContext<CookieAuthenticationOptions> context)
+{
+    return context.Request.Path.StartsWithSegments("/admin");
+}
+public class DashboardNoAuthorizationFilter : IDashboardAuthorizationFilter
+{
+    public bool Authorize(DashboardContext dashboardContext)
+    {
+        return true;
+    }
+}

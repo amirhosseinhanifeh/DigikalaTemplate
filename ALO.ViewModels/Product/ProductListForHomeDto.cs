@@ -1,10 +1,6 @@
-﻿using ALO.Common.Utilities.Methods;
+﻿
 using ALO.DomainClasses.Entity.Product;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ALO.ViewModels.Product
 {
@@ -24,6 +20,9 @@ namespace ALO.ViewModels.Product
         public List<ProductCustomFields> Values { get; set; }
         public bool Call { get; set; }
         public int? Percent { get; set; }
+        public long? LastPriceId { get; set; }
+        public bool IsFavourite { get; set; }
+        public List<tbl_ProductRating> Ratings { get; set; }
     }
 
 }

@@ -1,6 +1,7 @@
 ﻿using ALO.DomainClasses.Entity.Language;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace ALO.DomainClasses.Entity.Content
 {
     public class tbl_PageContent : BaseEntity
     {
+        [Display(Name = "نام صفحه")]
         public string Title { get; set; }
         public string Description { get; set; }
 
@@ -20,7 +22,7 @@ namespace ALO.DomainClasses.Entity.Content
         public string MetaKeyword { get; set; }
 
         [NotMapped]
-        public string[] MetaKeywords { get; set; }=new string[0];
+        public string[] MetaKeywords { get; set; } = new string[0];
         public string MetaDescription { get; set; }
 
         #endregion

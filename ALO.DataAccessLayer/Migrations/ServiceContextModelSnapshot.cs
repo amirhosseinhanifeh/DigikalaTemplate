@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
+#nullable disable
+
 namespace ALO.DataAccessLayer.Migrations
 {
     [DbContext(typeof(ServiceContext))]
@@ -15,9 +17,10 @@ namespace ALO.DataAccessLayer.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.17")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "7.0.20")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.Account.tbl_PhoneVerification", b =>
                 {
@@ -36,8 +39,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -72,8 +76,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
@@ -114,6 +119,12 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PostalCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReciverName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
 
@@ -131,8 +142,12 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("BrowserName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
@@ -145,6 +160,9 @@ namespace ALO.DataAccessLayer.Migrations
 
                     b.Property<bool>("IsDelete")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastLogin")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Mobile")
                         .IsRequired()
@@ -165,12 +183,59 @@ namespace ALO.DataAccessLayer.Migrations
                     b.ToTable("tbl_Users");
                 });
 
+            modelBuilder.Entity("ALO.DomainClasses.Entity.BankSetting.tbl_Banks", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<int>("BankType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Createdby")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSandbox")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("MerchantId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modifiedby")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("PaymentUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SandBoxUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_Banks");
+                });
+
             modelBuilder.Entity("ALO.DomainClasses.Entity.Basket.tbl_BasketOrder", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -204,8 +269,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<long>("BasketOrderId")
                         .HasColumnType("bigint");
@@ -247,14 +313,18 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Abstract")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("BlogCategoryId")
                         .HasColumnType("bigint");
+
+                    b.Property<bool>("CanComment")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -319,8 +389,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<long>("BlogTypeId")
                         .HasColumnType("bigint");
@@ -374,8 +445,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<long?>("BlogCommentId")
                         .HasColumnType("bigint");
@@ -428,8 +500,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -465,12 +538,47 @@ namespace ALO.DataAccessLayer.Migrations
                     b.ToTable("tbl_BlogType");
                 });
 
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Cache.tbl_Cache", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("CacheName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Createdby")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modifiedby")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_Caches");
+                });
+
             modelBuilder.Entity("ALO.DomainClasses.Entity.City.tbl_City", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<long>("CountryId")
                         .HasColumnType("bigint");
@@ -508,8 +616,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -560,8 +669,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
@@ -625,8 +735,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Answer")
                         .HasColumnType("nvarchar(max)");
@@ -672,8 +783,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -725,8 +837,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
@@ -794,8 +907,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Aparat")
                         .HasColumnType("nvarchar(max)");
@@ -849,8 +963,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -888,8 +1003,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -927,8 +1043,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -957,12 +1074,53 @@ namespace ALO.DataAccessLayer.Migrations
                     b.ToTable("tbl_Country");
                 });
 
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Discount.tbl_Discount", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Createdby")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modifiedby")
+                        .HasColumnType("bigint");
+
+                    b.Property<double>("Percent")
+                        .HasColumnType("float");
+
+                    b.Property<int>("UseCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_Discounts");
+                });
+
             modelBuilder.Entity("ALO.DomainClasses.Entity.Financial.tbl_FinancialAccount", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<decimal>("AccountBalance")
                         .HasColumnType("decimal(18,2)");
@@ -1008,8 +1166,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Body")
                         .IsRequired()
@@ -1058,8 +1217,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Body")
                         .HasColumnType("nvarchar(max)");
@@ -1105,8 +1265,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -1138,14 +1299,18 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("Createdby")
                         .HasColumnType("bigint");
+
+                    b.Property<byte>("FileType")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("Image_thumb")
                         .HasColumnType("nvarchar(max)");
@@ -1170,12 +1335,32 @@ namespace ALO.DataAccessLayer.Migrations
                     b.ToTable("tbl_Image");
                 });
 
+            modelBuilder.Entity("ALO.DomainClasses.Entity.IMG.tbl_VideoDetail", b =>
+                {
+                    b.Property<long>("VideoId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Duration")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("VideoId");
+
+                    b.ToTable("tbl_VideoDetail");
+                });
+
             modelBuilder.Entity("ALO.DomainClasses.Entity.Language.tbl_Language", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -1215,7 +1400,7 @@ namespace ALO.DataAccessLayer.Migrations
                         new
                         {
                             Id = 3L,
-                            CreatedDate = new DateTime(2023, 1, 18, 11, 37, 54, 571, DateTimeKind.Local).AddTicks(7070),
+                            CreatedDate = new DateTime(2024, 6, 27, 18, 44, 42, 348, DateTimeKind.Local).AddTicks(1955),
                             IsActive = true,
                             IsDelete = false,
                             LanguageCode = "fa",
@@ -1227,8 +1412,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -1268,8 +1454,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Abstract")
                         .HasColumnType("nvarchar(max)");
@@ -1335,8 +1522,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -1365,8 +1553,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -1408,17 +1597,67 @@ namespace ALO.DataAccessLayer.Migrations
                     b.ToTable("tbl_Menus");
                 });
 
-            modelBuilder.Entity("ALO.DomainClasses.Entity.Order.tbl_Order", b =>
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Order.tbl_DeliveryPrice", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("Createdby")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal?>("FromPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modifiedby")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_DeliveryPrices");
+                });
+
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Order.tbl_Order", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long?>("BankId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Createdby")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeliveryPriceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DiscountId")
                         .HasColumnType("bigint");
 
                     b.Property<bool>("IsActive")
@@ -1436,8 +1675,14 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Property<string>("OrderCode")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OrderState")
+                    b.Property<int>("PaymentMethod")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("SentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SentTime")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("UserAddressId")
                         .HasColumnType("bigint");
@@ -1446,6 +1691,12 @@ namespace ALO.DataAccessLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BankId");
+
+                    b.HasIndex("DeliveryPriceId");
+
+                    b.HasIndex("DiscountId");
 
                     b.HasIndex("UserAddressId");
 
@@ -1458,8 +1709,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<int>("Count")
                         .HasColumnType("int");
@@ -1497,6 +1749,45 @@ namespace ALO.DataAccessLayer.Migrations
                     b.ToTable("tbl_OrderDetails");
                 });
 
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Order.tbl_OrderStateHistory", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Createdby")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modifiedby")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("OrderId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("OrderState")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("tbl_OrderStateHistory");
+                });
+
             modelBuilder.Entity("ALO.DomainClasses.Entity.PFL.tbl_Profile", b =>
                 {
                     b.Property<long>("Id")
@@ -1518,6 +1809,9 @@ namespace ALO.DataAccessLayer.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
 
+                    b.Property<string>("NationalCode")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AvatarId");
@@ -1525,12 +1819,47 @@ namespace ALO.DataAccessLayer.Migrations
                     b.ToTable("tbl_Profile");
                 });
 
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Permission.tbl_Permission", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Createdby")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modifiedby")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_Permissions");
+                });
+
             modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_Brands", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -1592,8 +1921,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -1631,8 +1961,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -1681,16 +2012,14 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Abstract")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("BrandId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("CityId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedDate")
@@ -1738,9 +2067,6 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Property<long?>("Modifiedby")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("OwnerId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("PageTitle")
                         .HasColumnType("nvarchar(max)");
 
@@ -1756,6 +2082,12 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("TorobLink")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("UnitId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Url")
                         .HasColumnType("nvarchar(max)");
 
@@ -1766,19 +2098,17 @@ namespace ALO.DataAccessLayer.Migrations
 
                     b.HasIndex("BrandId");
 
-                    b.HasIndex("CityId");
-
                     b.HasIndex("FileId");
 
                     b.HasIndex("ImageId");
 
                     b.HasIndex("MainProductCategoryId");
 
-                    b.HasIndex("OwnerId");
-
                     b.HasIndex("ProductCategoryId");
 
                     b.HasIndex("SubProductCategoryId");
+
+                    b.HasIndex("UnitId");
 
                     b.ToTable("tbl_Products");
                 });
@@ -1787,8 +2117,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -1840,8 +2171,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Body")
                         .HasColumnType("nvarchar(max)");
@@ -1894,8 +2226,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -1945,8 +2278,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -1997,8 +2331,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -2035,8 +2370,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -2071,8 +2407,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<long?>("ColorId")
                         .HasColumnType("bigint");
@@ -2094,6 +2431,9 @@ namespace ALO.DataAccessLayer.Migrations
 
                     b.Property<bool>("IsDelete")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("MinCanOrder")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -2125,8 +2465,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -2168,8 +2509,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -2211,8 +2553,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -2254,8 +2597,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -2292,8 +2636,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<int>("Count")
                         .HasColumnType("int");
@@ -2335,8 +2680,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -2384,12 +2730,61 @@ namespace ALO.DataAccessLayer.Migrations
                     b.ToTable("tbl_SubProductCategories");
                 });
 
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_TorobProducts", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Createdby")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastUpdate")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modifiedby")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Price")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ShopName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("tbl_TorobProducts");
+                });
+
             modelBuilder.Entity("ALO.DomainClasses.Entity.SpecialSell.tbl_SpecialSell", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -2430,8 +2825,9 @@ namespace ALO.DataAccessLayer.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -2466,6 +2862,118 @@ namespace ALO.DataAccessLayer.Migrations
                     b.ToTable("tbl_SpecialSellProducts");
                 });
 
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Units.tbl_Units", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Createdby")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modifiedby")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_Units");
+                });
+
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Wallet.tbl_Wallet", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Createdby")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modifiedby")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("tbl_Wallets");
+                });
+
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Wallet.tbl_WalletHistory", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Createdby")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("Modifiedby")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("WalletId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WalletId");
+
+                    b.ToTable("tbl_WalletHistories");
+                });
+
             modelBuilder.Entity("tbl_Imagetbl_Product", b =>
                 {
                     b.Property<long>("ImagesId")
@@ -2478,7 +2986,37 @@ namespace ALO.DataAccessLayer.Migrations
 
                     b.HasIndex("ProductImagesId");
 
-                    b.ToTable("ProductImages");
+                    b.ToTable("ProductImages", (string)null);
+                });
+
+            modelBuilder.Entity("tbl_Menutbl_Users", b =>
+                {
+                    b.Property<long>("MenusId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UsersId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("MenusId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("tbl_Menutbl_Users");
+                });
+
+            modelBuilder.Entity("tbl_Permissiontbl_Users", b =>
+                {
+                    b.Property<long>("PermissionsId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UsersId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("PermissionsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("tbl_Permissiontbl_Users");
                 });
 
             modelBuilder.Entity("tbl_ProductPriceHistorytbl_ProductPriceOptionValue", b =>
@@ -2493,7 +3031,7 @@ namespace ALO.DataAccessLayer.Migrations
 
                     b.HasIndex("ProductPriceOptionValuesId");
 
-                    b.ToTable("tbl_ProductPriceHistoryOptionValues");
+                    b.ToTable("tbl_ProductPriceHistoryOptionValues", (string)null);
                 });
 
             modelBuilder.Entity("tbl_Producttbl_Users", b =>
@@ -2508,7 +3046,7 @@ namespace ALO.DataAccessLayer.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("UserFavouriteProducts");
+                    b.ToTable("UserFavouriteProducts", (string)null);
                 });
 
             modelBuilder.Entity("tbl_Roletbl_Users", b =>
@@ -2523,7 +3061,7 @@ namespace ALO.DataAccessLayer.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("tbl_UserInRoles");
+                    b.ToTable("tbl_UserInRoles", (string)null);
                 });
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.Account.tbl_UserAddresses", b =>
@@ -2761,6 +3299,17 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ALO.DomainClasses.Entity.IMG.tbl_VideoDetail", b =>
+                {
+                    b.HasOne("ALO.DomainClasses.Entity.IMG.tbl_Image", "Video")
+                        .WithOne("VideoDetail")
+                        .HasForeignKey("ALO.DomainClasses.Entity.IMG.tbl_VideoDetail", "VideoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Video");
+                });
+
             modelBuilder.Entity("ALO.DomainClasses.Entity.Language.tbl_Language", b =>
                 {
                     b.HasOne("ALO.DomainClasses.Entity.IMG.tbl_Image", "FlagIcon")
@@ -2807,6 +3356,18 @@ namespace ALO.DataAccessLayer.Migrations
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.Order.tbl_Order", b =>
                 {
+                    b.HasOne("ALO.DomainClasses.Entity.BankSetting.tbl_Banks", "Bank")
+                        .WithMany()
+                        .HasForeignKey("BankId");
+
+                    b.HasOne("ALO.DomainClasses.Entity.Order.tbl_DeliveryPrice", "DeliveryPrice")
+                        .WithMany("Orders")
+                        .HasForeignKey("DeliveryPriceId");
+
+                    b.HasOne("ALO.DomainClasses.Entity.Discount.tbl_Discount", "Discount")
+                        .WithMany("Orders")
+                        .HasForeignKey("DiscountId");
+
                     b.HasOne("ALO.DomainClasses.Entity.Account.tbl_UserAddresses", "UserAddress")
                         .WithMany()
                         .HasForeignKey("UserAddressId");
@@ -2816,6 +3377,12 @@ namespace ALO.DataAccessLayer.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Bank");
+
+                    b.Navigation("DeliveryPrice");
+
+                    b.Navigation("Discount");
 
                     b.Navigation("User");
 
@@ -2839,6 +3406,17 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Navigation("Order");
 
                     b.Navigation("ProductPriceHistory");
+                });
+
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Order.tbl_OrderStateHistory", b =>
+                {
+                    b.HasOne("ALO.DomainClasses.Entity.Order.tbl_Order", "Order")
+                        .WithMany("OrderStateHistories")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.PFL.tbl_Profile", b =>
@@ -2895,10 +3473,6 @@ namespace ALO.DataAccessLayer.Migrations
                         .WithMany("Products")
                         .HasForeignKey("BrandId");
 
-                    b.HasOne("ALO.DomainClasses.Entity.City.tbl_City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId");
-
                     b.HasOne("ALO.DomainClasses.Entity.IMG.tbl_File", "File")
                         .WithMany()
                         .HasForeignKey("FileId");
@@ -2911,10 +3485,6 @@ namespace ALO.DataAccessLayer.Migrations
                         .WithMany()
                         .HasForeignKey("MainProductCategoryId");
 
-                    b.HasOne("ALO.DomainClasses.Entity.Account.tbl_Users", "Owner")
-                        .WithMany("UserProducts")
-                        .HasForeignKey("OwnerId");
-
                     b.HasOne("ALO.DomainClasses.Entity.Product.tbl_ProductCategory", "ProductCategory")
                         .WithMany("Products")
                         .HasForeignKey("ProductCategoryId");
@@ -2923,9 +3493,11 @@ namespace ALO.DataAccessLayer.Migrations
                         .WithMany("Products")
                         .HasForeignKey("SubProductCategoryId");
 
-                    b.Navigation("Brand");
+                    b.HasOne("ALO.DomainClasses.Entity.Units.tbl_Units", "Unit")
+                        .WithMany()
+                        .HasForeignKey("UnitId");
 
-                    b.Navigation("City");
+                    b.Navigation("Brand");
 
                     b.Navigation("File");
 
@@ -2933,11 +3505,11 @@ namespace ALO.DataAccessLayer.Migrations
 
                     b.Navigation("MainProductCategory");
 
-                    b.Navigation("Owner");
-
                     b.Navigation("ProductCategory");
 
                     b.Navigation("SubProductCategory");
+
+                    b.Navigation("Unit");
                 });
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_ProductCategory", b =>
@@ -3140,6 +3712,17 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Navigation("ProductCategory");
                 });
 
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_TorobProducts", b =>
+                {
+                    b.HasOne("ALO.DomainClasses.Entity.Product.tbl_Product", "Product")
+                        .WithMany("TorobProducts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("ALO.DomainClasses.Entity.SpecialSell.tbl_SpecialSellProducts", b =>
                 {
                     b.HasOne("ALO.DomainClasses.Entity.Product.tbl_Product", "Product")
@@ -3159,6 +3742,28 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Navigation("SpecialSell");
                 });
 
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Wallet.tbl_Wallet", b =>
+                {
+                    b.HasOne("ALO.DomainClasses.Entity.Account.tbl_Users", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Wallet.tbl_WalletHistory", b =>
+                {
+                    b.HasOne("ALO.DomainClasses.Entity.Wallet.tbl_Wallet", "Wallet")
+                        .WithMany("WalletHistories")
+                        .HasForeignKey("WalletId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Wallet");
+                });
+
             modelBuilder.Entity("tbl_Imagetbl_Product", b =>
                 {
                     b.HasOne("ALO.DomainClasses.Entity.IMG.tbl_Image", null)
@@ -3170,6 +3775,36 @@ namespace ALO.DataAccessLayer.Migrations
                     b.HasOne("ALO.DomainClasses.Entity.Product.tbl_Product", null)
                         .WithMany()
                         .HasForeignKey("ProductImagesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("tbl_Menutbl_Users", b =>
+                {
+                    b.HasOne("ALO.DomainClasses.Entity.Menu.tbl_Menu", null)
+                        .WithMany()
+                        .HasForeignKey("MenusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ALO.DomainClasses.Entity.Account.tbl_Users", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("tbl_Permissiontbl_Users", b =>
+                {
+                    b.HasOne("ALO.DomainClasses.Entity.Permission.tbl_Permission", null)
+                        .WithMany()
+                        .HasForeignKey("PermissionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ALO.DomainClasses.Entity.Account.tbl_Users", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -3228,8 +3863,6 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Navigation("Orders");
 
                     b.Navigation("Profile");
-
-                    b.Navigation("UserProducts");
                 });
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.Basket.tbl_BasketOrder", b =>
@@ -3257,11 +3890,18 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Navigation("Cities");
                 });
 
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Discount.tbl_Discount", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
             modelBuilder.Entity("ALO.DomainClasses.Entity.IMG.tbl_Image", b =>
                 {
                     b.Navigation("ProductMainImages");
 
                     b.Navigation("Profile");
+
+                    b.Navigation("VideoDetail");
                 });
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.LinkManagement.tbl_GroupLinkManagement", b =>
@@ -3274,9 +3914,16 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Navigation("ChildMenus");
                 });
 
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Order.tbl_DeliveryPrice", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
             modelBuilder.Entity("ALO.DomainClasses.Entity.Order.tbl_Order", b =>
                 {
                     b.Navigation("OrderDetails");
+
+                    b.Navigation("OrderStateHistories");
                 });
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_Brands", b =>
@@ -3311,6 +3958,8 @@ namespace ALO.DataAccessLayer.Migrations
                     b.Navigation("ProductVisits");
 
                     b.Navigation("Ratings");
+
+                    b.Navigation("TorobProducts");
                 });
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_ProductCategory", b =>
@@ -3329,9 +3978,9 @@ namespace ALO.DataAccessLayer.Migrations
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_ProductCustomFields", b =>
                 {
-                    b.Navigation("ProductCustomFieldsOptionValues");
-
                     b.Navigation("ProductCustomFieldValues");
+
+                    b.Navigation("ProductCustomFieldsOptionValues");
                 });
 
             modelBuilder.Entity("ALO.DomainClasses.Entity.Product.tbl_ProductGuarantee", b =>
@@ -3357,6 +4006,11 @@ namespace ALO.DataAccessLayer.Migrations
             modelBuilder.Entity("ALO.DomainClasses.Entity.SpecialSell.tbl_SpecialSell", b =>
                 {
                     b.Navigation("SpecialSellProducts");
+                });
+
+            modelBuilder.Entity("ALO.DomainClasses.Entity.Wallet.tbl_Wallet", b =>
+                {
+                    b.Navigation("WalletHistories");
                 });
 #pragma warning restore 612, 618
         }

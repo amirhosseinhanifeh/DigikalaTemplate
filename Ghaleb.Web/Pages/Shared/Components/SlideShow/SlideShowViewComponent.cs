@@ -1,5 +1,4 @@
 ﻿using ALO.DataAccessLayer.DataContext;
-using ALO.DomainClasses.EntityHelpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +14,7 @@ namespace Ghaleb.Web.Pages.ViewComponents.SlideShow
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var slideShows = await _context.tbl_SlideShows.Include(x => x.Image).Where(h => h.IsActive && h.IsDelete != true).OrderByDescending(x => x.Id).Take(1).ToListAsync();
+            var slideShows = await _context.tbl_SlideShows.Include(x => x.Image).Where(h => h.IsActive && h.IsDelete != true).OrderByDescending(x => x.Id).Take(4).ToListAsync();
             return View(slideShows);
         }
     }

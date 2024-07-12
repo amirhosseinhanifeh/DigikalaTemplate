@@ -8,12 +8,12 @@
     @foreach (var item in Model.ToList()[0].Categories)
     {
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/search/@item.Id/@item.Url">@item.Title</a>
+                <a class="nav-link active" aria-current="page" href="/search/Category/@item.Id/@item.Url">@item.Title</a>
             <ul class="sub-category bg-white col-10 mx-auto">
                 @foreach (var item2 in item.SubCategoryForSiteHeaders)
                 {
                     <li>
-                        <a asp-page="search" asp-route-categoryId="@item.Id" asp-route-categoryUrl="@item.Url" asp-route-subCategoryId="@item2.Id" asp-route-subcategoryUrl="@item2.Url">@item2.Title</a>
+                            <a href="/search/Category/@item.Id/@item.Url/SubCategory/@item2.Id/@item2.Url" >@item2.Title</a>
                     </li>
                 }
 

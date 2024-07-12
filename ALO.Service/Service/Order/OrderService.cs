@@ -2,8 +2,8 @@
 using ALO.Common.Utilities.ConvertTo;
 using ALO.Common.Utilities.Generate;
 using ALO.DataAccessLayer.DataContext;
+using ALO.DomainClasses.Entity.Image.EntityHelpers;
 using ALO.DomainClasses.Entity.Order;
-using ALO.DomainClasses.EntityHelpers;
 using ALO.Service.Interface.Basket;
 using ALO.Service.Interface.Order;
 using ALO.ViewModels.Order;
@@ -44,7 +44,6 @@ namespace ALO.Service.Service.Order
                     {
                         OrderCode = Generate.GenerateCode(5),
                         UserId = baskets.model.UserId,
-                        OrderState = OrderState.PAYED,
                         OrderDetails = new List<tbl_OrderDetails>()
                     });
 

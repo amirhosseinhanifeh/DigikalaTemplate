@@ -1,0 +1,34 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model IEnumerable<ALO.DomainClasses.Entity.LinkManagement.tbl_GroupLinkManagement>
+@{
+    ViewData["Title"] = "مدیریت گروه لینک ها";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">افزودن</a>
+</p>
+
+@(
+        Html
+        .Grid(Model)
+        .Build(columns =>
+        {
+            columns.Add(model => model.Id);
+            columns.Add(model => model.Title);
+            columns.Add(model => model.RouteName);
+            columns.Add().Encoded(false).RenderedAs(h => Html.ActionLink("لیست لینک ها", "Index", "LinkManagement", new { Id = h.Id }, new { @class = "btn btn-dark" }));
+        })
+        .Filterable()
+        .Sortable()
+        .Empty("موردی یافت نشد")
+        .Pageable(pager =>
+        {
+            pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 5, "5" }, { 10, "10" }, { 15, "15" }, { 20, "20" } };
+            pager.ShowPageSizes = true;
+            pager.PagesToDisplay = 5;
+            pager.CurrentPage = 1;
+            pager.RowsPerPage = 2;
+        })
+        )

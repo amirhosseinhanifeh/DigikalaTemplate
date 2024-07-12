@@ -1,0 +1,40 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model IEnumerable<ALO.DomainClasses.Entity.Account.tbl_UserAddresses>
+@{
+    ViewData["Title"] = "لیست دسته بندی ها";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="">
+            <div class="card-header border-0">
+
+            </div>
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                    <thead>
+                        <tr>
+                            <th>آدرس</th>
+                            <th>کد پستی</th>
+                            <th>گیرنده</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Address پلاک @item.Pelak واحد @item.Vahed</td>
+                                <td>@item.PostalCode</td>
+                                <td>@item.ReciverName</td>
+                                <td><a class="btn btn-warning"  target="_blank" href="https://www.google.com/maps/@("@"+item.Lat+","+@item.Long),20z?entry=ttu">نمایش روی نقشه</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

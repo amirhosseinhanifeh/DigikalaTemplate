@@ -6,20 +6,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
 using ALO.Common.Enums;
 using static ALO.Common.Messages.Message;
 using ALO.DomainClasses.Entity.IMG;
 using ALO.DataAccessLayer.DataContext;
 using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace ALO.Service.Service.ImageService
 {
     public class FileService : IFileService
     {
-        private readonly IHostingEnvironment _webHostEnvironment;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ServiceContext _db;
-        public FileService(IHostingEnvironment webHostEnvironment,
+        public FileService(IWebHostEnvironment webHostEnvironment,
             ServiceContext db)
         {
             _webHostEnvironment = webHostEnvironment;

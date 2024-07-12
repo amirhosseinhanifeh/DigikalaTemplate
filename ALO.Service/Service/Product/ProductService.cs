@@ -4,7 +4,6 @@ using ALO.DomainClasses.Entity.Product;
 using ALO.Service.Interface.Product;
 using ALO.ViewModels.Product;
 using ALO.ViewModels.Result;
-using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +14,6 @@ using static ALO.Common.Messages.Message;
 using Binbin.Linq;
 using ALO.ViewModels.ProductComment;
 using ALO.ViewModels.Product.Admin;
-using ALO.DomainClasses.EntityHelpers;
 using Microsoft.EntityFrameworkCore;
 using ALO.Common.Utilities.ConvertTo;
 using ALO.Common.Utilities.ConvertDt;
@@ -28,6 +26,8 @@ using System.Security.Principal;
 using System.Threading;
 using ALO.ViewModels.Order;
 using Microsoft.AspNetCore.Http;
+using ALO.DomainClasses.Entity.Image.EntityHelpers;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ALO.Service.Service.Product
 {
@@ -74,7 +74,6 @@ namespace ALO.Service.Service.Product
                         EnTitle = model.EnTitle,
                         FileId = model.FileId,
                         DoIndex = model.DoIndex,
-                        OwnerId = ownerId,
 
                     };
                     data.ProductCustomFieldValues = new List<tbl_ProductCustomFieldValues>();
@@ -131,7 +130,7 @@ namespace ALO.Service.Service.Product
                 };
             }
         }
-        private static Random random = new Random();
+        private static Random random = new();
 
         public static string RandomString(int length)
         {
@@ -146,14 +145,12 @@ namespace ALO.Service.Service.Product
             {
                 Abstract = model.Title,
                 Title = model.Title,
-                CityId = 1,
                 Description = model.Description,
                 IsSpecial = false,
                 SubProductCategoryId = model.SubCategoryId,
                 MainProductCategoryId = category.ProductCategory.MainProuctCategoryId,
                 ProductCategoryId = category.ProductCategoryId,
                 Url = RandomString(8),
-                OwnerId = userId,
 
             };
             if (model.Values != null && model.Values.Any())
@@ -270,7 +267,7 @@ namespace ALO.Service.Service.Product
             }
         }
 
-        public async Task<ListResultViewModel<ProductDetailsForHomeDto>> GetProductDetails(long url, long? UserId = null)
+        public async Task<ListResultViewModel<ProductDetailsForHomeDto>> GetProductDetails(long id, string url, long? UserId = null)
         {
 
             try
@@ -286,12 +283,16 @@ namespace ALO.Service.Service.Product
                     .Include(x => x.ProductComments)
                     .ThenInclude(x => x.User)
                     .ThenInclude(x => x.Profile)
+                    .Include(x => x.ProductComments)
+                    .ThenInclude(x => x.ProductComments)
+                    .ThenInclude(x => x.User)
+                    .ThenInclude(x => x.Profile)
                     .Include(x => x.ProductCustomFieldValues)
                     .ThenInclude(x => x.ProductCustomField)
                     .ThenInclude(x => x.ProductCustomFieldsOptionValues)
                     .Include(x => x.ProductPriceHistories)
                     .ThenInclude(x => x.Color)
-                    .FirstOrDefaultAsync(x => x.Id == url);
+                    .FirstOrDefaultAsync(x => x.Id == id && x.Url == url);
                 if (query == null)
                     return new ListResultViewModel<ProductDetailsForHomeDto>
                     {
@@ -312,11 +313,11 @@ namespace ALO.Service.Service.Product
                         Name = query.SubProductCategory.Title,
                         Url = query.SubProductCategory.Url
                     } : null,
-                    Colors = query.ProductPriceHistories.Where(x=>x.Color!=null).Select(x => x.Color).Select(h => new ProductBrandDto
+                    Colors = query.ProductPriceHistories.Where(x => x.Color != null).GroupBy(h => h.Color).Select(h => new ProductBrandDto
                     {
-                        Id = h.Id,
-                        Name = h.Name,
-                        Hex = h.Hex,
+                        Id = h.Key.Id,
+                        Name = h.Key.Name,
+                        Hex = h.Key.Hex,
 
                     }).ToList(),
                     Tags = query.ProductTags.Select(x => new ProductBrandDto { Id = x.Id, Name = x.Name }).ToList(),
@@ -342,12 +343,19 @@ namespace ALO.Service.Service.Product
                     Date = query.CreatedDate.RelativeDate().toPersianNumber(),
                     //IsBuy = UserId == null ? null : query.OrderDetails.Any(x => x.Order.UserId == UserId),
                     Images = query.Images.Select(y => new ProductGalleryDTO { Url = y.BindImage(_configuration) }).ToList(),
-                    Comments = query.ProductComments.Where(x => x.IsActive && x.IsDelete != true).Select(y => new ProductCommentForWebsiteDto
+                    Comments = query.ProductComments.Where(x => x.IsActive && x.IsDelete != true && x.ProductCommentId == null).Select(y => new ProductCommentForWebsiteDto
                     {
                         Body = y.Body,
                         FullName = y.User.Profile.FirstName + " " + y.User.Profile.LastName,
                         Response = y.Response,
-                        Date = y.CreatedDate.ConvertToPesainDate().toPersianNumber()
+                        Date = y.CreatedDate.ConvertToPesainDate().toPersianNumber(),
+                        Replies = y.ProductComments.Select(y => new ProductCommentForWebsiteDto
+                        {
+                            Body = y.Body,
+                            FullName = y.User.Profile.FirstName + " " + y.User.Profile.LastName,
+                            Response = y.Response,
+                            Date = y.CreatedDate.ConvertToPesainDate().toPersianNumber()
+                        }).ToList()
                     }).ToList(),
                     Values = query.ProductCustomFieldValues.Select(x => new ProductCustomFields
                     {
@@ -396,7 +404,7 @@ namespace ALO.Service.Service.Product
                 var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 long ownerId;
                 long.TryParse(userId, out ownerId);
-                var result = (await _db.GetAsync<tbl_Product>(x => x.Id == Id && x.OwnerId == ownerId, includes: new string[] { "ProductPriceHistories", "Images" }));
+                var result = (await _db.GetAsync<tbl_Product>(x => x.Id == Id, includes: new string[] { "ProductPriceHistories", "Images" }));
                 var data = new AddProductForAdminDTO
                 {
                     Abstract = result.Abstract,
@@ -479,7 +487,7 @@ namespace ALO.Service.Service.Product
             string order = null,
             int page = 1,
             int pageSize = 10,
-            long? ownerId = null,
+            long? userId = null,
             bool? isExists = null)
         {
 
@@ -539,15 +547,13 @@ namespace ALO.Service.Service.Product
             {
                 strQuery = strQuery.And(y => y.Title.Contains(title));
             }
-            if (ownerId != null)
-            {
-                strQuery = strQuery.And(x => x.OwnerId == ownerId);
-            }
             if (isExists == true)
             {
                 strQuery = strQuery.And(x => !x.ProductPriceHistories.Any(h => h.IsActive && h.OrderDetails.Count() == h.Inventory));
             }
             var result = _db.GetAllAsync<tbl_Product>(strQuery, new string[] { "Image", "ProductPriceHistories" })
+                .Include(x => x.ProductPriceHistories)
+                .Include(x => x.Ratings)
                 .Where(x => x.IsActive && x.IsDelete != true)
                 .Select(x => new ProductListForHomeDto
                 {
@@ -561,7 +567,10 @@ namespace ALO.Service.Service.Product
                     State = x.State.ToString(),
                     Cost = x.GetLastPrice().ToString("n0").toPersianNumber(),
                     Discount = x.GetDiscountPrice() != null ? x.GetDiscountPrice().Value.ToString("n0").toPersianNumber() : null,
-                    Call = x.GetLastPrice() == 0
+                    Call = x.GetLastPrice() == 0,
+                    LastPriceId = x.ProductPriceHistories.Any() ? x.ProductPriceHistories.OrderBy(h => h.Id).LastOrDefault().Id : null,
+                    IsFavourite = x.Users.Any(x => x.Id == userId),
+                    Ratings = x.Ratings.ToList()
 
                 });
 
@@ -591,7 +600,7 @@ namespace ALO.Service.Service.Product
             };
         }
 
-        public ListResultViewModel<IQueryable<GetProductListForAdminDto>> GetProductListForAdmin(long? brandId, long? subcategoryId, int page = 1, int pageSize = 6)
+        public ListResultViewModel<IQueryable<GetProductListForAdminDto>> GetProductListForAdmin(string name = null, long? brandId = null, long? maincategoryId = null, long? categoryId = null, long? subcategoryId = null, int page = 1, int pageSize = 6)
         {
             try
             {
@@ -600,29 +609,33 @@ namespace ALO.Service.Service.Product
                 long.TryParse(userId, out ownerId);
 
                 var result = _db.tbl_Products.Include(x => x.Image)
-                    .Include(x=>x.ProductTags)
+                    .Include(x => x.ProductTags)
                     .Include(x => x.ProductVisits)
                     .Include(x => x.ProductComments)
                     .Include(x => x.ProductPriceHistories)
                     .ThenInclude(x => x.OrderDetails)
                     .ThenInclude(x => x.Order)
+                    .ThenInclude(x => x.OrderStateHistories)
                     .Include(x => x.SubProductCategory)
                     .OrderByDescending(x => x.CreatedDate)
-                    .Where(x=>x.IsDelete==false)
+                    .Where(x => !name.IsNullOrEmpty() ? x.Title.Contains(name) : true)
+                    .Where(x => x.IsDelete == false)
                     .Where(x => brandId != null ? x.BrandId == brandId : true)
-                    .Where(x => x.OwnerId == ownerId && (subcategoryId != null ? x.SubProductCategoryId == subcategoryId : true))
+                    .Where(x => maincategoryId != null ? x.MainProductCategoryId == maincategoryId : true)
+                    .Where(x => categoryId != null ? x.ProductCategoryId == categoryId : true)
+                    .Where(x => (subcategoryId != null ? x.SubProductCategoryId == subcategoryId : true))
                     .Select((x) => new GetProductListForAdminDto
                     {
                         Row = 1,
                         Id = x.Id,
                         Title = x.Title,
                         Image = x.Image.BindImage(_configuration),
-                        OrderCount = x.ProductPriceHistories.SelectMany(x => x.OrderDetails).Count(h => h.Order.OrderState == DomainClasses.Entity.Order.OrderState.PAYED),
+                        OrderCount = x.ProductPriceHistories.SelectMany(x => x.OrderDetails).Count(h => h.Order.OrderStateHistories.Any(g => g.OrderState == DomainClasses.Entity.Order.OrderState.PAYED)),
                         SubCategory = x.SubProductCategory.Title,
                         Status = x.IsActive ? "فعال" : "غیر فعال",
                         Cost = x.GetLastPrice().ToString("n0").toPersianNumber() + " تومان",
                         CommentCount = x.ProductComments.Count(),
-                        TagCount=x.ProductTags.Where(x=>x.IsDelete !=true && x.IsActive).Count(),
+                        TagCount = x.ProductTags.Where(x => x.IsDelete != true && x.IsActive).Count(),
                         Visit = x.ProductVisits.Count(),
                         AllVisit = x.Visit,
                         Url = x.Url,

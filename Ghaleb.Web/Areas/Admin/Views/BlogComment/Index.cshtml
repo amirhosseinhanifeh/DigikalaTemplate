@@ -1,0 +1,62 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model IEnumerable<ALO.DomainClasses.Entity.Blog.tbl_BlogComments>
+@{
+    ViewData["Title"] = "لیست نظرات";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@(
+                Html
+                .Grid(Model)
+                .Build(columns =>
+                {
+                    columns.Add(model => model.Blog.Title);
+                    columns.Add(model => model.User.Profile.FirstName + " " + model.User.Profile.LastName).Titled("نام و نام خانوادگی");
+                    columns.Add(model => model.User.Mobile);
+                    columns.Add(model => model.User.Email);
+                    columns.Add().RenderedAs(@<text>
+    <div class="custom-control custom-switch" style="direction:ltr;padding:0">
+        <input type="checkbox" class="custom-control-input" id="customSwitch@(item.Id)" onchange="ChangeStatus(@item.Id)" @(item.IsActive ? "checked" : "")>
+        <label class="custom-control-label" for="customSwitch@(item.Id)"></label>
+    </div>
+</text>).Titled("وضعیت");
+
+                    columns.Add().Encoded(false).RenderedAs(
+
+         @<text>
+    <a class="btn btn-info" asp-route-id="@item.Id" asp-action="Details">پاسخ ها (@item.BlogComments.Count(x=>x.IsActive==true))</a>
+</text>
+            );
+                })
+        .Filterable()
+        .Sortable()
+        .Empty("موردی یافت نشد")
+        .Pageable(pager =>
+        {
+            pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 5, "5" }, { 10, "10" }, { 15, "15" }, { 20, "20" } };
+            pager.ShowPageSizes = true;
+            pager.PagesToDisplay = 5;
+            pager.CurrentPage = 1;
+            pager.RowsPerPage = 2;
+        })
+        )
+
+
+@section scripts {
+
+    <script>
+        function ChangeStatus(id) {
+            $.ajax({
+                url: "@Url.Action("ChangeStatus")?id=" + id,
+                method: "GET",
+            }).done(function (data) {
+                Swal.fire(
+                    'تبریک !',
+                    data.message,
+                    'success'
+                )
+
+            });
+        }
+    </script>
+}

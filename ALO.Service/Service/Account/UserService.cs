@@ -5,7 +5,6 @@ using ALO.DomainClasses.Entity.Account;
 using ALO.Service.Interface.Account;
 using ALO.ViewModels.Account;
 using ALO.ViewModels.Result;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,11 +16,9 @@ namespace ALO.Service.Service.Account
     public class UserService : IUserService
     {
         private readonly ServiceContext _db;
-        private readonly IMapper _mapper;
-        public UserService(IMapper mapper, ServiceContext db)
+        public UserService(ServiceContext db)
         {
             _db = db;
-            _mapper = mapper;
         }
 
         public async Task<ListResultViewModel<tbl_Users>> Authenticate(string username, string password)

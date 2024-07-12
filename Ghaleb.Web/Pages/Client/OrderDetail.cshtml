@@ -1,0 +1,92 @@
+﻿@page
+@using ALO.Common.Extentions
+@model Ghaleb.Web.Pages.Client.OrderDetailModel
+@{
+    ViewData["Title"] = "#"+Model.Order.OrderCode.toPersianNumber();
+    Layout = "~/Pages/Client/Shared/_Layout.cshtml";
+}
+<div class="row mb-5">
+    <div class="col-xl-12">
+        <div class="card">
+
+            <div class="table-responsive table-striped">
+                <table class="table align-items-center table-flush">
+                    <thead>
+                        <tr>
+                            <th>نام گیرنده</th>
+                            <th>آدرس</th>
+                            <th>تلفن</th>
+                            <th>موبایل</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@Model.Order.UserAddress.User.Profile.FirstName @Model.Order.UserAddress.User.Profile.LastName</td>
+                            <td>@Model.Order.UserAddress.Address پلاک @Model.Order.UserAddress.Pelak واحد @Model.Order.UserAddress.Vahed</td>
+                            <td>@Model.Order.UserAddress.Phone</td>
+                            <td>@Model.Order.UserAddress.Mobile</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-54">
+    <div class="col-xl-12">
+        <div class="card">
+
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                    <thead>
+                        <tr>
+                            <th>کد سفارش</th>
+                            <th>مبلغ فاکتور</th>
+                            <th>تاریخ سفارش</th>
+                            <th>وضعیت</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                            <tr>
+                                <td>#@Model.Order.OrderCode.toPersianNumber()</td>
+                                <td>@Model.Order.OrderDetails.Sum(x => x.Count * x.ProductPriceHistory.GetPrice()).ToString("n0").toPersianNumber() تومان</td>
+                                <td>@Model.Order.CreatedDate.ConvertToPesainDate().toPersianNumber()</td>
+                                <td>@Model.Order.OrderStateHistories.OrderBy(x => x.Id).LastOrDefault().OrderState.GetDisplay()</td>
+                            </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush table-striped">
+                    <thead>
+                        <tr>
+                            <th>نام محصول</th>
+                            <th>تعداد</th>
+                            <th>قیمت واحد</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Order.OrderDetails)
+                        {
+                            <tr>
+                                <td>@item.ProductPriceHistory.Product.Title</td>
+                                <td>@item.Count.ToString().toPersianNumber()</td>
+                                <td>@item.ProductPriceHistory.GetPrice().ToString("n0").toPersianNumber() تومان</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

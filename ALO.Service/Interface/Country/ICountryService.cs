@@ -9,6 +9,5 @@ namespace ALO.Service.Interface.Country
 {
     public interface ICountryService
     {
-        Task<ResultViewModel> CreateAsync(tbl_Country model);
     }
 }

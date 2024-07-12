@@ -18,7 +18,7 @@ namespace ALO.DomainClasses.Entity.PFL
         [Display(Name = "جنسیت")]
         public Gender Gender { get; set; }
 
-
+        public string NationalCode { get; set; }
         #region Navigation
 
         public tbl_Users User { get; set; }

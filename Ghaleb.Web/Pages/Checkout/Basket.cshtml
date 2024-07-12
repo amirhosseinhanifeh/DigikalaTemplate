@@ -4,8 +4,8 @@
     int i = 0;
 }
 
-<div class="row bg-white p-5 table-responsive">
-    @if (Model.List.Any())
+ <div class="row bg-white p-5 table-responsive">
+    @if (Model !=null && Model.Order.Items.Any() && Model.Order.Items !=null)
     {
         <form id="basketForm" method="post">
             <table class="table table-striped" *ngIf="data.length>0">
@@ -22,7 +22,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.List)
+                    @foreach (var item in Model.Order.Items)
                     {
 
                         <tr *ngFor="let item of data" style="vertical-align:middle ;">
@@ -62,7 +62,6 @@
         <h4 *ngIf="data?.length==0">سبد خرید شما خالی می باشد</h4>
     }
 </div>
-
 
 @section Scripts{
     <script>

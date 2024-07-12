@@ -26,13 +26,13 @@ namespace ALO.Service.Interface.Product
             string order = null,
             int page = 1,
             int pageSize = 10,
-            long? ownerId = null,
+            long? userId = null,
             bool? isExists = null);
         Task<ListResultViewModel<IEnumerable<ProductListForHomeDto>>> GetLastVisitProductList(long userId);
         Task<ListResultViewModel<IEnumerable<object>>> GetLastVisitCategoryList(long userId);
         Task<ListResultViewModel<IEnumerable<CategoryListForHomeDTO>>> GetHomeProductsByCategoryList();
-        Task<ListResultViewModel<ProductDetailsForHomeDto>> GetProductDetails(long url, long? UserId = null);
-        ListResultViewModel<IQueryable<GetProductListForAdminDto>> GetProductListForAdmin(long? brandId, long? subcategoryId, int page = 1, int pageSize = 6);
+        Task<ListResultViewModel<ProductDetailsForHomeDto>> GetProductDetails(long id, string url, long? UserId = null);
+        ListResultViewModel<IQueryable<GetProductListForAdminDto>> GetProductListForAdmin(string name = null, long? brandId = null, long? maincategoryId = null, long? categoryId = null, long? subcategoryId = null, int page = 1, int pageSize = 6);
         Task<ListResultViewModel<bool>> AddProductForAdmin(AddProductForAdminDTO model);
         Task<ListResultViewModel<AddProductForAdminDTO>> GetProductForAdmin(long Id);
         Task<ListResultViewModel<bool>> UpdateProductForAdmin(AddProductForAdminDTO model);

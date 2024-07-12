@@ -1,0 +1,40 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model IEnumerable<ALO.DomainClasses.Entity.BankSetting.tbl_Banks>
+
+@{
+    ViewData["Title"] = "لیست درگاه ها";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">افزودن</a>
+</p>
+
+@(
+Html
+        .Grid(Model)
+        .Build(columns =>
+        {
+            columns.Add(model => model.BankType);
+            columns.Add(model => model.MerchantId);
+            columns.Add(model => model.PaymentUrl);
+            columns.Add(model => model.SandBoxUrl);
+            columns.Add(model => model.IsSandbox);
+            columns.Add(model => model.IsActive);
+            columns.Add().Encoded(false).RenderedAs(h => Html.ActionLink("ویرایش", "Edit", new { id = h.Id },new { @class="btn btn-dark"}));
+            columns.Add().Encoded(false).RenderedAs(h => Html.ActionLink("حذف", "Delete", new { id = h.Id }, new { @class = "btn btn-danger" }));
+        })
+        .Filterable()
+        .Sortable()
+        .Empty("موردی یافت نشد")
+        .Pageable(pager =>
+        {
+            pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 5, "5" }, { 10, "10" }, { 15, "15" }, { 20, "20" } };
+            pager.ShowPageSizes = true;
+            pager.PagesToDisplay = 5;
+            pager.CurrentPage = 1;
+            pager.RowsPerPage = 2;
+        })
+        )
+

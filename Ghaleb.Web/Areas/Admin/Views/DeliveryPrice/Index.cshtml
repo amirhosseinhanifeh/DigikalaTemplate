@@ -1,0 +1,31 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model IEnumerable<ALO.DomainClasses.Entity.Order.tbl_DeliveryPrice>
+@{
+    ViewData["Title"] = "شیوه های ارسال";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@(
+        Html
+        .Grid(Model)
+        .Build(columns =>
+        {
+            columns.Add(model => model.Id);
+            columns.Add(model => model.Name);
+            columns.Add(model => model.Cost.ToString("n0") + " تومان").Titled("هزینه ازسال");
+            columns.Add(model => model.FromPrice.GetValueOrDefault().ToString("n0") + " تومان").Titled("رایگان برای هزینه بالای (تومان)");
+            columns.Add().Encoded(false).RenderedAs(h => Html.ActionLink("ویرایش", "Edit", new { Id = h.Id }, new { @class = "btn btn-dark" }));
+        })
+        .Filterable()
+        .Sortable()
+        .Empty("موردی یافت نشد")
+        .Pageable(pager =>
+        {
+            pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 5, "5" }, { 10, "10" }, { 15, "15" }, { 20, "20" } };
+            pager.ShowPageSizes = true;
+            pager.PagesToDisplay = 5;
+            pager.CurrentPage = 1;
+            pager.RowsPerPage = 2;
+        })
+        )

@@ -1,0 +1,65 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@using ALO.DomainClasses.Entity.BankSetting
+@model ALO.DomainClasses.Entity.BankSetting.tbl_Banks
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>tbl_Banks</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+                <input asp-for="Id" hidden class="form-control" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="BankType" class="control-label"></label>
+                <select asp-for="BankType" asp-items="Html.GetEnumSelectList<BankType>()" class="form-control">
+
+                </select>
+                <span asp-validation-for="BankType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MerchantId" class="control-label"></label>
+                <input asp-for="MerchantId" class="form-control" />
+                <span asp-validation-for="MerchantId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PaymentUrl" class="control-label"></label>
+                <input asp-for="PaymentUrl" class="form-control" />
+                <span asp-validation-for="PaymentUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SandBoxUrl" class="control-label"></label>
+                <input asp-for="SandBoxUrl" class="form-control" />
+                <span asp-validation-for="SandBoxUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsSandbox" /> @Html.DisplayNameFor(model => model.IsSandbox)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

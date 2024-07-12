@@ -1,0 +1,25 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    bool isUrl = (bool)ViewBag.IsUrl;
+    bool? isIdm = isUrl ? false : null;
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<form method="post" enctype="multipart/form-data">
+    <input name="file" type="file" />
+    <button type="submit">Save</button>
+</form>
+
+
+<video autoplay muted controls src="@Url.Action("Download","pageContent",new {id=184})">
+</video>
+
+@section Scripts {
+    <script>
+        var video_element = document.getElementsByTagName("Video")[0]; 
+        video_element.setAttribute("controlsList", "nodownload"); 
+        video_element.setAttribute("disablepictureinpicture", "");
+
+    </script>
+}

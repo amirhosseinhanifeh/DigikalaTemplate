@@ -1,0 +1,38 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@using ALO.Common.Utilities.ConvertDt
+@using ALO.Common.Extentions
+@model IEnumerable<ALO.DomainClasses.Entity.Product.tbl_TorobProducts>
+@{
+    ViewData["Title"] = "لیست ترب";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                    <thead>
+                        <tr>
+                            <th>نام فروشگاه</th>
+                            <th>قیمت</th>
+                            <th>آخرین بروزرسانی</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.ShopName</td>
+                                <td>@item.Price</td>
+                                <td>@item.LastUpdate</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

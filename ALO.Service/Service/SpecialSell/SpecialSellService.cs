@@ -1,8 +1,8 @@
 ﻿using ALO.Common.Enums;
 using ALO.Common.Utilities.ConvertTo;
 using ALO.DataAccessLayer.DataContext;
+using ALO.DomainClasses.Entity.Image.EntityHelpers;
 using ALO.DomainClasses.Entity.SpecialSell;
-using ALO.DomainClasses.EntityHelpers;
 using ALO.Service.Interface.SpecialSell;
 using ALO.ViewModels.Result;
 using ALO.ViewModels.SpecialSell;

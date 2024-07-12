@@ -1,5 +1,5 @@
 ﻿@page
-@using ALO.DomainClasses.EntityHelpers
+
 @model IndexModel
 @{
     if (Model.Seo != null)
@@ -13,7 +13,10 @@
         };
     }
 }
-
+@section Tags
+{
+    <link rel="canonical" href="@Configuration["SiteSetting:Url"]">
+}
 @await Component.InvokeAsync("SlideShow")
 
 
@@ -23,21 +26,21 @@
     @foreach (var item in Model.SubCategoryProducts.Where(x => x.Products.Any()))
     {
         <partial name="~/Components/Product/ProductRow/Row.cshtml" model="item.Products" view-data='@new ViewDataDictionary(ViewData) {
-{"HeaderTitle", "تازه های "+item.Title },
-{"SubCategoryId",item.Id},
-{"SubCategoryUrl",item.Url}
-}' />
+        {"HeaderTitle", "تازه های "+item.Title },
+        {"SubCategoryId",item.Id},
+        {"SubCategoryUrl",item.Url}
+        }' />
     }
     @foreach (var item in Model.CategoryProducts.Where(x => x.Products.Any()))
     {
         <partial name="~/Components/Product/ProductRow/Row.cshtml" model="item.Products" view-data='@new ViewDataDictionary(ViewData) {
-{"HeaderTitle", "جدید ترین "+item.Title },
-{"SubCategoryId",item.Id},
-{"SubCategoryUrl",item.Url}
-}' />
+        {"HeaderTitle", "جدید ترین "+item.Title },
+        {"SubCategoryId",item.Id},
+        {"SubCategoryUrl",item.Url}
+        }' />
     }
 
-@*    <div class="row mt-5 mb-5">
+    <div class="row mt-5 mb-5">
         @{
             var whyus = Model.Blocks.Where(x => x.RouteName == "why-us").FirstOrDefault();
         }
@@ -60,7 +63,7 @@
             </div>
         }
 
-    </div>*@
+    </div>
 
     <partial name="~/Components/Product/ProductRow/Row.cshtml" model="Model.MoreSell" view-data='@new ViewDataDictionary(ViewData) { {"HeaderTitle", "پرفروش ترین ها" }}' />
 
@@ -69,9 +72,9 @@
         <partial name="~/Components/Product/ProductRow/Row.cshtml" model="Model.YourVisits" view-data='@new ViewDataDictionary(ViewData) { {"HeaderTitle", "براساس بازید های شما " }}' />
     }
 
-@*    @await Component.InvokeAsync("Brand")
+    @await Component.InvokeAsync("Brand")
 
-    @await Component.InvokeAsync("Blog")*@
+    @await Component.InvokeAsync("Blog")
 
 
 </div>

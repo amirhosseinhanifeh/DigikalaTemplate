@@ -1,17 +1,15 @@
 ﻿using ALO.DataAccessLayer.Convention;
 using ALO.DataAccessLayer.UnitOfWork;
 using ALO.DomainClasses;
-using ALO.DomainClasses.Config.Account;
-using ALO.DomainClasses.Config.City;
-using ALO.DomainClasses.Config.Country;
-using ALO.DomainClasses.Config.Financial;
-using ALO.DomainClasses.Config.Profile;
 using ALO.DomainClasses.Entity.Account;
+using ALO.DomainClasses.Entity.BankSetting;
 using ALO.DomainClasses.Entity.Basket;
 using ALO.DomainClasses.Entity.Blog;
+using ALO.DomainClasses.Entity.Cache;
 using ALO.DomainClasses.Entity.City;
 using ALO.DomainClasses.Entity.Content;
 using ALO.DomainClasses.Entity.Country;
+using ALO.DomainClasses.Entity.Discount;
 using ALO.DomainClasses.Entity.Financial;
 using ALO.DomainClasses.Entity.Forms;
 using ALO.DomainClasses.Entity.IMG;
@@ -20,20 +18,23 @@ using ALO.DomainClasses.Entity.LinkManagement;
 using ALO.DomainClasses.Entity.Menu;
 using ALO.DomainClasses.Entity.MSG;
 using ALO.DomainClasses.Entity.Order;
+using ALO.DomainClasses.Entity.Permission;
 using ALO.DomainClasses.Entity.PFL;
 using ALO.DomainClasses.Entity.Product;
 using ALO.DomainClasses.Entity.SpecialSell;
+using ALO.DomainClasses.Entity.Wallet;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ALO.DataAccessLayer.DataContext
 {
-    public class ServiceContext : DbContext, IUnitOfWork,IDisposable
+    public class ServiceContext : DbContext, IUnitOfWork, IDisposable
     {
         public ServiceContext(DbContextOptions<ServiceContext> options) : base(options)
         {
@@ -44,6 +45,7 @@ namespace ALO.DataAccessLayer.DataContext
 
 
         public DbSet<tbl_Users> tbl_Users { get; set; }
+
         public DbSet<tbl_UserAddresses> tbl_UserAddresses { get; set; }
 
         public DbSet<tbl_Role> tbl_Role { get; set; }
@@ -79,10 +81,12 @@ namespace ALO.DataAccessLayer.DataContext
         public DbSet<tbl_ProductCustomFieldsOptionValues> tbl_ProductCustomFieldsOptionValues { get; set; }
         public DbSet<tbl_ProductVisits> tbl_ProductVisits { get; set; }
         public DbSet<tbl_ProductTags> tbl_ProductTags { get; set; }
-        public DbSet<tbl_ProductPriceHistory> tbl_ProductPriceHistory{ get; set; }
-        public DbSet<tbl_ProductPriceOption> tbl_ProductPriceOptions{ get; set; }
-        public DbSet<tbl_ProductPriceOptionValue> tbl_ProductPriceOptionValues{ get; set; }
+        public DbSet<tbl_ProductPriceHistory> tbl_ProductPriceHistory { get; set; }
+        public DbSet<tbl_ProductPriceOption> tbl_ProductPriceOptions { get; set; }
+        public DbSet<tbl_ProductPriceOptionValue> tbl_ProductPriceOptionValues { get; set; }
         public DbSet<tbl_ProductGuarantee> tbl_ProductGuarantees { get; set; }
+        public DbSet<tbl_DeliveryPrice> tbl_DeliveryPrices { get; set; }
+        public DbSet<tbl_TorobProducts> tbl_TorobProducts { get; set; }
 
 
         #endregion
@@ -134,19 +138,28 @@ namespace ALO.DataAccessLayer.DataContext
         #region Order
         public DbSet<tbl_Order> tbl_Orders { get; set; }
         public DbSet<tbl_OrderDetails> tbl_OrderDetails { get; set; }
+        public DbSet<tbl_Discount> tbl_Discounts { get; set; }
+        public DbSet<tbl_Wallet> tbl_Wallets { get; set; }
+        public DbSet<tbl_WalletHistory> tbl_WalletHistories { get; set; }
 
 
         #endregion
 
         #region Menu
         public DbSet<tbl_Menu> tbl_Menus { get; set; }
+        public DbSet<tbl_Permission> tbl_Permissions { get; set; }
         #endregion
 
         #region Language
         public DbSet<tbl_Language> tbl_Languages { get; set; }
 
         #endregion
+
+        public DbSet<tbl_Cache> tbl_Caches { get; set; }
+
+        public DbSet<tbl_Banks> tbl_Banks { get; set; }
         #endregion
+
 
 
 
@@ -240,9 +253,9 @@ namespace ALO.DataAccessLayer.DataContext
             }
             if (expression != null)
             {
-                data= data.Where(expression);
+                data = data.Where(expression);
             }
-            return  data.Where(x=> EF.Property<bool>(x, "IsDelete") == false).AsQueryable();
+            return data.Where(x => EF.Property<bool>(x, "IsDelete") == false).AsQueryable();
 
         }
 
@@ -298,50 +311,18 @@ namespace ALO.DataAccessLayer.DataContext
     .WithMany(x => x.ProductMainImages)
     .HasForeignKey(x => x.ImageId);
             modelBuilder.Entity<tbl_Product>().HasMany(x => x.Users)
-.WithMany(x => x.Products).UsingEntity(x=>x.ToTable("UserFavouriteProducts"));
+.WithMany(x => x.Products).UsingEntity(x => x.ToTable("UserFavouriteProducts"));
 
-            modelBuilder.Entity<tbl_Product>().HasOne(x => x.Owner)
-.WithMany(x => x.UserProducts)
-.HasForeignKey(x => x.OwnerId);
+
 
             modelBuilder.Entity<tbl_ProductPriceHistory>().HasMany(x => x.ProductPriceOptionValues)
                 .WithMany(x => x.ProductPriceHistories).UsingEntity(x => x.ToTable("tbl_ProductPriceHistoryOptionValues"));
 
 
             modelBuilder.Seed();
-            //foreach (var entityType in modelBuilder.Model.GetEntityTypes()
-            //    .SelectMany(x => x.GetProperties())
-            //    .Where(x => x.Name == "Id"))
-            //{
-            //    entityType.SetDefaultValue(Guid.NewGuid());
-            //}
 
-            //foreach (var entityType in modelBuilder.Model.GetEntityTypes()
-            //    .SelectMany(x => x.GetProperties())
-            //    .Where(x => x.Name == "CreatedDate"))
-            //{
-            //    entityType.SetDefaultValue(DateTime.Now);
-            //}
-            //foreach (var entityType in modelBuilder.Model.GetEntityTypes()
-            //    .SelectMany(x => x.GetProperties())
-            //    .Where(x => x.ClrType == typeof(decimal) || x.ClrType == typeof(decimal?)))
-            //{
-            //    entityType.Relational().ColumnType = "decimal(18, 0)";
-            //}
-            //var typesToRegister = Assembly.GetExecutingAssembly().GetTypes()
-            //             .Where(t => t.GetInterfaces().Any(gi => gi.IsGenericType && gi.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>))).ToList();
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-            //foreach (var type in typesToRegister)
-            //{
-            //    dynamic configurationInstance = Activator.CreateInstance(type);
-            //    modelBuilder.ApplyConfiguration(configurationInstance);
-            //}
-            modelBuilder.ApplyConfiguration(new UserConfig());
-            modelBuilder.ApplyConfiguration(new CityConfig());
-            modelBuilder.ApplyConfiguration(new ProfileConfig());
-            modelBuilder.ApplyConfiguration(new CountryConfig());
-            modelBuilder.ApplyConfiguration(new FinancialAccountConfig());
-            //modelBuilder.ApplyConfiguration(new CourtConfig());
 
             base.OnModelCreating(modelBuilder);
         }

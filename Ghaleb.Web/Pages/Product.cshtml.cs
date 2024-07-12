@@ -1,8 +1,8 @@
 
 using ALO.Common.Utilities.ConvertTo;
 using ALO.DataAccessLayer.DataContext;
+using ALO.DomainClasses.Entity.Image.EntityHelpers;
 using ALO.DomainClasses.Entity.Product;
-using ALO.DomainClasses.EntityHelpers;
 using ALO.Service.Interface.Product;
 using ALO.ViewModels.Product;
 using ALO.ViewModels.Result;
@@ -29,6 +29,10 @@ namespace Ghaleb.Web.Pages
         public ProductDetailsForHomeDto Product { get; set; }
         [BindProperty(SupportsGet = true)]
         public long? Id { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string Url { get; set; }
+
         [BindProperty(SupportsGet = true)]
         public long? Color { get; set; }
         [BindProperty(SupportsGet = true)]
@@ -36,12 +40,12 @@ namespace Ghaleb.Web.Pages
         public List<ProductListForHomeDto> RelatedProducts { get; set; }
         public async Task<IActionResult> OnGetAsync(long[] attrIds)
         {
-            if (Id == null)
+            if (Id == null || Url == null)
                 return RedirectToPage("NotFound");
 
             if (User.Identity.IsAuthenticated)
             {
-                Product = (await _product.GetProductDetails(Id.GetValueOrDefault(), User.UserId())).model;
+                Product = (await _product.GetProductDetails(Id.GetValueOrDefault(), Url, User.UserId())).model;
                 if (Product != null)
                 {
                     await _product.AddProductVisit(Product.Id, User.UserId());
@@ -49,17 +53,19 @@ namespace Ghaleb.Web.Pages
             }
             else
             {
-                Product = (await _product.GetProductDetails(Id.GetValueOrDefault())).model;
+                Product = (await _product.GetProductDetails(Id.GetValueOrDefault(), Url)).model;
             }
             if (Product == null)
-                return RedirectToPage("Error");
+            {
+                return NotFound();
+            }
 
             if (!attrIds.Any())
             {
-                AttrIds = Product.Options.Where(x=>x.Options.Any()).Select(h => h.Options.FirstOrDefault().Id).ToArray();
+                AttrIds = Product.Options.Where(x => x.Options.Any()).Select(h => h.Options.FirstOrDefault().Id).ToArray();
             }
-            
-            RelatedProducts = await _context.tbl_Products.Where(h => h.IsDelete == false && h.IsActive == true && h.Id != Id && (Product.Category!=null? h.ProductCategory.Id == Product.Category.Id:true) && (Product.Brand !=null? h.BrandId == Product.Brand.Id:true)).Select(y => new ProductListForHomeDto
+
+            RelatedProducts = await _context.tbl_Products.Where(h => h.IsDelete == false && h.IsActive == true && h.Id != Id && (Product.Category != null ? h.ProductCategory.Id == Product.Category.Id : true) && (Product.Brand != null ? h.BrandId == Product.Brand.Id : true)).Select(y => new ProductListForHomeDto
             {
                 Id = y.Id,
                 Abstract = y.Abstract,
@@ -75,16 +81,21 @@ namespace Ghaleb.Web.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(tbl_ProductComment model)
+        public async Task<IActionResult> OnPostAsync(long Id, string body, string url)
         {
             if (User.Identity.IsAuthenticated)
             {
-                model.UserId = User.UserId();
-                model.IsActive = false;
-                _context.tbl_ProductComments.Add(model);
+                _context.tbl_ProductComments.Add(new tbl_ProductComment
+                {
+                    Body = body,
+                    IsActive = false,
+                    IsDelete = false,
+                    UserId = User.UserId(),
+                    ProductId = Id
+                });
                 await _context.SaveChangesAsync();
             }
-            return RedirectToPage("Product", new { id = model.ProductId });
+            return RedirectToPage("Product", new { id = Id, Url = url });
         }
         public IActionResult OnPostAddToBasket()
         {

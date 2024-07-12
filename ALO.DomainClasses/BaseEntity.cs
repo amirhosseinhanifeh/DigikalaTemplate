@@ -14,6 +14,7 @@ namespace ALO.DomainClasses
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Display(Name = "شناسه")]
         public long Id { get; set; }
 
 
@@ -26,6 +27,7 @@ namespace ALO.DomainClasses
 
         public bool IsDelete { get; set; } = false;
 
+        [Display(Name = "وضعیت")]
         public bool IsActive { get; set; } = true;
 
 
