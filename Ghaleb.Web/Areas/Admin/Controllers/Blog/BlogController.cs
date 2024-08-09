@@ -35,14 +35,22 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Blog
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+            string? name = null,
+            long? blogcategoryId = null
+            )
         {
+            ViewBag.BlogCategories = new SelectList(await _context.tbl_BlogCategories.AsNoTracking().ToListAsync(), "Id", "Title", blogcategoryId);
+            ViewBag.Name = name;
             var Result = await _context.GetAllAsync<tbl_Blog>()
                 .Include(x => x.Image)
                 .Include(x => x.BlogCategory)
                 .ThenInclude(x => x.BlogType)
                 .Include(x => x.BlogComments)
-                .Where(x => x.IsDelete == false).ToListAsync();
+                .Where(x => x.IsDelete == false)
+                .Where(x => blogcategoryId != null ? x.BlogCategoryId == blogcategoryId : true)
+                .Where(x => string.IsNullOrEmpty(name) || x.Title.Contains(name))
+                .ToListAsync();
             return View(Result);
         }
         public async Task<IActionResult> Create()

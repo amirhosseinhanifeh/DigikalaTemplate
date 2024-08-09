@@ -1,131 +1,103 @@
 ﻿@using Microsoft.Extensions.Configuration;
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, AuthoringTagHelpers
-@model IEnumerable<ALO.ViewModels.Product.Admin.GetProductListForAdminDto>
+@model IQueryable<ALO.ViewModels.Product.Admin.GetProductListForAdminDto>
 @inject IConfiguration Configuration
 @{
     ViewData["Title"] = "لیست محصولات";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
-    int row = 1;
 }
-
-<form method="get" class="row">
-    <div class="col-3 form-group ">
-        <input type="text" class="form-control" name="name" value="@ViewBag.Name" placeholder="نام محصول">
+<p>
+    <form method="get" class="row">
+        <div class="col-3 form-group ">
+            <input type="text" class="form-control" name="name" value="@ViewBag.Name" placeholder="نام محصول">
+        </div>
+        <div class="form-group col-3">
+            <select asp-items="ViewBag.MainCategories" name="maincategoryId" id="MainCategoryId" class="form-control">
+                <option value="">دسته اصلی</option>
+            </select>
+        </div>
+        <div class="form-group col-3">
+            <select asp-items="ViewBag.Categories" name="categoryId" id="ProductCategoryId" class="form-control">
+                <option value="">دسته وسط</option>
+            </select>
+        </div>
+        <div class="form-group col-3">
+            <select asp-items="ViewBag.SubCategories" name="subcategoryId" id="SubProductCategoryId" class="form-control">
+                <option value="">زیر دسته</option>
+            </select>
+        </div>
+        <div class="form-group col-3">
+            <select asp-items="ViewBag.Brands" name="brandId" id="BrandId" class="form-control">
+                <option value="">برند</option>
+            </select>
+        </div>
+        <div class="col-1">
+            <button type="submit" class="btn btn-dark col-12">جستجو</button>
+        </div>
+        <div class="col-1">
+            <button type="reset" class="btn btn-danger col-12">پاک</button>
+        </div>
+    </form>
+</p>
+<p>
+    <div class="col text-left">
+        <a type="button" asp-action="Create" asp-area="Admin" asp-controller="Product" class="btn btn-primary">افزودن</a>
     </div>
-    <div class="form-group col-3">
-        <select asp-items="ViewBag.MainCategories" name="maincategoryId" id="MainCategoryId" class="form-control">
-            <option value="">دسته اصلی</option>
-        </select>
-    </div>
-    <div class="form-group col-3">
-        <select asp-items="ViewBag.Categories" name="categoryId" id="ProductCategoryId" class="form-control">
-            <option value="">دسته وسط</option>
-        </select>
-    </div>
-    <div class="form-group col-3">
-        <select asp-items="ViewBag.SubCategories" name="subcategoryId" id="SubProductCategoryId" class="form-control">
-            <option value="">زیر دسته</option>
-        </select>
-    </div>
-    <div class="form-group col-3">
-        <select asp-items="ViewBag.Brands" name="brandId" id="BrandId" class="form-control">
-            <option value="">برند</option>
-        </select>
-    </div>
-    <div class="col-1">
-        <button type="submit" class="btn btn-dark col-12">جستجو</button>
-    </div>
-    <div class="col-1">
-        <button type="reset" class="btn btn-danger col-12">پاک</button>
-    </div>
-</form>
-
-<div class="col text-left">
-    <a type="button" asp-action="Create" asp-area="Admin" asp-controller="Product" class="btn btn-primary">افزودن</a>
-</div>
+</p>
+<p>
 <form method="post" class="row mt-3" action="UpdatePriceByExcel" enctype="multipart/form-data">
     <input name="excel" value="" type="file" />
     <button class="btn btn-warning" type="submit">بروزرسانی قیمت</button>
 </form>
-<div class="row">
-    <div class="col-xl-12">
-        <div class="">
-            <div class="card-header border-0">
-            </div>
-
-            <div class="table-responsive">
-                <table class="table align-items-center table-flush">
-                    <thead>
-                        <tr>
-                            <th>ردیف</th>
-                            <th>عکس محصول</th>
-                            <th>نام محصول</th>
-                            <th>دسته</th>
-                            <th>تعداد سفارش</th>
-                            <th>تعداد بازدید اعضا</th>
-                            <th>تعداد کل بازدید(حتی بدون اعضا)</th>
-                            <th>قیمت</th>
-                            <th>وضعیت</th>
-                            <th>آخرین بروزرسانی</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@row</td>
-                                <td><img style="width:75px;height:75px" class="img-fluid" src="@item.Image" /></td>
-                                <td><a href="@Configuration["SiteSetting:Url"]product/@item.Id/@item.Url">@item.Title</a></td>
-                                <td>@item.SubCategory</td>
-                                <td>@item.OrderCount</td>
-                                <td>@item.Visit</td>
-                                <td>@item.AllVisit</td>
-                                <td>@item.Cost</td>
-                                <td>
-                                    <div class="custom-control custom-switch" style="direction:ltr;padding:0">
-                                        <input type="checkbox" class="custom-control-input" id="customSwitch@(item.Id)" onchange="ChangeStatus(@item.Id)" @(item.Status == "فعال" ? "checked" : "")>
-                                        <label class="custom-control-label" for="customSwitch@(item.Id)"></label>
-                                    </div>
-                                </td>
-                                <td>@item.LastModified</td>
-                                <td>
-                                    <a class="btn btn-warning" asp-route-productId="@item.Id" asp-controller="ProductComment" asp-action="Index" data-toggle="tooltip" data-placement="top" title="نظرات"><i class="fa-regular fa-comment"></i> (@item.CommentCount)</a>|
-                                    <a class="btn btn-success" asp-route-productId="@item.Id" asp-controller="ProductTag" asp-action="Index" data-toggle="tooltip" data-placement="top" title="برچسب ها"><i class="fa-regular fa-tag"></i> (@item.TagCount)</a>|
-                                    <a class="btn btn-primary" asp-route-productId="@item.Id" asp-controller="ProductPriceHistory" asp-action="Index" data-toggle="tooltip" data-placement="top" title="قیمت گذاری"><i class="fa-regular fa-square-dollar"></i></a>|
-                                    <a class="btn btn-primary" asp-route-id="@item.Id" asp-controller="Torob" asp-action="Index" data-toggle="tooltip" data-placement="top" title="فروشنده های تروب"><i class="fa-regular fa-square-dollar"></i></a>|
-                                    <a class="btn btn-dark" asp-route-id="@item.Id" asp-action="Edit" data-toggle="tooltip" data-placement="top" title="ویرایش"><i class="fa-regular fa-pen-to-square"></i></a>|
-                                    <a class="btn btn-danger" asp-action="Delete" asp-area="Admin" asp-controller="Product" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="حذف"><i class="fa-regular fa-trash"></i></a>
-                                </td>
-                            </tr>
-                            row = row + 1;
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div class="row">
-                @{
-                    double pageCount = (double)((decimal)ViewBag.TotalCount / Convert.ToDecimal(ViewBag.PageSize));
-
-                }
-                <nav aria-label="Page navigation example ">
-                    <ul class="pagination justify-content-center">
-                        @for (int i = 1; i <= (int)Math.Ceiling(pageCount); i++)
-                        {
-                            <li class="page-item @(i==ViewBag.PageNumber?"active":"")">
-                                <a asp-all-route-data="@ViewBag.Routes" asp-route-page="@i" class="page-link">@i</a>
-                            </li>
-                        }
-
-                    </ul>
-                </nav>
-
-            </div>
-        </div>
+</p>
+@(
+                Html
+                .Grid(Model)
+                .Build(columns =>
+                {
+                    columns.Add().RenderedAs(@<text>
+    <img style="width:75px;height:75px" class="img-fluid" src="@item.Image" />
+</text>);
+                    columns.Add(model => model.Title).RenderedAs(@<text>
+    <a href="@Configuration["SiteSetting:Url"]product/@item.Id/@item.Url">@item.Title</a>
+</text>);
+                    columns.Add(model => model.SubCategory);
+                    columns.Add(model => model.OrderCount);
+                    columns.Add(model => model.Visit);
+                    columns.Add(model => model.AllVisit);
+                    columns.Add(model => model.Cost);
+                    columns.Add(model => model.Visit);
+                    columns.Add().RenderedAs(@<text>
+    <div class="custom-control custom-switch" style="direction:ltr;padding:0">
+        <input type="checkbox" class="custom-control-input" id="customSwitch@(item.Id)" onchange="ChangeStatus(@item.Id)" @(item.Status == "فعال" ? "checked" : "")>
+        <label class="custom-control-label" for="customSwitch@(item.Id)"></label>
     </div>
+</text>).Titled("وضعیت");
+                    columns.Add(model => model.LastModified);
+                    columns.Add().RenderedAs(@<text>
+    <a class="btn btn-warning" asp-route-productId="@item.Id" asp-controller="ProductComment" asp-action="Index" data-toggle="tooltip" data-placement="top" title="نظرات"><i class="fa-regular fa-comment"></i> (@item.CommentCount)</a>|
+    <a class="btn btn-success" asp-route-productId="@item.Id" asp-controller="ProductTag" asp-action="Index" data-toggle="tooltip" data-placement="top" title="برچسب ها"><i class="fa-regular fa-tag"></i> (@item.TagCount)</a>|
+    <a class="btn btn-primary" asp-route-productId="@item.Id" asp-controller="ProductPriceHistory" asp-action="Index" data-toggle="tooltip" data-placement="top" title="قیمت گذاری"><i class="fa-regular fa-square-dollar"></i></a>|
+    <a class="btn btn-primary" asp-route-id="@item.Id" asp-controller="Torob" asp-action="Index" data-toggle="tooltip" data-placement="top" title="فروشنده های تروب"><i class="fa-regular fa-square-dollar"></i></a>|
+    <a class="btn btn-dark" asp-route-id="@item.Id" asp-action="Edit" data-toggle="tooltip" data-placement="top" title="ویرایش"><i class="fa-regular fa-pen-to-square"></i></a>|
+    <a class="btn btn-danger" asp-action="Delete" asp-area="Admin" asp-controller="Product" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="حذف"><i class="fa-regular fa-trash"></i></a>
+</text>);
 
-</div>
+                })
+        .Filterable()
+        .Sortable()
+        .Empty("موردی یافت نشد")
+
+        .Pageable(pager =>
+        {
+            pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 5, "5" }, { 10, "10" }, { 15, "15" }, { 20, "20" } };
+            pager.ShowPageSizes = true;
+            pager.PagesToDisplay = 5;
+            pager.CurrentPage = 1;
+            pager.RowsPerPage = 2;
+        })
+        )
 @section scripts {
 
     <script>

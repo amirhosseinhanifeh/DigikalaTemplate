@@ -45,9 +45,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
             long? brandId = null,
             long? maincategoryId = null,
             long? categoryId = null,
-            long? subcategoryId = null,
-            int page = 1,
-            int pageSize = 6)
+            long? subcategoryId = null)
         {
             var res = _productService.GetProductListForAdmin(name, brandId, maincategoryId, categoryId, subcategoryId);
 
@@ -64,14 +62,11 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
 
             }
             ViewBag.Name = name;
-            ViewBag.TotalCount = await res.model.CountAsync();
-            ViewBag.PageSize = pageSize;
-            ViewBag.PageNumber = page;
             ViewBag.Routes = new Dictionary<string, string> {
                 { "brandId", brandId.ToString()},
                 { "subcategoryId", subcategoryId.ToString()},
             };
-            return View(await res.model.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync());
+            return View(res.model);
         }
         public async Task<IActionResult> Create()
         {

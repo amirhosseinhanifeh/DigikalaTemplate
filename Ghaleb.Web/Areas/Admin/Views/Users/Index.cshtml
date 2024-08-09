@@ -39,15 +39,12 @@ Html
             columns.Add(model => model.Profile.LastName);
             columns.Add(model => model.Mobile);
             columns.Add(model => model.Email);
-            columns.Add(model => model.Password);
-            columns.Add(model => model.LastLogin);
-            columns.Add(model => model.BrowserName);
             columns.Add(model => model.Orders.Count(h => h.OrderStateHistories.Any(f => f.OrderState == ALO.DomainClasses.Entity.Order.OrderState.PAYED))).Titled("تعداد سفارش");
             columns.Add().Encoded(false).RenderedAs(
 
             @<text>
-    <a class="btn btn-primary" asp-route-userId="@item.Id" asp-controller="Order" asp-action="Index">سفارشات</a>
-    <a class="btn btn-dark" asp-route-id="@item.Id" asp-action="Menues">دسترسی ها</a>
+    <a class="btn btn-dark" asp-route-userId="@item.Id" asp-controller="Order" asp-action="Index">سفارشات</a>
+@*     <a class="btn btn-dark" asp-route-id="@item.Id" asp-action="Menues">دسترسی ها</a> *@
     <a class="btn btn-warning" asp-route-id="@item.Id" asp-action="Addresses">آدرس ها</a>
     <a class="btn btn-success" asp-route-id="@item.Id" asp-action="SendSms">ارسال پیامک</a>
     <a class="btn btn-danger" asp-route-id="@item.Id" asp-action="Delete">حذف</a>

@@ -15,6 +15,7 @@ namespace ALO.DomainClasses.Entity.Blog
         public string Title { get; set; }
         public string Description { get; set; }
         public string Abstract { get; set; }
+        [Display(Name = "تعداد بازدید")]
         public int Visit { get; set; }
         public bool ShowInHome { get; set; } = false;
         public bool CanComment { get; set; } = true;

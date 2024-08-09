@@ -24,6 +24,7 @@
     columns.Add().Encoded(false).RenderedAs(
 
  @<text>
+    <a class="btn btn-primary" asp-area="Admin" asp-action="Index" asp-controller="Blog" asp-route-blogCategoryId="@item.Id">پست ها</a>
     <button class="btn btn-dark" area="Admin" id="@item.Id" action="Edit" controller="BlogCategory" data-toggle="modal" data-target="#exampleModal" onclick="EditModal(this)">ویرایش</button>
     <a class="btn btn-danger" asp-action="Delete" asp-area="Admin" asp-controller="BlogCategory" asp-route-id="@item.Id">حذف</a>
 </text>
