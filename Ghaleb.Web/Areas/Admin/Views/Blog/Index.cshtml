@@ -1,63 +1,68 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@addTagHelper *, AuthoringTagHelpers
+﻿
 @model IEnumerable<ALO.DomainClasses.Entity.Blog.tbl_Blog>
-@using Microsoft.Extensions.Configuration
-@inject IConfiguration Configuration
 
 @{
     ViewData["Title"] = "لیست وبلاگ ها";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row">
-    <div class="col-xl-12">
-        <div class="card">
-            <div class="card-header border-0">
-                <div class="row align-items-center">
-                    <div class="col text-right">
-                        <a type="button" class="btn btn-primary" asp-action="Create">افزودن</a>
-                    </div>
-                </div>
-            </div>
 
-            <div class="table-responsive">
-                <table class="table align-items-center table-flush">
-                    <thead>
-                        <tr>
-                            <th>عکس</th>
-                            <th>عنوان</th>
-                            <th>نوع</th>
-                            <th>دسته</th>
-                            <th>تعداد بازدید</th>
-                            <th>وضعیت</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td><img class="img-thumbnail" style="width:75px" src="@item.Image.BindImage(Configuration)" /></td>
-                                <td>@item.Title</td>
-                                <td>@item.BlogCategory?.BlogType?.Name</td>
-                                <td>@item.BlogCategory.Title</td>
-                                <td>@item.Visit</td>
-                                <td>
-                                    <div class="custom-control custom-switch" style="direction:ltr;padding:0">
-                                        <input type="checkbox" class="custom-control-input" id="customSwitch@(item.Id)" onchange="ChangeStatus(@item.Id)" @(item.IsActive ? "checked" : "")>
-                                        <label class="custom-control-label" for="customSwitch@(item.Id)"></label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <a class="btn btn-warning"  asp-action="Index" asp-controller="BlogComment" asp-route-blogId="@item.Id" >نظرات (@item.BlogComments.Count())</a>
-                                    <a class="btn btn-dark"  asp-action="Edit" asp-route-Id="@item.Id" >ویرایش</a>
-                                    <a class="btn btn-danger" asp-action="Delete" asp-area="Admin" asp-controller="Blog" asp-route-id="@item.Id">حذف</a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+<p>
+    <form method="get" class="row">
+        <div class="col-3">
+            <input class="form-control" name="name" value="@ViewBag.Name" placeholder="عنوان پست" />
         </div>
+        <div class="form-group col-3">
+            <select asp-items="ViewBag.BlogCategories" name="blogcategoryId" class="form-control">
+                <option value="">دسته</option>
+            </select>
+        </div>
+        <div class="col-1">
+            <button type="submit" class="btn btn-dark col-12">جستجو</button>
+        </div>
+        <div class="col-1">
+            <button type="reset" class="btn btn-danger col-12">پاک</button>
+        </div>
+    </form>
+</p>
+
+<p>
+    <a type="button" class="btn btn-primary" asp-action="Create">افزودن</a>
+</p>
+@(
+                Html
+                .Grid(Model)
+                .Build(columns =>
+                {
+                    columns.Add().RenderedAs(@<text>
+    <img class="img-thumbnail" style="width:75px" src="@item.Image.BindImage(Configuration)" />
+                    </text>);
+                    columns.Add(model => model.Title);
+                    columns.Add(model => model.BlogCategory.BlogType.Name).Titled("نوع");
+                    columns.Add(model => model.BlogCategory.Title).Titled("دسته");
+                    columns.Add(model => model.Visit);
+                    columns.Add().RenderedAs(@<text>
+    <div class="custom-control custom-switch" style="direction:ltr;padding:0">
+        <input type="checkbox" class="custom-control-input" id="customSwitch@(item.Id)" onchange="ChangeStatus(@item.Id)" @(item.IsActive ? "checked" : "")>
+        <label class="custom-control-label" for="customSwitch@(item.Id)"></label>
     </div>
-</div>
+                    </text>).Titled("وضعیت");
+                    columns.Add().RenderedAs(@<text>
+    <a class="btn btn-warning" asp-action="Index" asp-controller="BlogComment" asp-route-blogId="@item.Id">نظرات (@item.BlogComments.Count())</a>
+    <a class="btn btn-dark" asp-action="Edit" asp-route-Id="@item.Id">ویرایش</a>
+    <a class="btn btn-danger" asp-action="Delete" asp-area="Admin" asp-controller="Blog" asp-route-id="@item.Id">حذف</a>
+</text>).Titled("وضعیت");
+
+                })
+        .Filterable()
+        .Sortable()
+        .Empty("موردی یافت نشد")
+        .Pageable(pager =>
+        {
+            pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 5, "5" }, { 10, "10" }, { 15, "15" }, { 20, "20" } };
+            pager.ShowPageSizes = true;
+            pager.PagesToDisplay = 5;
+            pager.CurrentPage = 1;
+            pager.RowsPerPage = 2;
+        })
+        )

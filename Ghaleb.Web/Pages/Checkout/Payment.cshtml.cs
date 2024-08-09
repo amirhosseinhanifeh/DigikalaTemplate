@@ -5,26 +5,20 @@ using ALO.DomainClasses.Entity.BankSetting;
 using ALO.DomainClasses.Entity.Discount;
 using ALO.DomainClasses.Entity.Image.EntityHelpers;
 using ALO.DomainClasses.Entity.Order;
-using Dto.Payment;
 using Ghaleb.Web.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using ZarinPal.Class;
 
 namespace Ghaleb.Web.Pages.Checkout
 {
     public class PaymentModel : PageModel
     {
         private readonly ServiceContext _context;
-        private readonly Payment _payment;
         private readonly IConfiguration _configuration;
         public PaymentModel(ServiceContext context, IConfiguration configuration)
         {
-            _context = context;
-            var expose = new Expose();
-            _payment = expose.CreatePayment();
             _configuration = configuration;
         }
         public List<ResponseGetBasketItems> List { get; set; } = new List<ResponseGetBasketItems>();
@@ -49,7 +43,12 @@ namespace Ghaleb.Web.Pages.Checkout
             Address = useraddress;
             var list = JsonConvert.DeserializeObject<List<ResonseBasketDTO>>(res);
             var ids = list.Select(h => h.Id);
-            var prs = await _context.tbl_ProductPriceHistory.AsNoTracking().Include(x => x.Product).ThenInclude(x => x.Image).Where(h => ids.Contains(h.Id)).ToListAsync();
+            var prs = await _context.tbl_ProductPriceHistory
+                .AsNoTracking()
+                .Include(x => x.Product)
+                .ThenInclude(x => x.Image)
+                .Where(h => ids.Contains(h.Id))
+                .ToListAsync();
             Banks = await _context.tbl_Banks.AsNoTracking().ToListAsync();
             foreach (var item in prs)
             {
@@ -81,7 +80,10 @@ namespace Ghaleb.Web.Pages.Checkout
         {
             if (!string.IsNullOrEmpty(code))
             {
-                var discount = await _context.tbl_Discounts.AsNoTracking().Include(x => x.Orders).FirstOrDefaultAsync(h => h.Code == code && h.UseCount > h.Orders.Count());
+                var discount = await _context.tbl_Discounts
+                    .AsNoTracking()
+                    .Include(x => x.Orders)
+                    .FirstOrDefaultAsync(h => h.Code == code && h.UseCount > h.Orders.Count());
                 if (discount != null)
                 {
                     Discount = discount;

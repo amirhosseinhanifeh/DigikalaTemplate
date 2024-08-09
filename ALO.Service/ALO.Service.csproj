@@ -2,13 +2,13 @@
 
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
 
   <ItemGroup>
     <PackageReference Include="Binbin.Linq.PredicateBuilder" Version="2.0.1" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.1" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
 	  <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 

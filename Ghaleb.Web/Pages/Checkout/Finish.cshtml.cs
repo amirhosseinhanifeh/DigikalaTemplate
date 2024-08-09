@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text;
-using ZarinPal.Class;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Ghaleb.Web.Pages.Checkout
@@ -13,14 +12,11 @@ namespace Ghaleb.Web.Pages.Checkout
     public class FinishModel : PageModel
     {
         private readonly ServiceContext _context;
-        private readonly Payment _payment;
         private readonly IConfiguration _configuration;
         private readonly IHttpClientFactory _httpClientFactory;
         public FinishModel(ServiceContext context, IConfiguration configuration, IHttpClientFactory httpClientFactory)
         {
             _context = context;
-            var expose = new Expose();
-            _payment = expose.CreatePayment();
             _configuration = configuration;
             _httpClientFactory = httpClientFactory;
         }

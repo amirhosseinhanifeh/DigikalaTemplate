@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Text;
-using ZarinPal.Class;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Ghaleb.Web.Pages.Checkout
@@ -14,13 +13,10 @@ namespace Ghaleb.Web.Pages.Checkout
     public class PayModel : PageModel
     {
         private readonly ServiceContext _context;
-        private readonly Payment _payment;
         private readonly IHttpClientFactory _httpClientFactory;
         public PayModel(ServiceContext context, IHttpClientFactory httpClientFactory)
         {
             _context = context;
-            var expose = new Expose();
-            _payment = expose.CreatePayment();
             _httpClientFactory = httpClientFactory;
         }
         public async Task<IActionResult> OnGetAsync(long orderId)
