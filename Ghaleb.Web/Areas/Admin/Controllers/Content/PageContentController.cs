@@ -33,9 +33,9 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Content
 
         public async Task<IActionResult> Index()
         {
-            var lan = _websitebase.GetCurrectLanguageIdAsync;
 
-            return View(await _context.GetAllAsync<tbl_PageContent>(x => x.LanguageId == lan).ToListAsync());
+
+            return View(await _context.GetAllAsync<tbl_PageContent>().ToListAsync());
         }
         public async Task<IActionResult> Edit(long? Id)
         {
@@ -49,12 +49,10 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Content
 
             try
             {
-                var lan = _websitebase.GetCurrectLanguageIdAsync;
 
-                var data = await _context.GetAsync<tbl_PageContent>(x => x.LanguageId == lan && x.Id == model.Id);
+                var data = await _context.GetAsync<tbl_PageContent>(x => x.Id == model.Id);
                 if (data == null)
                 {
-                    model.LanguageId = lan;
                     _context.CreateBaseEntity<tbl_PageContent>(model);
 
                 }
@@ -85,7 +83,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Content
         public static byte[] ReadFully(Stream input)
         {
             byte[] buffer = new byte[16 * 1024];
-            using (MemoryStream ms = new MemoryStream())
+            using (MemoryStream ms = new())
             {
                 int read;
                 while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
@@ -97,7 +95,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Content
         }
         public async Task<IActionResult> Upload()
         {
-            HttpContext.Session.SetInt32("counter",0);
+            HttpContext.Session.SetInt32("counter", 0);
             ViewBag.IsUrl = true;
 
             return View();
@@ -106,7 +104,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Content
         public async Task<IActionResult> Upload(IFormFile file)
         {
             var data = ReadFully(file.OpenReadStream());
-            tbl_Image image = new tbl_Image
+            tbl_Image image = new()
             {
                 Url = data,
                 FileType = FileType.Video,
@@ -120,7 +118,7 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Content
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Download(long id, bool? isIdm )
+        public async Task<IActionResult> Download(long id, bool? isIdm)
         {
             var counter = HttpContext.Session.GetInt32("counter");
             counter = counter + 1;

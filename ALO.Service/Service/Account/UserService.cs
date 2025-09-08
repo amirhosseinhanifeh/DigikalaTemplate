@@ -1,6 +1,7 @@
 ﻿using ALO.Common.Enums;
 using ALO.Common.Utilities.Generate;
 using ALO.DataAccessLayer.DataContext;
+using ALO.DataAccessLayer.UnitOfWork;
 using ALO.DomainClasses.Entity.Account;
 using ALO.Service.Interface.Account;
 using ALO.ViewModels.Account;
@@ -16,16 +17,21 @@ namespace ALO.Service.Service.Account
     public class UserService : IUserService
     {
         private readonly ServiceContext _db;
-        public UserService(ServiceContext db)
+        private readonly IUnitOfWork unitOfWork;
+        public UserService(ServiceContext db, IUnitOfWork unitOfWork)
         {
             _db = db;
+            this.unitOfWork = unitOfWork;
         }
-
+        public UserService(IUnitOfWork unitOfWork)
+        {
+            this.unitOfWork = unitOfWork;
+        }
         public async Task<ListResultViewModel<tbl_Users>> Authenticate(string username, string password)
         {
             try
             {
-                var data = await _db.GetAsync<tbl_Users>(x => x.Email == username && x.Password == password, new[] { "Profile","Roles" });
+                var data = await unitOfWork.GetAsync<tbl_Users>(x => x.Email == username && x.Password == password, new[] { "Profile", "Roles" });
                 if (data != null)
                 {
                     return new ListResultViewModel<tbl_Users>

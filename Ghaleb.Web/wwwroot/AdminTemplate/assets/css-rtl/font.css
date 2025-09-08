@@ -3,6 +3,10 @@
     font-family: 'iransans';
     src: url('../font/iransans.woff') format('woff');
 }*/
+@font-face {
+    font-family: 'iransans';
+    src: url('../font/iransans.woff') format('woff');
+}
 body{
-    font-family: iranyekan !important;
+    font-family: 'iranyekan' !important;
 }

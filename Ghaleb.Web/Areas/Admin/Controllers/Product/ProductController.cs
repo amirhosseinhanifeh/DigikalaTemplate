@@ -1,23 +1,17 @@
 ﻿using ALO.Common.Enums;
+using ALO.Common.Utilities.ConvertDt;
 using ALO.DataAccessLayer.DataContext;
 using ALO.DomainClasses.Entity.Product;
 using ALO.Service.Interface.Product;
 using ALO.ViewModels.Product.Admin;
 using ALO.ViewModels.Result;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using static ALO.Common.Messages.Message;
-using static Azure.Core.HttpHeader;
 
 namespace Ghaleb.API.Areas.Admin.Controllers.Product
 {
@@ -257,9 +251,12 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
         }
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> GetSampleExcel()
+        public async Task<IActionResult> PriceExcel()
         {
-            var prices = await _context.tbl_ProductPriceHistory.Include(x => x.ProductPriceOptionValues).ThenInclude(x => x.ProductPriceOption).Include(x => x.Color).Include(c => c.Product).ToListAsync();
+            var prices = await _context.tbl_Products
+                .Include(x => x.ProductPriceHistories)
+                .ThenInclude(x => x.Color)
+                .ToListAsync();
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             var stream = new MemoryStream();
             using (ExcelPackage package = new(stream))
@@ -268,19 +265,24 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
                 //Add the headers
                 worksheet.View.RightToLeft = true;
 
-                worksheet.Cells[1, 1].Value = "کد قیمت";
+                worksheet.Cells[1, 1].Value = "کد محصول";
                 worksheet.Cells[1, 2].Value = "نام محصول";
                 worksheet.Cells[1, 2].AutoFitColumns();
                 worksheet.Cells[1, 3].Value = "رنگ";
                 worksheet.Cells[1, 4].Value = "قیمت";
+                worksheet.Cells[1, 5].Value = "آخرین بروزرسانی";
+                worksheet.Cells[1, 6].Value = "کد رنگ";
                 int i = 2;
                 foreach (var item in prices)
                 {
                     worksheet.Cells[i, 1].Value = item.Id;
-                    worksheet.Cells[i, 2].Value = item.Product.Title + " " + string.Join(" ", item.ProductPriceOptionValues.Select(x => x.ProductPriceOption.Name + " " + x.Value).ToList());
+                    worksheet.Cells[i, 2].Value = item.Title;
                     worksheet.Cells[i, 2].AutoFitColumns();
-                    worksheet.Cells[i, 3].Value = item.Color.Name;
-                    worksheet.Cells[i, 4].Value = (int)item.Price;
+                    var pPrice = item.ProductPriceHistories.OrderBy(x => x.Id).LastOrDefault();
+                    worksheet.Cells[i, 3].Value = pPrice?.Color?.Name;
+                    worksheet.Cells[i, 4].Value = pPrice != null ? (int)pPrice.Price : null;
+                    worksheet.Cells[i, 5].Value = pPrice?.CreatedDate.ConvertToPesainDate();
+                    worksheet.Cells[i, 6].Value = pPrice?.ColorId;
                     i++;
                 }
                 package.Save();
@@ -314,10 +316,17 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
 
                             var Id = Convert.ToInt32(worksheet.Cells[row, 1].Value);
                             var Price = Convert.ToDecimal(worksheet.Cells[row, 4].Value);
+                            var colorId = !string.IsNullOrEmpty(worksheet.Cells[row, 6].Value.ToString()) ? (int?)worksheet.Cells[row, 6].Value : null;
 
-                            var productPrice = await _context.tbl_ProductPriceHistory.FirstOrDefaultAsync(x => x.Id == Id);
-                            if (productPrice != null)
-                                productPrice.Price = Price;
+
+                            await _context.tbl_ProductPriceHistory.AddAsync(new tbl_ProductPriceHistory
+                            {
+                                ProductGuaranteeId = null,
+                                ColorId = colorId,
+                                DiscountPrice = null,
+                                Price = Price,
+                                ProductId = Id,
+                            });
                             await _context.SaveChangesAsync();
                         }
                         catch (Exception ex)
@@ -328,7 +337,30 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Product
                 }
 
             }
-            return View("Index");
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> ReplaceColor()
+        {
+            var prices = await _context.tbl_Products
+    .Include(x => x.ProductPriceHistories)
+    .ThenInclude(x => x.Color)
+    .ToListAsync();
+
+            foreach (var item in prices)
+            {
+                var colorNotNull = item.ProductPriceHistories.Where(x => x.ColorId != null).FirstOrDefault();
+                if (colorNotNull != null)
+                {
+                    var colorNull = item.ProductPriceHistories.Where(x => x.ColorId == null).FirstOrDefault();
+                    if (colorNull != null)
+                        colorNull.ColorId = colorNotNull.ColorId;
+                }
+                item.ModifiedDate = DateTime.Now;
+            }
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+
         }
     }
 }

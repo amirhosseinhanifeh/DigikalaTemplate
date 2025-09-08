@@ -2,7 +2,7 @@
 @addTagHelper *, AuthoringTagHelpers
 @using ALO.Common.Utilities.ConvertDt
 @using ALO.Common.Extentions
-@model IEnumerable<ALO.DomainClasses.Entity.Order.tbl_Order>
+@model IQueryable<ALO.DomainClasses.Entity.Order.tbl_Order>
 @{
     ViewData["Title"] = "لیست سفارشات";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
@@ -18,7 +18,35 @@
         <button type="reset" class="btn btn-danger col-12">پاک</button>
     </div>
 </form>
-<div class="row mt-5">
+
+@(
+        Html
+        .Grid(Model)
+        .Build(columns =>
+        {
+            columns.Add(model => model.OrderCode);
+            columns.Add(model => model.User.Mobile);
+            columns.Add(model => model.OrderStateHistories.OrderBy(x => x.Id).LastOrDefault().OrderState.GetDisplay()).Titled("وضعیت سفارش");
+            columns.Add(model => model.PaymentMethod).Titled("نوع پرداخت");
+            columns.Add(model => model.OrderDetails.Sum(x => x.Count * x.ProductPriceHistory.GetPrice()).ToString("n0")+" تومان").Titled("مبلغ کل");
+            columns.Add().RenderedAs(@<text>
+    <a class="btn btn-info" asp-route-id="@item.Id" asp-action="Details">مشاهده جزییات</a>
+    
+</text>);
+        })
+        .Filterable()
+        .Sortable()
+        .Empty("موردی یافت نشد")
+        .Pageable(pager =>
+        {
+            pager.PageSizes = new Dictionary<Int32, String> { { 0, "All" }, { 5, "5" }, { 10, "10" }, { 15, "15" }, { 20, "20" } };
+            pager.ShowPageSizes = true;
+            pager.PagesToDisplay = 5;
+            pager.CurrentPage = 1;
+            pager.RowsPerPage = 2;
+        })
+        )
+@* <div class="row mt-5">
     <div class="col-xl-12">
         <div class="">
             <div class="card-header border-0">
@@ -53,4 +81,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> *@

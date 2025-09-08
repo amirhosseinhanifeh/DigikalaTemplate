@@ -22,10 +22,10 @@
 
 <div class="col-12 col-lg-11 mx-auto">
 
-    <partial name="~/Components/Product/ProductRow/Row.cshtml" model="Model.HasDiscounts" view-data='@new ViewDataDictionary(ViewData) { {"HeaderTitle", "دارای تخفیف " }}' />
+    <partial name="~/Components/Product/ProductRow/Row.cshtml" model="Model.HasDiscounts" view-data='new ViewDataDictionary(ViewData) { {"HeaderTitle", "دارای تخفیف " }}' />
     @foreach (var item in Model.SubCategoryProducts.Where(x => x.Products.Any()))
     {
-        <partial name="~/Components/Product/ProductRow/Row.cshtml" model="item.Products" view-data='@new ViewDataDictionary(ViewData) {
+        <partial name="~/Components/Product/ProductRow/Row.cshtml" model="item.Products" view-data='new ViewDataDictionary(ViewData) {
         {"HeaderTitle", "تازه های "+item.Title },
         {"SubCategoryId",item.Id},
         {"SubCategoryUrl",item.Url}
@@ -33,7 +33,7 @@
     }
     @foreach (var item in Model.CategoryProducts.Where(x => x.Products.Any()))
     {
-        <partial name="~/Components/Product/ProductRow/Row.cshtml" model="item.Products" view-data='@new ViewDataDictionary(ViewData) {
+        <partial name="~/Components/Product/ProductRow/Row.cshtml" model="item.Products" view-data='new ViewDataDictionary(ViewData) {
         {"HeaderTitle", "جدید ترین "+item.Title },
         {"SubCategoryId",item.Id},
         {"SubCategoryUrl",item.Url}
@@ -65,11 +65,11 @@
 
     </div>
 
-    <partial name="~/Components/Product/ProductRow/Row.cshtml" model="Model.MoreSell" view-data='@new ViewDataDictionary(ViewData) { {"HeaderTitle", "پرفروش ترین ها" }}' />
+    <partial name="~/Components/Product/ProductRow/Row.cshtml" model="Model.MoreSell" view-data='new ViewDataDictionary(ViewData) { {"HeaderTitle","پرفروش ترین ها"  }}' />
 
     @if (User.Identity.IsAuthenticated)
     {
-        <partial name="~/Components/Product/ProductRow/Row.cshtml" model="Model.YourVisits" view-data='@new ViewDataDictionary(ViewData) { {"HeaderTitle", "براساس بازید های شما " }}' />
+        <partial name="~/Components/Product/ProductRow/Row.cshtml" model="Model.YourVisits" view-data='new ViewDataDictionary(ViewData) { {"HeaderTitle","براساس بازید های شما " }}' />
     }
 
     @await Component.InvokeAsync("Brand")

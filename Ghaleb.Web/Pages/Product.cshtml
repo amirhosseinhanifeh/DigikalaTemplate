@@ -1,12 +1,21 @@
 ﻿@page "{id?}/{url?}"
 @model Ghaleb.Web.Pages.ProductModel
 @{
+
+    var color = Model.Product.Colors.FirstOrDefault(x => x.Id == Model.Color);
+    string colorProps = null;
+    if (color != null)
+    {
+        colorProps = $"&color={Model.Color}";
+        Model.Product.PageTitle += " رنگ "+ color.Name;
+    }
     ViewData["Seo"] = Model.Product;
 }
 
 @section Tags
-    {
-    <link rel="canonical" href="@Configuration["SiteSetting:Url"]Product/@Model.Product.Id/@Model.Product.Url">
+{
+
+    <link rel="canonical" href="@Configuration["SiteSetting:Url"]Product/@Model.Product.Id/@Model.Product.Url@colorProps">
 }
 <style>
     .zoomWindow {
@@ -23,6 +32,12 @@
         font-size: 15px
     }
 </style>
+@if (User.IsInRole("Admin"))
+{
+    <div class="d-flex bg-dark position-fixed top-0 justify-content-center" style="min-height:30px;width:100%;padding:5px">
+        <a class="text-white" href="@Url.Action("Edit","Product",new{area ="Admin",Id=Model.Id})">ویرایش محصول</a>
+    </div>
+}
 <div class="row bg-white p-5">
     <div class="col-12 col-lg-5 justify-content-center d-flex">
         <div class="row" style="font-size:21px">
@@ -178,7 +193,7 @@
         <div class="row d-flex justify-content-center">
             <div class="col-12 col-lg-10">
 
-                @await Component.InvokeAsync("Price",new {prId=Model.Product.Id,colorId=Model.Color,attrIds=Model.AttrIds})
+                @await Component.InvokeAsync("Price", new { prId = Model.Product.Id, colorId = Model.Color, attrIds = Model.AttrIds })
 
             </div>
         </div>
@@ -281,7 +296,7 @@
 
     </div>
 </div>
-<partial name="~/Components/Product/ProductRow/Row.cshtml" model="Model.RelatedProducts" view-data='@new ViewDataDictionary(ViewData) { {"HeaderTitle", @"محصولات مشابه " }}' />
+<partial name="~/Components/Product/ProductRow/Row.cshtml" model="Model.RelatedProducts" view-data='new ViewDataDictionary(ViewData) { {"HeaderTitle", "محصولات مشابه " }}' />
 <!-- <div class="row box bg-white mt-5 p-3">
 
 </div>
@@ -295,7 +310,7 @@
 <div class="row box bg-white mt-5 p-3">
 
 </div> -->
-@section Scripts{
+@section Scripts {
     <script src="~/lib/elevateZoom/jquery.elevatezoom.min.js"></script>
     <script>
         $('#zoom_04').elevateZoom();
@@ -318,8 +333,8 @@
         }
 
     </script>
-        }
-@section Modal{
+}
+@section Modal {
     <div class="modal  fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -355,4 +370,4 @@
             </div>
         </div>
     </div>
-        }
+}

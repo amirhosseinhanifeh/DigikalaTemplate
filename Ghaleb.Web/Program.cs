@@ -1,5 +1,5 @@
 using ALO.DataAccessLayer.DataContext;
-using ALO.DomainClasses;
+using ALO.DataAccessLayer.UnitOfWork;
 using ALO.Service.Interface.Account;
 using ALO.Service.Interface.Basket;
 using ALO.Service.Interface.Blog;
@@ -20,7 +20,6 @@ using ALO.Service.Service.PageContent;
 using ALO.Service.Service.Product;
 using ALO.Service.Service.Profile;
 using ALO.Service.Service.SpecialSell;
-using ALO.ViewModels;
 using AspNetCore.ReCaptcha;
 using Ghaleb.Web.Helpers;
 using Hangfire;
@@ -102,6 +101,7 @@ builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IBlogCategoryService, BlogCategoryService>();
 builder.Services.AddScoped<ISeoService, SeoService>();
+builder.Services.AddScoped<IUnitOfWork, ServiceContext>();
 builder.Services.AddReCaptcha(builder.Configuration.GetSection("ReCaptcha"));
 
 builder.Services.AddScoped<CookieHelper>();

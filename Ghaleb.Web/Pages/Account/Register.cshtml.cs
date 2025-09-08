@@ -3,12 +3,8 @@ using ALO.Service.Interface.Account;
 using ALO.Service.Interface.Profile;
 using ALO.ViewModels.Account;
 using AspNetCore.ReCaptcha;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 namespace Ghaleb.Web.Pages.Account
 {
@@ -43,6 +39,7 @@ namespace Ghaleb.Web.Pages.Account
                 }
                 return RedirectToPage("Login");
             }
+            Message = ModelState.SelectMany(x => x.Value.Errors).FirstOrDefault().ErrorMessage;
             return Page();
         }
     }
