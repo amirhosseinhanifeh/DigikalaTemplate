@@ -3,6 +3,7 @@ using ALO.DomainClasses.Entity.BankSetting;
 using ALO.DomainClasses.Entity.Discount;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace ALO.DomainClasses.Entity.Order
 {
     public class tbl_Order : BaseEntity
     {
-
+        [Display(Name = "کد سفارش")]
         public string OrderCode { get; set; }
 
         public PaymentMethod PaymentMethod { get; set; }

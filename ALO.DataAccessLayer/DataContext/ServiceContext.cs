@@ -29,7 +29,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ALO.DataAccessLayer.DataContext
@@ -317,6 +316,20 @@ namespace ALO.DataAccessLayer.DataContext
 
             modelBuilder.Entity<tbl_ProductPriceHistory>().HasMany(x => x.ProductPriceOptionValues)
                 .WithMany(x => x.ProductPriceHistories).UsingEntity(x => x.ToTable("tbl_ProductPriceHistoryOptionValues"));
+
+            //Database.EnsureCreated();
+
+            //var role = new tbl_Role()
+            //{
+            //    Id = 1,
+            //    IsActive = true,
+            //    RoleName = "Admin",
+            //    RoleIndex = "0",
+            //    IsDelete = false,
+
+            //};
+            //tbl_Role.Add(role);
+            //SaveChanges();
 
 
             modelBuilder.Seed();

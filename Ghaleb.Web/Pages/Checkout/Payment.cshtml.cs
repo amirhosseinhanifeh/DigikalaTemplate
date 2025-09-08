@@ -20,6 +20,7 @@ namespace Ghaleb.Web.Pages.Checkout
         public PaymentModel(ServiceContext context, IConfiguration configuration)
         {
             _configuration = configuration;
+            _context = context;
         }
         public List<ResponseGetBasketItems> List { get; set; } = new List<ResponseGetBasketItems>();
         public decimal TotalPrice { get; set; }

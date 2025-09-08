@@ -20,13 +20,13 @@ namespace Ghaleb.Web.Pages
             _context = context;
         }
         public IEnumerable<ProductListForHomeDto> Products { get; set; }
-        public tbl_Brands Brand { get; set; }
-        public tbl_ProductCategory ProductCategory { get; set; }
+        public tbl_Brands? Brand { get; set; }
+        public tbl_ProductCategory? ProductCategory { get; set; }
         public List<tbl_ProductCategory> ProductCategories { get; set; } = new List<tbl_ProductCategory>();
         public List<tbl_Brands> Brands { get; set; } = new List<tbl_Brands>();
         public List<tbl_ProductCustomFields> ProductCustomFields { get; set; } = new List<tbl_ProductCustomFields>();
-        public tbl_SubProductCategory SubProductCategory { get; set; }
-        public tbl_ProductTags ProductTag { get; set; }
+        public tbl_SubProductCategory? SubProductCategory { get; set; }
+        public tbl_ProductTags? ProductTag { get; set; }
 
 
         [BindProperty(SupportsGet = true)]
@@ -43,7 +43,7 @@ namespace Ghaleb.Web.Pages
         [BindProperty(SupportsGet = true)]
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 16;
-        public Dictionary<string, string> Routes{ get; set; }
+        public Dictionary<string, string> Routes { get; set; }
 
         public async Task<IActionResult> OnGetAsync(
             long? mainCategoryId = null,
@@ -76,18 +76,18 @@ namespace Ghaleb.Web.Pages
             }
             if (tagId != null)
             {
-                ProductTag = await _context.tbl_ProductTags.FirstOrDefaultAsync(x=>x.Id==tagId && x.Name==tagName);
+                ProductTag = await _context.tbl_ProductTags.FirstOrDefaultAsync(x => x.Id == tagId && x.Name == tagName);
                 if (ProductTag == null)
                     return Redirect("~/");
             }
-            var res = _product.GetProductList(mainCategoryId, categoryId, subcategoryId, CategoryIds, BrandIds, tagId, OptionIds, q, order, PageNumber, PageSize, null, isExists:IsExists).model;
+            var res = _product.GetProductList(mainCategoryId, categoryId, subcategoryId, CategoryIds, BrandIds, tagId, OptionIds, q, order, PageNumber, PageSize, null, isExists: IsExists).model;
             TotalCount = await res.CountAsync();
-            Routes = RouteBuiler(BrandId, categoryId,subcategoryId, BrandIds, CategoryIds, OptionIds, IsExists);
+            Routes = RouteBuiler(BrandId, categoryId, subcategoryId, BrandIds, CategoryIds, OptionIds, IsExists);
             Products = await _product.GetProductList(mainCategoryId, categoryId, subcategoryId, CategoryIds, BrandIds, tagId, OptionIds, q, order, PageNumber, PageSize, null, isExists: IsExists).model.Skip((PageNumber - 1) * PageSize).Take(PageSize).ToListAsync();
 
             return Page();
         }
-        public Dictionary<string, string> RouteBuiler(long? brandId,long? categoryId,long? subcategoryId, long[] brandIds, long[] categoryIds, long[] optionIds, bool isExists)
+        public Dictionary<string, string> RouteBuiler(long? brandId, long? categoryId, long? subcategoryId, long[] brandIds, long[] categoryIds, long[] optionIds, bool isExists)
         {
             var routes = new Dictionary<string, string>();
             routes.Add("brandId", brandId.ToString());

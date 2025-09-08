@@ -26,15 +26,15 @@ namespace Ghaleb.API.Areas.Admin.Controllers.Orders
         {
             ViewBag.OrderCode = orderCode;
 
-            return View(await _context.GetAllAsync<tbl_Order>()
+            return View(_context.GetAllAsync<tbl_Order>()
+                .Include(x => x.User)
                 .Include(x => x.DeliveryPrice)
                 .Include(x => x.OrderStateHistories)
                 .Include(x => x.OrderDetails)
                 .ThenInclude(x => x.ProductPriceHistory)
                 .Where(x => orderCode != null ? x.OrderCode == orderCode : true)
                 .Where(x => userId != null ? x.UserId == userId : true)
-                .Where(x => x.OrderStateHistories.Any(h => h.OrderState == OrderState.PAYED))
-                .ToListAsync());
+                .Where(x => x.OrderStateHistories.Any(h => h.OrderState == OrderState.PAYED)));
         }
         public async Task<IActionResult> Details(long? Id)
         {

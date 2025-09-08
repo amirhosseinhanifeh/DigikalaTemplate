@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ALO.ViewModels", "ALO.ViewM
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ghaleb.Web", "Ghaleb.Web\Ghaleb.Web.csproj", "{AD8B62D2-A32D-4EED-A090-F7293C938934}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ghaleb.Test", "Ghaleb.Test\Ghaleb.Test.csproj", "{042D5557-402E-49E6-92A5-CBC7CF1E6853}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{AD8B62D2-A32D-4EED-A090-F7293C938934}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD8B62D2-A32D-4EED-A090-F7293C938934}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD8B62D2-A32D-4EED-A090-F7293C938934}.Release|Any CPU.Build.0 = Release|Any CPU
+		{042D5557-402E-49E6-92A5-CBC7CF1E6853}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{042D5557-402E-49E6-92A5-CBC7CF1E6853}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{042D5557-402E-49E6-92A5-CBC7CF1E6853}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{042D5557-402E-49E6-92A5-CBC7CF1E6853}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

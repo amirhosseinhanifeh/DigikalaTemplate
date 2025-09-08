@@ -2,29 +2,35 @@
 @addTagHelper *, AuthoringTagHelpers
 @model ALO.DomainClasses.Entity.Order.tbl_Order
 
-    @{
-        ViewData["Title"] = "جزییات سفارش";
-        Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
-    }
+@{
+    ViewData["Title"] = "جزییات سفارش";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
 <div class="row">
     <div class="col-xl-12">
-        <div class="card">
-
+        <div class="card p-4">
+            <h4>اطلاعات خریدار</h4>
             <div class="table-responsive">
                 <table class="table align-items-center table-flush">
-                    <thead>
-                        <tr>
-                            <th>نام گیرنده</th>
-                            <th>آدرس</th>
-                            <th>تلفن</th>
-                            <th>موبایل</th>
-                        </tr>
-                    </thead>
                     <tbody>
                         <tr>
+                            <td>نام گیرنده</td>
                             <td>@Model.User.Profile.FirstName @Model.User.Profile.LastName</td>
+                        </tr>
+                        <tr>
+                            <td>آدرس</td>
                             <td>@Model.UserAddress.Address پلاک @Model.UserAddress.Pelak واحد @Model.UserAddress.Vahed</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                شماره تماس
+                            </td>
                             <td>@Model.UserAddress.Phone</td>
+                        </tr>
+                        <tr>
+                            <td>موبایل</td>
+
+
                             <td>@Model.UserAddress.Mobile</td>
                         </tr>
                     </tbody>
@@ -34,34 +40,34 @@
     </div>
 </div>
 
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="card">
-
-                <div class="table-responsive">
-                    <table class="table align-items-center table-flush table-striped">
-                        <thead>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card p-4">
+            <h4>محصولات</h4>
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush table-striped">
+                    <thead>
+                        <tr>
+                            <th>نام محصول</th>
+                            <th>تعداد</th>
+                            <th>قیمت واحد</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrderDetails)
+                        {
                             <tr>
-                                <th>نام محصول</th>
-                                <th>تعداد</th>
-                                <th>قیمت واحد</th>
+                                <td>@item.ProductPriceHistory.Product.Title</td>
+                                <td>@item.Count</td>
+                                <td>@item.ProductPriceHistory.GetPrice().ToString("n0") تومان</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.OrderDetails)
-                            {
-                                <tr>
-                                    <td>@item.ProductPriceHistory.Product.Title</td>
-                                    <td>@item.Count</td>
-                                    <td>@item.ProductPriceHistory.GetPrice().ToString("n0") تومان</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+</div>
 
 <div class="row">
     <form method="post">

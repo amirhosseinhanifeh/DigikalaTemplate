@@ -8,8 +8,14 @@
         MetaDescription = Model.Data.MetaDescription,
         DoIndex = true
     };
-}
 
+
+}
+@section Tags
+{
+
+    <link rel="canonical" href="@Configuration["SiteSetting:Url"]page/@Model.Data.Url">
+}
 <style>
     .bgcover {
         position: relative;

@@ -3,10 +3,8 @@ using ALO.DomainClasses.Entity.Product;
 using AspNetCore.SEOHelper.Sitemap;
 using Hangfire;
 using HtmlAgilityPack;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace Ghaleb.Web.Pages
 {
@@ -38,8 +36,11 @@ Cron.Daily);
         }
         public async Task StartTorob()
         {
-            var products = await _context.tbl_Products.Include(x=>x.TorobProducts).Where(h => h.IsActive && !h.IsDelete && h.TorobLink != null).ToListAsync();
+            var products = await _context.tbl_Products.Include(x => x.TorobProducts).Where(h => h.IsActive && !h.IsDelete && h.TorobLink != null).ToListAsync();
             var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+            client.DefaultRequestHeaders.Add("Accept", "text/html");
+            client.DefaultRequestHeaders.Add("Accept-Language", "en-US,en;q=0.5");
             List<tbl_TorobProducts> torobs = new List<tbl_TorobProducts>();
             foreach (var product in products)
             {
@@ -64,10 +65,11 @@ Cron.Daily);
                             torobs.Add(new tbl_TorobProducts
                             {
                                 ProductId = product.Id,
-                                LastUpdate = lastUpdate.InnerText,
+                                LastUpdate = lastUpdate?.InnerText,
                                 Price = price.InnerText,
-                                ShopName=shopName.InnerText
-                            }) ;
+                                ShopName = shopName.InnerText,
+                                City = city.InnerHtml
+                            });
 
                         }
                         //Some work with page....
@@ -82,12 +84,17 @@ Cron.Daily);
         }
         public async Task Start()
         {
-            var products = await _context.tbl_Products.Where(x => x.IsActive && x.IsDelete != true).ToListAsync();
+            var products = await _context.tbl_Products.Include(x => x.ProductPriceHistories).Where(x => x.IsActive && x.IsDelete != true).ToListAsync();
             var list = new List<SitemapNode>();
             foreach (var item in products)
             {
                 list.Add(new SitemapNode { LastModified = DateTime.UtcNow, Priority = 0.8, Url = configuration["SiteSetting:Url"] + "product/" + item.Id + "/" + item.Url, Frequency = SitemapFrequency.Daily });
+                var colors = products.SelectMany(x => x.ProductPriceHistories).Select(x => x.ColorId).Distinct();
+                foreach (var color in colors)
+                {
+                    list.Add(new SitemapNode { LastModified = DateTime.UtcNow, Priority = 0.8, Url = configuration["SiteSetting:Url"] + "product/" + item.Id + "/" + item.Url + "?color=" + color.Value, Frequency = SitemapFrequency.Daily });
 
+                }
             }
             var blogs = await _context.tbl_Blogs.Where(h => h.IsActive && !h.IsDelete).ToListAsync();
             foreach (var item in blogs)
